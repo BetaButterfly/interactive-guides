@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotebookLM: покроковий гайд</title>
+  <style>
+    :root {
+      --primary: #2E3440;
+      --accent: #6B5B95;
+      --accent-light: #9B8DC4;
+      --accent-bg: #F0EBF7;
+      --success: #7FA968;
+      --success-bg: #EFF5E8;
+      --warning: #D4A53C;
+      --warning-bg: #FBF3D9;
+      --danger: #BF616A;
+      --danger-bg: #FCE8E8;
+      --bg: #FAFAF7;
+      --card: #FFFFFF;
+      --border: #E5E5E0;
+      --text: #2E3440;
+      --text-muted: #5C6370;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #6B5B95 0%, #9B8DC4 100%);
+      color: white;
+      padding: 36px 28px;
+      border-radius: 14px;
+      margin-bottom: 28px;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header .subtitle {
+      font-size: 17px;
+      opacity: 0.92;
+      margin-bottom: 18px;
+    }
+
+    .header .pill {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.22);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-right: 8px;
+      margin-bottom: 4px;
+    }
+
+    /* Progress nav */
+    .progress-nav {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+    }
+
+    .progress-nav h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 600;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+    }
+
+    .nav-list a {
+      display: block;
+      padding: 10px 14px;
+      background: var(--bg);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .nav-list a:hover {
+      background: var(--accent-bg);
+      border-color: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .nav-list .num {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 22px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    /* Section */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 30px 28px;
+      margin-bottom: 24px;
+      scroll-margin-top: 20px;
+    }
+
+    .section-header {
+      border-bottom: 2px solid var(--accent-bg);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .section-header .label {
+      display: inline-block;
+      background: var(--accent-bg);
+      color: var(--accent);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      font-size: 26px;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .section-header .time-estimate {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .intro {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    .intro strong {
+      color: var(--accent);
+    }
+
+    .section h3 {
+      font-size: 19px;
+      margin: 26px 0 12px;
+      color: var(--primary);
+      line-height: 1.4;
+    }
+
+    .section h4 {
+      font-size: 16px;
+      margin: 18px 0 10px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 12px;
+    }
+
+    .section ul,
+    .section ol {
+      margin: 10px 0 16px 24px;
+    }
+
+    .section li {
+      margin-bottom: 6px;
+    }
+
+    /* Steps */
+    .step {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 16px 18px 16px 60px;
+      margin: 14px 0;
+      position: relative;
+      border-left: 3px solid var(--accent);
+    }
+
+    .step-num {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      background: var(--accent);
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .step strong {
+      color: var(--primary);
+    }
+
+    .step+.step {
+      margin-top: 8px;
+    }
+
+    /* Boxes */
+    .tip {
+      background: var(--warning-bg);
+      border-left: 4px solid var(--warning);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .tip strong {
+      color: #8a6d1f;
+    }
+
+    .tip-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #8a6d1f;
+    }
+
+    .warning {
+      background: var(--danger-bg);
+      border-left: 4px solid var(--danger);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .warning strong {
+      color: var(--danger);
+    }
+
+    .info {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    /* Code/Key */
+    .key {
+      display: inline-block;
+      background: #ECEFF4;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-family: "SF Mono", Monaco, monospace;
+      font-size: 13px;
+      color: var(--primary);
+      border: 1px solid #D8DEE9;
+      box-shadow: 0 1px 0 #D8DEE9;
+      font-weight: 600;
+    }
+
+    code {
+      background: #ECEFF4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SF Mono", Monaco, monospace;
+      font-size: 13px;
+      color: var(--primary);
+    }
+
+    /* Copyable text */
+    .copy-text {
+      background: var(--success-bg);
+      border: 1px dashed var(--success);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 10px 0;
+      font-size: 14px;
+      color: #4d6a3a;
+    }
+
+    .copy-text::before {
+      content: "📋 Можна скопіювати: ";
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    /* Prompt block — special for AI prompts */
+    .prompt {
+      background: #2E3440;
+      color: #ECEFF4;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 12px 0;
+      font-family: "SF Mono", Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      position: relative;
+      padding-top: 30px;
+    }
+
+    .prompt::before {
+      content: "💬 ПРОМПТ — встав у NotebookLM";
+      position: absolute;
+      top: 8px;
+      left: 18px;
+      font-size: 11px;
+      font-family: -apple-system, sans-serif;
+      color: var(--accent-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .prompt .placeholder {
+      background: rgba(155, 141, 196, 0.25);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #D4C4F0;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg);
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Self-check */
+    .self-check {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0 8px;
+    }
+
+    .self-check h3 {
+      margin-top: 0 !important;
+      color: var(--success) !important;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .self-check ul {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .self-check li {
+      padding: 8px 0 8px 32px;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.2s;
+    }
+
+    .self-check li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      font-size: 20px;
+      color: var(--success);
+      line-height: 1;
+    }
+
+    .self-check li.done::before {
+      content: "☑";
+    }
+
+    .self-check li.done {
+      opacity: 0.55;
+      text-decoration: line-through;
+    }
+
+    /* Result preview */
+    .result-preview {
+      background: linear-gradient(135deg, #F0EBF7 0%, #E4DCF1 100%);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .result-preview .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+    }
+
+    /* Comparison: good vs bad */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .comparison>div {
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .comparison .bad {
+      background: var(--danger-bg);
+      border-left: 4px solid var(--danger);
+    }
+
+    .comparison .good {
+      background: var(--success-bg);
+      border-left: 4px solid var(--success);
+    }
+
+    .comparison .label-bad {
+      font-weight: 600;
+      color: var(--danger);
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .comparison .label-good {
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Motivation */
+    .motivation {
+      text-align: center;
+      padding: 24px;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 16px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    /* FAQ */
+    .faq {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 10px 0;
+      background: var(--bg);
+    }
+
+    .faq strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* Final */
+    .final {
+      background: linear-gradient(135deg, #6B5B95 0%, #9B8DC4 100%);
+      color: white;
+      border-radius: 14px;
+      padding: 32px 28px;
+      text-align: center;
+      margin: 28px 0;
+    }
+
+    .final h2 {
+      color: white;
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .final p {
+      font-size: 16px;
+      opacity: 0.95;
+      margin-bottom: 6px;
+    }
+
+    /* Highlight */
+    .highlight {
+      background: linear-gradient(180deg, transparent 60%, #FBF3D9 60%);
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .section {
+        padding: 22px 18px;
+      }
+
+      .header {
+        padding: 26px 20px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .step {
+        padding-left: 54px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>🤖 NotebookLM: твій AI-помічник в написанні дипломної роботи</h1>
+      <div class="subtitle">Покроковий гайд<br>Працюємо з 50 джерелами
+        розумно, а не вручну.<div class=""></div>
+      </div>
+      <span class="pill">🎓 Для практики</span>
+      <span class="pill">⏱ ~3-4 тижні роботи</span>
+      <span class="pill">📚 50 джерел → 1 розділ</span>
+    </div>
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 14px;">👋 Привіт!</h2>
+      <p>Цей гайд проведе тебе через найважчу частину практики — написання теоретичного розділу диплому. <strong>З
+          NotebookLM це робиться у 3-4 рази швидше</strong>, ніж вручну, без втрати якості.</p>
+
+      <h4>Що таке NotebookLM (і чим він кращий за ChatGPT)</h4>
+      <p>NotebookLM — це <strong>AI-помічник від Google, який працює тільки з твоїми джерелами</strong>. Ти завантажуєш
+        50 наукових статей — і він допомагає в них орієнтуватися, шукати потрібну інформацію, складати цитати,
+        узагальнювати.</p>
+
+      <div class="comparison">
+        <div class="bad">
+          <div class="label-bad">❌ ChatGPT</div>
+          Знає «все потроху» з інтернету. Часто вигадує факти, авторів, цитати. Для диплому небезпечний.
+        </div>
+        <div class="good">
+          <div class="label-good">✅ NotebookLM</div>
+          Знає лише твої джерела. Кожна відповідь з посиланням на конкретне джерело. Не вигадує — або відповідає, або
+          каже «не знайшов».
+        </div>
+      </div>
+
+      <h4>Що в тебе буде наприкінці</h4>
+      <ul>
+        <li>Блокнот NotebookLM з 50 науковими джерелами по темі диплому</li>
+        <li>3 готові звіти — по одному на кожен підрозділ 1 розділу</li>
+        <li>Аналітичні висновки до 1 розділу (3-5 сторінок)</li>
+        <li>Список літератури за ДСТУ</li>
+        <li><strong>Готовий перший розділ дипломної роботи</strong> (25-35 сторінок)</li>
+      </ul>
+
+      <div class="info">
+        <strong>📌 Як працювати з гайдом:</strong> читай послідовно, але не намагайся зробити все за день. Реалістичний
+        план — 3 тижні: 1 тиждень на збір джерел, 1 тиждень на роботу з AI та звіти, 1 тиждень на оформлення тексту
+        диплому.
+      </div>
+
+      <div class="warning">
+        <strong>⚠️ Дуже важливо:</strong> NotebookLM — це помічник, не автор. Ти пишеш диплом сам — AI лише прискорює
+        пошук інформації в твоїх же джерелах. Кожну цитату перевіряй. Готовий текст редагуй своїми словами.
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="progress-nav">
+      <h3>📍 Структура гайду</h3>
+      <ul class="nav-list">
+        <li><a href="#part1"><span class="num">1</span>Реєстрація</a></li>
+        <li><a href="#part2"><span class="num">2</span>Тема і план</a></li>
+        <li><a href="#part3"><span class="num">3</span>Де шукати джерела</a></li>
+        <li><a href="#part4"><span class="num">4</span>50 джерел</a></li>
+        <li><a href="#part5"><span class="num">5</span>Перевірка блокнота</a></li>
+        <li><a href="#part6"><span class="num">6</span>Як ставити питання</a></li>
+        <li><a href="#part7"><span class="num">7</span>Перевірка AI</a></li>
+        <li><a href="#part8"><span class="num">8</span>Звіт по 1.1</a></li>
+        <li><a href="#part9"><span class="num">9</span>Звіти 1.2 і 1.3</a></li>
+        <li><a href="#part10"><span class="num">10</span>Аналітичні висновки</a></li>
+        <li><a href="#part11"><span class="num">11</span>Список літератури</a></li>
+        <li><a href="#part12"><span class="num">12</span>Текст розділу</a></li>
+        <li><a href="#faq"><span class="num">?</span>Питання</a></li>
+      </ul>
+    </div>
+
+    <!-- PART 1: REGISTRATION -->
+    <div class="section" id="part1">
+      <div class="section-header">
+        <span class="label">Частина 1</span>
+        <h2>Реєстрація та перший блокнот</h2>
+        <span class="time-estimate">⏱ ~10 хвилин</span>
+      </div>
+
+      <div class="intro">
+        <strong>Що зробимо:</strong> створимо акаунт NotebookLM і перший блокнот з правильною назвою.
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Відкрий сайт</strong><br>
+        Перейди на <code>notebooklm.google.com</code>. Працює у будь-якому браузері, краще з ноутбука.
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Увійди через Google</strong><br>
+        Використай свій основний Google-акаунт (той, що для навчання). Якщо немає — створи. Інших способів реєстрації
+        немає.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Створи новий блокнот</strong><br>
+        У центрі екрана — кнопка <strong>+ Create new notebook</strong> (або <strong>+ New notebook</strong>). Клікни.
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Дай блокноту назву своєї теми</strong><br>
+        Зверху блокнота — клікни на «Untitled notebook» і впиши тему диплому. Наприклад:
+        <div class="copy-text">Управління персоналом у малому бізнесі — Диплом 2026</div>
+      </div>
+
+      <h3>Що ти бачиш — 3 зони екрана</h3>
+
+      <h4>🅰️ Sources (зліва) — джерела</h4>
+      <p>Сюди завантажуєш свої наукові статті, книги, закони. Поки що порожньо — далі заповнимо.</p>
+
+      <h4>🅱️ Chat (центр) — діалог з AI</h4>
+      <p>Тут ставиш питання, отримуєш відповіді. Поки що теж порожньо — нема джерел, нема й розмови.</p>
+
+      <h4>🅲 Studio (справа) — інструменти і нотатки</h4>
+      <p>Тут ти зможеш одним кліком згенерувати огляд джерел, тести для самоперевірки, аудіо-подкаст і зберігати важливі
+        відповіді.</p>
+
+      <div class="self-check">
+        <h3>✅ Перевір себе</h3>
+        <ul>
+          <li onclick="this.classList.toggle('done')">Я зайшов на notebooklm.google.com</li>
+          <li onclick="this.classList.toggle('done')">У мене створений блокнот</li>
+          <li onclick="this.classList.toggle('done')">Блокнот названо за темою диплому</li>
+          <li onclick="this.classList.toggle('done')">Я бачу три зони: Sources, Chat, Studio</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PART 2: TOPIC AND PLAN -->
+    <div class="section" id="part2">
+      <div class="section-header">
+        <span class="label">Частина 2</span>
+        <h2>Тема диплому і план 1 розділу</h2>
+        <span class="time-estimate">⏱ ~30 хвилин</span>
+      </div>
+
+      <div class="intro">
+        <strong>СТОП.</strong> Не починай збирати джерела, поки не маєш чіткого плану. Інакше збереш 50 випадкових
+        файлів — і витратиш купу часу даремно.
+      </div>
+
+      <h3>Як виглядає правильний план 1 розділу</h3>
+      <p>Перший розділ диплому з менеджменту майже завжди має таку структуру:</p>
+
+      <ul>
+        <li><strong>1.1</strong> — Поняття, сутність, теоретичні засади (про <em>що</em> ми говоримо)</li>
+        <li><strong>1.2</strong> — Класифікація / складові / методи / етапи (<em>з чого складається</em>)</li>
+        <li><strong>1.3</strong> — Сучасний стан / тренди / зарубіжний досвід / законодавство (<em>як це працює
+            зараз</em>)</li>
+      </ul>
+
+      <h3>Приклади правильних формулювань</h3>
+      <table>
+        <tr>
+          <th>Якщо тема...</th>
+          <th>То план може бути таким</th>
+        </tr>
+        <tr>
+          <td>Управління персоналом у малому бізнесі</td>
+          <td>
+            1.1 Сутність і функції управління персоналом<br>
+            1.2 Методи та інструменти управління персоналом<br>
+            1.3 Сучасні HR-тренди в малому бізнесі
+          </td>
+        </tr>
+        <tr>
+          <td>Стратегія розвитку підприємства</td>
+          <td>
+            1.1 Теоретичні засади стратегічного управління<br>
+            1.2 Види стратегій та етапи їх розробки<br>
+            1.3 Сучасні підходи до оцінки ефективності стратегії
+          </td>
+        </tr>
+        <tr>
+          <td>Антикризове управління</td>
+          <td>
+            1.1 Поняття, причини та види кризи в організації<br>
+            1.2 Інструменти антикризового управління<br>
+            1.3 Зарубіжний досвід антикризового менеджменту
+          </td>
+        </tr>
+        <tr>
+          <td>Маркетингова діяльність підприємства</td>
+          <td>
+            1.1 Сутність маркетингової діяльності<br>
+            1.2 Інструменти та методи маркетингу<br>
+            1.3 Цифровий маркетинг: сучасні підходи
+          </td>
+        </tr>
+      </table>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Сформулюй свій план</strong><br>
+        Запиши на папері або в Notion (у розділі «План дипломної роботи»). Це твоя карта — від цього залежить, ЯКІ
+        джерела шукати.
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Перевір план з науковим керівником</strong><br>
+        Раджу зробити це до того, як збирати джерела. План може корегуватись — і це нормально.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Розподіли орієнтовну кількість джерел між підрозділами</strong><br>
+        Стандартно: 1.1 — 15-20 джерел, 1.2 — 15-20, 1.3 — 10-15. Це орієнтир, не догма.
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 Якщо тема дуже специфічна</div>
+        Іноді 1.3 може бути не «сучасний стан», а наприклад «нормативно-правова база» (для тем з юридичним аспектом) або
+        «зарубіжний досвід» (для порівняльних тем). Обговори з керівником.
+      </div>
+
+      <div class="self-check">
+        <h3>✅ Перевір себе</h3>
+        <ul>
+          <li onclick="this.classList.toggle('done')">У мене сформульована тема диплому</li>
+          <li onclick="this.classList.toggle('done')">Я маю план з 3 підрозділів 1 розділу</li>
+          <li onclick="this.classList.toggle('done')">Я знаю, скільки приблизно джерел треба на кожен</li>
+          <li onclick="this.classList.toggle('done')">Я узгодив план з науковим керівником</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PART 3: WHERE TO FIND SOURCES -->
+    <div class="section" id="part3">
+      <div class="section-header">
+        <span class="label">Частина 3</span>
+        <h2>Де шукати наукові джерела</h2>
+        <span class="time-estimate">⏱ ~1 година (вивчити ресурси)</span>
+      </div>
+
+      <div class="intro">
+        Якість джерел = якість диплому. Гугл «реферати по менеджменту» — це не наукова робота. Ось ресурси, де реально
+        шукають науковці.
+      </div>
+
+      <h3>Топ-7 джерел для пошуку</h3>
+      <table>
+        <tr>
+          <th>Ресурс</th>
+          <th>Адреса</th>
+          <th>Чим корисний</th>
+        </tr>
+        <tr>
+          <td><strong>Google Scholar</strong></td>
+          <td>scholar.google.com</td>
+          <td>Найголовніший. Усі наукові статті світу, кількість цитувань.</td>
+        </tr>
+        <tr>
+          <td>Нац. бібліотека ім. Вернадського</td>
+          <td>irbis-nbuv.gov.ua</td>
+          <td>Українські дисертації, автореферати</td>
+        </tr>
+        <tr>
+          <td>Український індекс цитувань</td>
+          <td>ouci.dntb.gov.ua</td>
+          <td>Українські наукові публікації</td>
+        </tr>
+        <tr>
+          <td>ResearchGate</td>
+          <td>researchgate.net</td>
+          <td>Світова база — багато безкоштовних PDF</td>
+        </tr>
+        <tr>
+          <td>DOAJ</td>
+          <td>doaj.org</td>
+          <td>Відкриті наукові журнали</td>
+        </tr>
+        <tr>
+          <td>SSRN</td>
+          <td>ssrn.com</td>
+          <td>Економіка, менеджмент — багато safe-PDF</td>
+        </tr>
+        <tr>
+          <td>Електронні бібліотеки твого ВНЗ</td>
+          <td>через сайт університету</td>
+          <td>Доступ до платних баз через ВНЗ</td>
+        </tr>
+      </table>
+
+      <h3>Що рахується як джерело</h3>
+      <div class="comparison">
+        <div class="good">
+          <div class="label-good">✅ ТАК</div>
+          <ul style="margin: 0;">
+            <li>Наукові статті у фахових журналах</li>
+            <li>Монографії</li>
+            <li>Дисертації та автореферати</li>
+            <li>Закони, постанови, нормативні акти</li>
+            <li>Аналітичні звіти (НБУ, Держстат, ООН, МВФ)</li>
+          </ul>
+        </div>
+        <div class="bad">
+          <div class="label-bad">❌ НІ</div>
+          <ul style="margin: 0;">
+            <li>Вікіпедія</li>
+            <li>Реферати, курсові з інтернету</li>
+            <li>Блоги, особисті сторінки</li>
+            <li>Новини без аналітики</li>
+            <li>Студентські сайти</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Лайфхак: одне хороше джерело → 15 додаткових</h3>
+      <p>Знайди в Google Scholar 2-3 статті точно по твоїй темі. Під кожною є кнопка <strong>«Cited by»</strong> або
+        <strong>«Цит. за»</strong> з числом. Клацнувши — побачиш десятки статей, які <em>цитували цю</em>. Серед них
+        точно будуть твої майбутні джерела.
+      </p>
+
+      <p>Так само працює <strong>«Related articles»</strong> / <strong>«Подібні статті»</strong>.</p>
+
+      <div class="tip">
+        <div class="tip-title">💡 Як швидко перевірити якість джерела</div>
+        Подивись: (1) автор має наукову ступінь чи афіліацію? (2) Стаття у журналі з рецензуванням? (3) Є список
+        використаних джерел в кінці? Якщо «так» хоча б на 2 з 3 — джерело придатне.
+      </div>
+
+      <h3>Як зберігати знайдені джерела</h3>
+      <ol>
+        <li>Створи папку на ноутбуці: <code>Диплом / Джерела</code></li>
+        <li>Усередині — три підпапки: <code>1.1</code>, <code>1.2</code>, <code>1.3</code></li>
+        <li>Скачуй PDF одразу в потрібну підпапку</li>
+        <li>Перейменовуй файл за зразком: <strong>Іваненко_2023_Управління_персоналом.pdf</strong> (так буде легше
+          шукати)</li>
+      </ol>
+    </div>
+
+    <!-- PART 4: 50 SOURCES -->
+    <div class="section" id="part4">
+      <div class="section-header">
+        <span class="label">Частина 4</span>
+        <h2>Завантажуємо 50 джерел до блокнота</h2>
+        <span class="time-estimate">⏱ ~1-1.5 тижні (це найдовший етап)</span>
+      </div>
+
+      <div class="intro">
+        Це не зробити за один вечір. Закладай хоча б тиждень. Краще день за днем додавати 7-10 джерел, ніж за 1 день —
+        50.
+      </div>
+
+      <h3>4 способи додати джерело</h3>
+      <p>У лівій панелі (Sources) — кнопка <strong>+ Add source</strong>. Варіанти:</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Upload sources</strong> — найчастіше. Перетягни або вибери PDF, .docx, .txt з комп'ютера. Підходить для
+        скачаних статей.
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Google Drive</strong> — якщо документ у твоєму Google Drive.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Link → Website</strong> — посилання на онлайн-статтю (наприклад, на сайті журналу). NotebookLM сам
+        зчитає текст.
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Paste text</strong> — просто вставити текст. Зручно для коротких законів, постанов.
+      </div>
+
+      <h3>Як виглядає процес для одного джерела</h3>
+      <ol>
+        <li>Знайшов статтю у Google Scholar → скачав PDF</li>
+        <li>Перейменував файл (наприклад, <em>Іваненко_2023_HR-стратегія.pdf</em>)</li>
+        <li>У NotebookLM → <strong>+ Add source</strong> → <strong>Upload</strong> → вибрав файл</li>
+        <li>Зачекав 10-30 секунд, поки система обробить</li>
+        <li>Джерело з'явилося в лівій панелі</li>
+        <li>Одразу заніс це джерело в базу «Література» в Notion (Автор, Рік, Назва, Підрозділ)</li>
+      </ol>
+
+      <div class="warning">
+        <strong>⚠️ НЕ завантажуй дублікати!</strong> Часта помилка — одна стаття скачана з двох сайтів і має різні назви
+        файлів. У NotebookLM обидві потраплять як окремі джерела. Перевіряй автор+рік перед додаванням. Це прямо вимога
+        практики — «не має бути повторень».
+      </div>
+
+      <h3>Скільки джерел на день — реалістично</h3>
+      <table>
+        <tr>
+          <th>Темп</th>
+          <th>За день</th>
+          <th>50 джерел зайдуть</th>
+        </tr>
+        <tr>
+          <td>Розслаблений</td>
+          <td>5</td>
+          <td>10 днів</td>
+        </tr>
+        <tr>
+          <td>Нормальний</td>
+          <td>7-8</td>
+          <td>7 днів</td>
+        </tr>
+        <tr>
+          <td>Інтенсивний</td>
+          <td>10-12</td>
+          <td>4-5 днів</td>
+        </tr>
+        <tr>
+          <td>«Останній вечір»</td>
+          <td>50</td>
+          <td>1 ніч — і ти втомлений</td>
+        </tr>
+      </table>
+
+      <div class="tip">
+        <div class="tip-title">💡 Найкраща стратегія</div>
+        Витрать перші 2-3 дні на пошук ключових статей по 1.1 (5-7). Потім через «Cited by» / «Related» — нашаровуй ще
+        10-15 джерел. Потім переходь до 1.2, 1.3. Поетапно — менше хаосу.
+      </div>
+
+      <div class="self-check">
+        <h3>✅ Перевір себе</h3>
+        <ul>
+          <li onclick="this.classList.toggle('done')">У мене папка з 50 PDF на ноутбуці</li>
+          <li onclick="this.classList.toggle('done')">Усі 50 завантажено в NotebookLM</li>
+          <li onclick="this.classList.toggle('done')">Я перевірив — немає дублів</li>
+          <li onclick="this.classList.toggle('done')">Усі джерела одночасно занесені в базу «Література» в Notion</li>
+          <li onclick="this.classList.toggle('done')">Мінімум 30 з них — наукові статті</li>
+          <li onclick="this.classList.toggle('done')">Мінімум 10 — за останні 5 років</li>
+          <li onclick="this.classList.toggle('done')">Мінімум 5 — україномовних</li>
+        </ul>
+      </div>
+
+      <div class="motivation">
+        Найважча частина позаду. Тепер починається магія — AI допомагає тобі вичавити максимум з цих 50 джерел.
+      </div>
+    </div>
+
+    <!-- PART 5: NOTEBOOK CHECK -->
+    <div class="section" id="part5">
+      <div class="section-header">
+        <span class="label">Частина 5</span>
+        <h2>Перевіряємо, що блокнот працює</h2>
+        <span class="time-estimate">⏱ ~15 хвилин</span>
+      </div>
+
+      <div class="intro">
+        Перш ніж писати звіти — переконайся, що NotebookLM правильно «зрозумів» твої джерела.
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Постав тестове питання</strong><br>
+        У центральній панелі (Chat) встав:
+        <div class="prompt">Стисло опиши, про що мої джерела. На які теми вони згруповані?</div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Прочитай відповідь</strong><br>
+        AI має дати огляд за 1-2 хвилини. Перевір:
+        <ul>
+          <li>Відповідь стосується твоєї теми? ✅</li>
+          <li>Є посилання на джерела (циферки [1], [2])? ✅</li>
+          <li>Згадуються підрозділи 1.1, 1.2, 1.3? ✅</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Згенеруй Briefing doc</strong><br>
+        У правій панелі (Studio) — кнопка <strong>Briefing doc</strong>. AI створить структурований огляд усіх джерел.
+        Це чудовий стартовий матеріал — збережи його, знадобиться для висновків.
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Спробуй Mind map</strong><br>
+        Там же в Studio — <strong>Mind map</strong>. Цікаво: AI намалює інтерактивну карту понять. Допомагає побачити,
+        що чим пов'язано.
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 Audio overview — окрема забавка</div>
+        У Studio є <strong>Audio overview</strong> — генерує 10-хвилинний подкаст із двома ведучими-AI, які обговорюють
+        твої джерела. Англійською дуже якісно, українською — поки що так собі. Слухай у дорозі, якщо хочеш швидко
+        зануритись у тему.
+      </div>
+
+      <h3>Що робити, якщо щось не так</h3>
+      <table>
+        <tr>
+          <th>Проблема</th>
+          <th>Рішення</th>
+        </tr>
+        <tr>
+          <td>AI не «бачить» якісь джерела</td>
+          <td>Переконайся, що галочки навпроти них увімкнені (зліва в Sources)</td>
+        </tr>
+        <tr>
+          <td>Файл не завантажується</td>
+          <td>Перевір розмір (макс. 200 МБ) і формат. Спробуй конвертувати в PDF</td>
+        </tr>
+        <tr>
+          <td>AI відповідає англійською</td>
+          <td>Додай у запит: «Відповідай українською мовою»</td>
+        </tr>
+        <tr>
+          <td>Відповіді стислі та поверхневі</td>
+          <td>Запит занадто загальний — конкретизуй (див. Частину 6)</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- PART 6: HOW TO ASK -->
+    <div class="section" id="part6">
+      <div class="section-header">
+        <span class="label">Частина 6</span>
+        <h2>Як ставити правильні питання AI</h2>
+        <span class="time-estimate">⏱ ~30 хвилин на тренування</span>
+      </div>
+
+      <div class="intro">
+        Від того, як ти спитаєш — на 80% залежить, яку відповідь ти отримаєш. Це окрема навичка — освоюй її свідомо.
+      </div>
+
+      <h3>4 правила хорошого запиту</h3>
+
+      <h4>1. Конкретність замість загальності</h4>
+      <div class="comparison">
+        <div class="bad">
+          <div class="label-bad">❌ Погано</div>
+          Розкажи про управління персоналом
+        </div>
+        <div class="good">
+          <div class="label-good">✅ Добре</div>
+          Дай 5 визначень поняття «управління персоналом» з моїх джерел. Кожне — автор, рік, точне формулювання.
+        </div>
+      </div>
+
+      <h4>2. Академічна мова</h4>
+      <div class="comparison">
+        <div class="bad">
+          <div class="label-bad">❌ Погано</div>
+          Шо там кажуть про менеджмент?
+        </div>
+        <div class="good">
+          <div class="label-good">✅ Добре</div>
+          Які концептуальні підходи до менеджменту представлені в моїх джерелах?
+        </div>
+      </div>
+
+      <h4>3. Формат відповіді</h4>
+      <div class="comparison">
+        <div class="bad">
+          <div class="label-bad">❌ Погано</div>
+          Які бувають методи?
+        </div>
+        <div class="good">
+          <div class="label-good">✅ Добре</div>
+          Класифікуй методи управління персоналом з моїх джерел. Формат: таблиця з колонками «Метод», «Опис», «Автор»,
+          «Посилання».
+        </div>
+      </div>
+
+      <h4>4. Прив'язка до джерел</h4>
+      <div class="comparison">
+        <div class="bad">
+          <div class="label-bad">❌ Погано</div>
+          Які сучасні тренди?
+        </div>
+        <div class="good">
+          <div class="label-good">✅ Добре</div>
+          На основі моїх джерел за 2020-2025 роки — 5 найголовніших трендів управління персоналом. На кожен — 2-3 цитати
+          з джерел.
+        </div>
+      </div>
+
+      <h3>Універсальна формула</h3>
+      <div class="prompt">[ДІЯ: проаналізуй / порівняй / класифікуй / опиши]
+        [ОБ'ЄКТ: конкретне поняття]
+        [ДЖЕРЕЛА: усі / лише статті / лише за 2020+ роки]
+        [ФОРМАТ: список / таблиця / абзаци]
+        [ОБМЕЖЕННЯ: до 500 слів / на 3 авторах / з посиланнями]</div>
+
+      <h3>Приклад «до і після»</h3>
+      <p><strong>Було:</strong> «Що таке мотивація?»</p>
+      <p><strong>Стало:</strong></p>
+      <div class="prompt">Проаналізуй поняття «мотивація персоналу» в моїх джерелах. Згрупуй за основними теоріями
+        (Маслоу, Герцберг, McGregor тощо). Для кожної — суть, ключові автори, цитати з джерел. Формат: 5-6 абзаців з
+        посиланнями. Українською мовою.</div>
+
+      <div class="tip">
+        <div class="tip-title">💡 Експериментуй</div>
+        Якщо відповідь не та, що очікував — переформулюй. Додай «детальніше», «з цитатами», «українською», «коротше». AI
+        підлаштовується.
+      </div>
+
+      <div class="self-check">
+        <h3>✅ Перевір себе</h3>
+        <ul>
+          <li onclick="this.classList.toggle('done')">Я розумію різницю між поганим і добрим запитом</li>
+          <li onclick="this.classList.toggle('done')">Я знаю формулу: ДІЯ + ОБ'ЄКТ + ДЖЕРЕЛА + ФОРМАТ + ОБМЕЖЕННЯ</li>
+          <li onclick="this.classList.toggle('done')">Я попрактикувався — поставив 5 різних запитів і отримав якісні
+            відповіді</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PART 7: CHECK AI -->
+    <div class="section" id="part7">
+      <div class="section-header">
+        <span class="label">Частина 7</span>
+        <h2>Перевіряємо, що AI не вигадав</h2>
+        <span class="time-estimate">⏱ ~постійно, як звичка</span>
+      </div>
+
+      <div class="intro">
+        AI іноді помиляється. Особливо коли ти просиш узагальнити те, чого мало в джерелах. Завжди перевіряй важливі
+        цитати — це твоя робота.
+      </div>
+
+      <h3>Як читати посилання у відповідях</h3>
+      <p>У відповіді NotebookLM кожне твердження має маленьку цифру у квадратних дужках: <strong>[1]</strong>,
+        <strong>[2]</strong>, <strong>[3]</strong>. Це посилання на конкретне джерело.
+      </p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Клацни на цифру</strong><br>
+        Відкриється бічна панель з тим самим текстом, що цитується. Видно — звідки взято.
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Перевір цитату</strong><br>
+        Особливо для прямих цитат у лапках — чи справді так написано? Чи правильна сторінка?
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Перевір автора</strong><br>
+        Іноді AI неправильно атрибутує цитату. Перевір ім'я і рік.
+      </div>
+
+      <h3>Що робити, якщо AI відповідає «не знайдено»</h3>
+      <p>Це нормально — краще, ніж вигаданий факт. Варіанти дій:</p>
+      <ol>
+        <li><strong>Переформулюй питання</strong> — можливо, інформація є, але іншими словами</li>
+        <li><strong>Зменши обсяг</strong> — замість «5 визначень» спитай «хоч одне визначення»</li>
+        <li><strong>Знайди додаткові джерела</strong> — можливо, твоїх 50 недостатньо для цього аспекту</li>
+      </ol>
+
+      <h3>Червоні прапори — коли точно треба перевіряти</h3>
+      <div class="warning">
+        <strong>Завжди перевіряй:</strong>
+        <ul style="margin-top: 6px;">
+          <li>Прямі цитати у лапках — чи дослівно так?</li>
+          <li>Конкретні цифри, відсотки, статистику</li>
+          <li>Імена та роки публікацій</li>
+          <li>Назви законів та номери постанов</li>
+          <li>Висновки, які звучать занадто впевнено для твоєї теми</li>
+        </ul>
+      </div>
+
+      <h3>Що таке «галюцинації AI»</h3>
+      <p>Це коли AI впевнено говорить неправду. У NotebookLM це буває рідше, ніж у ChatGPT (бо він прив'язаний до твоїх
+        джерел), але буває. Як виглядає:</p>
+      <ul>
+        <li>Цитата виглядає правдоподібно, але такого тексту в джерелі немає</li>
+        <li>Сторінка вказана, але текст на іншій сторінці</li>
+        <li>«Узагальнення», яке нібито з джерел, але насправді — це AI домалював</li>
+      </ul>
+
+      <div class="tip">
+        <div class="tip-title">💡 Простий принцип</div>
+        Якщо ти цитуєш у дипломі — точно перевір цитату в оригіналі. Якщо просто узагальнюєш — теж перевір, але не так
+        суворо. Ніколи не копіюй прямі цитати з AI без перевірки.
+      </div>
+    </div>
+
+    <!-- PART 8: REPORT 1.1 -->
+    <div class="section" id="part8">
+      <div class="section-header">
+        <span class="label">Частина 8</span>
+        <h2>Створюємо перший звіт — підрозділ 1.1</h2>
+        <span class="time-estimate">⏱ ~3-4 години</span>
+      </div>
+
+      <div class="intro">
+        Це <strong>головна частина роботи</strong>. За вимогами практики ти маєш зробити 3 звіти — по одному на кожен
+        підрозділ. Зараз робимо перший. Решта — за тим самим алгоритмом.
+      </div>
+
+      <h3>Структура одного звіту (4-6 сторінок)</h3>
+      <ol>
+        <li><strong>Заголовок підрозділу + вступний абзац</strong> (1 абз.)</li>
+        <li><strong>Теоретичні підходи / визначення</strong> (1-1.5 стор.)</li>
+        <li><strong>Класифікація / структура</strong> (1 стор.)</li>
+        <li><strong>Дискусійні питання</strong> (0.5-1 стор.)</li>
+        <li><strong>Аналітичні висновки</strong> (1 стор.)</li>
+        <li><strong>Список джерел до підрозділу</strong> (10-15 шт.)</li>
+      </ol>
+
+      <p>Для кожної частини — окремий запит до AI. Усі відповіді зберігаєш у Studio Notes (праворуч у блокноті) і
+        паралельно копіюєш у Word/Google Docs.</p>
+
+      <h3>5 запитів, які складуть твій звіт по 1.1</h3>
+
+      <h4>Запит 1 — Вступ до підрозділу</h4>
+      <p><em>Підстав свою тему замість виділеного тексту:</em></p>
+      <div class="prompt">Напиши вступний абзац (100-150 слів) до підрозділу 1.1 «<span class="placeholder">Сутність і
+          функції управління персоналом</span>». Він має пояснити актуальність теми, окреслити коло питань, які будуть
+        розглянуті, послатися на наявність різних поглядів. Стиль академічний, українською мовою.</div>
+
+      <h4>Запит 2 — Визначення поняття</h4>
+      <div class="prompt">Дай 5 різних визначень поняття «<span class="placeholder">управління персоналом</span>» з моїх
+        джерел. Формат: для кожного визначення — автор, рік, повне формулювання, посилання на джерело. Виключи
+        повторення. Українською мовою.</div>
+
+      <h4>Запит 3 — Класифікація / структура</h4>
+      <div class="prompt">На основі моїх джерел — які функції / складові / структурні елементи «<span
+          class="placeholder">управління персоналом</span>»? Згрупуй у класифікацію. На кожну функцію — короткий опис і
+        посилання на джерело. Формат: список з 5-7 пунктів.</div>
+
+      <h4>Запит 4 — Дискусійні питання</h4>
+      <div class="prompt">У чому розходяться позиції різних авторів щодо «<span class="placeholder">управління
+          персоналом</span>» в моїх джерелах? Сформулюй 2-3 ключові дискусії. На кожну — короткий опис позицій з
+        цитатами.</div>
+
+      <h4>Запит 5 — Висновки до підрозділу</h4>
+      <div class="prompt">На основі попередніх відповідей сформулюй 3-4 висновки до підрозділу 1.1 «<span
+          class="placeholder">Сутність і функції управління персоналом</span>». Це має бути академічний текст 200-300
+        слів. Без посилань — лише авторські узагальнення.</div>
+
+      <h3>Що робити з отриманими відповідями</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Зберігай у Studio Notes</strong><br>
+        Під кожною відповіддю — кнопка <strong>Save to note</strong>. Назви нотатки за зразком: «1.1 — Визначення», «1.1
+        — Класифікація», «1.1 — Висновки».
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Копіюй у Word</strong><br>
+        Створи документ «Диплом — 1 розділ.docx». Додай туди тексти всіх відповідей по черзі під заголовком 1.1.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Редагуй своїми словами</strong><br>
+        <strong>Це обов'язково.</strong> Текст AI має бути «причесаний» твоїм пером — інакше викладач за стилем
+        зрозуміє, що це чистий копі-пейст. Перепиши кожен абзац, додай логічні переходи, прибери канцелярит.
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Перевір цитати</strong><br>
+        Кожну пряму цитату — звір з оригіналом джерела.
+      </div>
+
+      <div class="result-preview">
+        <div class="label">🎯 Що в тебе вийшло за 3-4 години</div>
+        Готовий звіт по 1.1 на 4-6 сторінок. У тебе вже є вступний абзац, теоретичні підходи з 5 визначеннями,
+        класифікація з 5-7 пунктів, дискусія і висновки. Усе з посиланнями на джерела.
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 Час реальної економії</div>
+        Уручну така робота займала би 2-3 тижні: знайди визначення, прочитай статтю, виділи, перепиши, посилання... З
+        NotebookLM — 1 день. Це і є цінність інструмента.
+      </div>
+    </div>
+
+    <!-- PART 9: REPORTS 1.2 AND 1.3 -->
+    <div class="section" id="part9">
+      <div class="section-header">
+        <span class="label">Частина 9</span>
+        <h2>Звіти по 1.2 і 1.3 — за тим самим алгоритмом</h2>
+        <span class="time-estimate">⏱ ~6-8 годин на обидва</span>
+      </div>
+
+      <div class="intro">
+        Алгоритм той самий — 5 запитів на кожен підрозділ. Але для 1.2 і 1.3 — деякі промпти краще модифікувати.
+      </div>
+
+      <h3>Звіт по 1.2 «Методи / складові»</h3>
+
+      <h4>Замість «визначень» — зосередься на методах/класифікаціях</h4>
+      <div class="prompt">Опиши основні методи / інструменти / технології «<span class="placeholder">управління
+          персоналом</span>» з моїх джерел. Класифікуй за 2-3 підставами (наприклад: за впливом, за функціями, за
+        рівнем). На кожен метод — суть, приклади застосування, посилання на джерело.</div>
+
+      <h4>Додай порівняльну таблицю</h4>
+      <div class="prompt">Зроби порівняльну таблицю основних методів «<span class="placeholder">управління
+          персоналом</span>». Колонки: «Метод», «Сильні сторони», «Слабкі сторони», «Сфера застосування», «Автор». 5-7
+        рядків.</div>
+
+      <h4>Висновки до 1.2</h4>
+      <div class="prompt">Сформулюй 3-4 висновки до підрозділу 1.2 «<span class="placeholder">Методи та інструменти
+          управління персоналом</span>». Особливо — який підхід найдоцільніший для малого бізнесу? Академічний стиль,
+        200-300 слів.</div>
+
+      <h3>Звіт по 1.3 «Сучасний стан / тренди / зарубіжний досвід»</h3>
+
+      <h4>Тренди</h4>
+      <div class="prompt">Які сучасні тренди «<span class="placeholder">управління персоналом</span>» описано в моїх
+        джерелах за останні 5 років? Виділи 5-7 трендів. На кожен — суть, причини виникнення, приклади, цитати з 2-3
+        джерел.</div>
+
+      <h4>Український контекст</h4>
+      <div class="prompt">Які особливості «<span class="placeholder">управління персоналом</span>» в українському
+        контексті — згідно з моїми джерелами? Виділи специфіку, проблеми, перспективи. З посиланнями.</div>
+
+      <h4>Зарубіжний досвід (якщо це є в твоєму плані)</h4>
+      <div class="prompt">Який зарубіжний досвід «<span class="placeholder">управління персоналом</span>» представлено в
+        моїх джерелах? Виділи 3-4 країни/моделі. На кожну — короткий опис, що можна перейняти.</div>
+
+      <h4>Виклики та перспективи</h4>
+      <div class="prompt">Які виклики та перспективи розвитку «<span class="placeholder">управління персоналом</span>» у
+        малому бізнесі — за моїми джерелами? 4-5 викликів, 4-5 перспектив.</div>
+
+      <h4>Висновки до 1.3</h4>
+      <div class="prompt">Сформулюй 3-4 висновки до підрозділу 1.3 «<span class="placeholder">Сучасні HR-тренди в малому
+          бізнесі</span>». Стиль академічний, 200-300 слів.</div>
+
+      <div class="self-check">
+        <h3>✅ Перевір себе</h3>
+        <ul>
+          <li onclick="this.classList.toggle('done')">Звіт по 1.1 — готовий, 4-6 сторінок</li>
+          <li onclick="this.classList.toggle('done')">Звіт по 1.2 — готовий, 4-6 сторінок</li>
+          <li onclick="this.classList.toggle('done')">Звіт по 1.3 — готовий, 4-6 сторінок</li>
+          <li onclick="this.classList.toggle('done')">Усі цитати перевірені</li>
+          <li onclick="this.classList.toggle('done')">Текст відредаговано — не голий копі-пейст</li>
+          <li onclick="this.classList.toggle('done')">У Studio Notes — мінімум 15 збережених нотаток</li>
+        </ul>
+      </div>
+
+      <div class="motivation">
+        Якщо ти дочитав до цього місця і дійсно зробив — у тебе вже є 12-18 сторінок матеріалу. Це 50-60% теоретичного
+        розділу. Залишилось зовсім трошки.
+      </div>
+    </div>
+
+    <!-- PART 10: ANALYTICAL CONCLUSIONS -->
+    <div class="section" id="part10">
+      <div class="section-header">
+        <span class="label">Частина 10</span>
+        <h2>Аналітичні висновки до 1 розділу</h2>
+        <span class="time-estimate">⏱ ~1-2 години</span>
+      </div>
+
+      <div class="intro">
+        Окрім висновків до кожного підрозділу — у твоєму дипломі має бути <strong>загальний блок висновків до всього 1
+          розділу</strong>. Це обов'язкова вимога практики.
+      </div>
+
+      <h3>Що це за висновки</h3>
+      <p>3-5 сторінок наприкінці 1 розділу, де ти узагальнюєш увесь теоретичний матеріал. Це <strong>твоя власна
+          аналітика</strong> на основі прочитаного — без прямих цитат, без посилань.</p>
+
+      <h3>Структура висновків</h3>
+      <ol>
+        <li><strong>Узагальнення підходів</strong> — що показав аналіз літератури (1-2 абзаци)</li>
+        <li><strong>Виявлені закономірності</strong> — те, що бачимо в більшості джерел (1-2 абзаци)</li>
+        <li><strong>Прогалини / дискусії</strong> — що недостатньо досліджено (1 абзац)</li>
+        <li><strong>Перспективи дослідження</strong> — місток до 2 розділу диплому (1 абзац)</li>
+      </ol>
+
+      <h3>Готовий промпт для генерації</h3>
+      <div class="prompt">На основі ВСІХ моїх джерел сформулюй аналітичні висновки до теоретичного 1 розділу дипломної
+        роботи на тему «<span class="placeholder">Управління персоналом у малому бізнесі</span>».
+
+        Структура:
+        1. Узагальнення теоретичних підходів (що показав аналіз літератури)
+        2. Виявлені закономірності (те, що повторюється в багатьох джерелах)
+        3. Прогалини в дослідженнях (що недостатньо вивчено)
+        4. Перспективи дослідження (місток до практичної частини)
+
+        Обсяг — 500-700 слів. Стиль академічний, без прямих цитат — лише авторські узагальнення. Українською мовою.
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Введи цей промпт у NotebookLM</strong><br>
+        Підстав свою тему. Отримай первинний варіант.
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Перепиши своїми словами</strong><br>
+        Це найважливіше. Висновки — це <em>твоя</em> аналітика. Викладач буде особливо уважно дивитись саме на цей блок.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Додай свою думку</strong><br>
+        У висновках можна (і треба) висловити свою позицію: «На думку автора...», «Доцільним видається підхід...». Це
+        показує самостійне мислення.
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Зроби місток до 2 розділу</strong><br>
+        Останній абзац — про те, як теорія готує до практичного аналізу. Наприклад: «Розглянуті теоретичні засади будуть
+        застосовані для аналізу системи управління персоналом ТОВ "Назва" у наступному розділі».
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 Лайфхак: Briefing doc</div>
+        Згенеруй у Studio новий <strong>Briefing doc</strong> — він дасть тобі ще один погляд на твої джерела. Багато
+        ідей звідти можна перетворити на висновки.
+      </div>
+    </div>
+
+    <!-- PART 11: REFERENCES -->
+    <div class="section" id="part11">
+      <div class="section-header">
+        <span class="label">Частина 11</span>
+        <h2>Список літератури за ДСТУ</h2>
+        <span class="time-estimate">⏱ ~2-3 години</span>
+      </div>
+
+      <div class="intro">
+        50 джерел треба оформити за ДСТУ 8302:2015 — це український стандарт оформлення бібліографічних посилань.
+        Звучить страшно, але насправді — є кілька шаблонів.
+      </div>
+
+      <h3>Шаблони оформлення</h3>
+
+      <h4>📖 Книга / монографія</h4>
+      <p><em>Прізвище, ініціали автора. Назва книги. Місто: Видавництво, рік. Кількість сторінок.</em></p>
+      <div class="copy-text">Іваненко І. П. Управління персоналом : навч. посіб. Київ : Знання, 2020. 320 с.</div>
+
+      <h4>📄 Стаття у журналі</h4>
+      <p><em>Прізвище, ініціали. Назва статті. Назва журналу. Рік. №випуску. С. сторінки.</em></p>
+      <div class="copy-text">Петренко С. О. Сучасні підходи до управління персоналом. Економіка України. 2023. № 5. С.
+        45-58.</div>
+
+      <h4>📑 Дисертація</h4>
+      <p><em>Прізвище, ініціали. Назва дисертації : дис. ... канд./докт. наук : спеціальність. Місто, рік. Кількість
+          сторінок.</em></p>
+      <div class="copy-text">Коваленко О. М. Стратегічне управління персоналом малих підприємств : дис. ... канд. екон.
+        наук : 08.00.04. Київ, 2022. 215 с.</div>
+
+      <h4>🌐 Електронний ресурс</h4>
+      <p><em>Прізвище, ініціали. Назва. URL: посилання (дата звернення).</em></p>
+      <div class="copy-text">Сидоренко В. Цифрові HR-технології. URL: https://example.com (дата звернення: 15.07.2026).
+      </div>
+
+      <h4>📜 Закон / нормативний акт</h4>
+      <p><em>Про що : Закон України від дата № номер. Назва видання. Рік. № випуску.</em></p>
+      <div class="copy-text">Про охорону праці : Закон України від 14.10.1992 № 2694-XII. Відомості Верховної Ради
+        України. 1992. № 49.</div>
+
+      <h3>Як швидко оформити 50 джерел</h3>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Попроси NotebookLM</strong><br>
+        <div class="prompt">Зроби список усіх моїх джерел у форматі ДСТУ 8302:2015. Для кожного: автор, рік, назва,
+          місце видання, видавництво, сторінки. Якщо це стаття — назва журналу і номер. Якщо електронний — URL.
+          Пронумеруй від 1 до 50.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Перевір кожен запис</strong><br>
+        AI може помилитись з пунктуацією або пропустити сторінки. Звір з оригіналом.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Впорядкуй за алфавітом</strong><br>
+        Список літератури зазвичай впорядковується за прізвищем автора (українські — спочатку, потім іноземні).
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 Онлайн-сервіси для перевірки</div>
+        Є безкоштовні сервіси, які оформлюють літературу за ДСТУ автоматично: <code>vak.in.ua</code>,
+        <code>refstudio.ua</code>. Вставляєш дані статті — отримуєш правильний формат. Корисно для перевірки складних
+        випадків.
+      </div>
+    </div>
+
+    <!-- PART 12: FINAL TEXT -->
+    <div class="section" id="part12">
+      <div class="section-header">
+        <span class="label">Частина 12</span>
+        <h2>Збираємо все в текст 1 розділу</h2>
+        <span class="time-estimate">⏱ ~1-2 дні роботи</span>
+      </div>
+
+      <div class="intro">
+        Усі частини зібрані — час перетворити їх на цілісний документ.
+      </div>
+
+      <h3>Структура файлу «Диплом — 1 розділ.docx»</h3>
+      <pre
+        style="background: var(--bg); padding: 16px; border-radius: 8px; font-size: 13px; overflow-x: auto; line-height: 1.6;">
+РОЗДІЛ 1. ТЕОРЕТИЧНІ ЗАСАДИ [ТВОЯ ТЕМА]
+
+  1.1 [Назва підрозділу]
+       — вступний абзац
+       — теоретичні підходи (визначення)
+       — класифікація
+       — дискусійні питання
+       — висновки до 1.1
+
+  1.2 [Назва підрозділу]
+       — те саме
+
+  1.3 [Назва підрозділу]
+       — те саме
+
+  Висновки до розділу 1
+       — узагальнення підходів
+       — закономірності
+       — прогалини
+       — перспективи
+
+Список використаних джерел до 1 розділу
+       — 50 джерел за ДСТУ</pre>
+
+      <h3>Що зробити обов'язково перед здачею</h3>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Перепиши кожен абзац своїми словами</strong><br>
+        Це <strong>найважливіше</strong>. Викладач помітить чистий копі-пейст AI за стилем. Зміни структуру речень,
+        використовуй синоніми, додай свої переходи.
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Розстав посилання правильно</strong><br>
+        У академічному стилі — у квадратних дужках: «На думку Іваненка [12, с. 47], управління персоналом — це...»<br>
+        Число — це номер джерела зі списку літератури.
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Додай виноски (якщо такий стиль)</strong><br>
+        Деякі ВНЗ вимагають виноски внизу сторінки замість дужок. Перевір вимоги свого керівника.
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Оформлення</strong><br>
+        Шрифт Times New Roman, 14 пт, інтервал 1.5, поля стандартні (2.5 / 2 / 2 / 1.5), вирівнювання за шириною,
+        абзацний відступ 1.25.
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <strong>Перевір на плагіат</strong><br>
+        Багато ВНЗ використовують Unicheck або інші системи. Перевір текст ще до здачі — мають бути показники
+        самостійності 60-80% мінімум.
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <strong>Прочитай уголос</strong><br>
+        Серйозно. Прочитай свій 1 розділ уголос. Усі шорсткі формулювання одразу будуть чутні. Виправ.
+      </div>
+
+      <div class="warning">
+        <strong>⚠️ Антиплагіат і AI</strong><br>
+        Деякі ВНЗ вже використовують детектори AI-тексту. Це додаткова причина <strong>обов'язково переписувати своїми
+          словами</strong>. Чистий вихід NotebookLM зчитається як AI-генерація.
+      </div>
+
+      <h3>Фінальний чек-лист</h3>
+      <ul class="checklist" style="list-style: none; margin-left: 0;">
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Перший розділ — 25-35 сторінок
+        </li>
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Усі 3 підрозділи з висновками до кожного
+        </li>
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Загальні висновки до 1 розділу (3-5 стор.)
+        </li>
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Список літератури — 50 джерел за ДСТУ
+        </li>
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Усі цитати перевірені й мають посилання
+        </li>
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Текст перевірено на плагіат і AI-генерацію
+        </li>
+        <li style="padding-left: 28px; position: relative; margin-bottom: 8px;">
+          <span style="position: absolute; left: 0; color: var(--accent); font-size: 18px;">☐</span>
+          Текст прочитано уголос і відредаговано
+        </li>
+      </ul>
+    </div>
+
+    <!-- FINAL -->
+    <div class="final">
+      <h2>🎉 Готово! Перший розділ написаний.</h2>
+      <p>У тебе є блокнот NotebookLM з 50 джерелами,</p>
+      <p>3 структурованих звіти, аналітичні висновки,</p>
+      <p>список літератури за ДСТУ та готовий теоретичний розділ диплому.</p>
+      <p style="margin-top: 14px;"><strong>Це рівень «Задовільно» за вимогами практики — обов'язковий для всіх.</strong>
+      </p>
+    </div>
+
+    <!-- WHAT TO SHOW ON DEFENSE -->
+    <div class="section">
+      <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 16px;">🎤 Що показати на захисті (3-4 хвилини)
+      </h2>
+
+      <p>Захист NotebookLM-частини — це частина загального захисту практики. Ось готовий сценарій:</p>
+
+      <h4>0:00–0:30 — Вступ</h4>
+      <p style="font-style: italic; color: var(--text-muted);">«Моя тема — [тема]. У блокноті NotebookLM я зібрала 50
+        наукових джерел: [N] статей, [N] монографій, [N] дисертацій. Серед них [N] україномовних, [N] за останні 5
+        років.»</p>
+
+      <h4>0:30–1:30 — Демо запиту</h4>
+      <p style="font-style: italic; color: var(--text-muted);">«Покажу, як я працювала. Ось мій запит: [читаю один із
+        своїх запитів]. Ось відповідь з посиланнями на [N] джерел. Я перевіряла кожне — для прикладу клікаю на [3] —
+        відкривається стаття, де саме це і написано.»</p>
+
+      <h4>1:30–2:30 — Studio Notes і звіти</h4>
+      <p style="font-style: italic; color: var(--text-muted);">«У Studio Notes у мене [N] нотаток за структурою: [N] для
+        1.1, [N] для 1.2, [N] для 1.3. З них я зробила 3 звіти і написала перший розділ.»</p>
+
+      <h4>2:30–3:30 — Готовий розділ</h4>
+      <p style="font-style: italic; color: var(--text-muted);">«Ось перший розділ диплому (відкриваю Word) — [N]
+        сторінок, [N] цитувань, висновки на [N] сторінок. Список літератури — за ДСТУ.»</p>
+
+      <h4>3:30–4:00 — Завершення</h4>
+      <p style="font-style: italic; color: var(--text-muted);">«NotebookLM дозволив мені опрацювати 50 джерел швидко і
+        структурно. Але AI — це помічник, не автор. Кожну цитату я перевіряла, кожен абзац — переписала своїми словами.
+        Дякую.»</p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section" id="faq">
+      <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 16px;">❓ Часті питання</h2>
+
+      <div class="faq">
+        <strong>NotebookLM — це безкоштовно?</strong>
+        Так, базова версія повністю безкоштовна. Її точно вистачає для практики (50 джерел і необмежені запити в межах
+        розумного).
+      </div>
+
+      <div class="faq">
+        <strong>А якщо у мене менше 50 джерел?</strong>
+        Це не виконані вимоги практики. Дошукай — навіть один тиждень додаткового пошуку рятує ситуацію. Через Google
+        Scholar «Cited by» це реалістично.
+      </div>
+
+      <div class="faq">
+        <strong>Можна використовувати ChatGPT замість NotebookLM?</strong>
+        Ні. По-перше, ChatGPT вигадує цитати, що для диплому небезпечно. По-друге, у вимогах практики прямо написано
+        «NotebookLM». По-третє, ChatGPT не дає посилань на твої конкретні джерела.
+      </div>
+
+      <div class="faq">
+        <strong>Чи можна копіювати відповіді AI у диплом без змін?</strong>
+        Технічно — так, але це погана ідея. По-перше, легко зловити плагіат (стиль AI впізнаваний). По-друге, без
+        редагування текст звучить нелюдсько. По-третє, перевірка на AI-генерацію стає стандартною. Завжди переписуй
+        своїми словами.
+      </div>
+
+      <div class="faq">
+        <strong>Скільки часу займає вся робота з NotebookLM?</strong>
+        Реалістично: 2-3 тижні. 1 тиждень — збір джерел, 1 тиждень — звіти, 1 тиждень — оформлення тексту і висновків.
+        Якщо стиснути в 1 тиждень — буде сильно поспіхом і неякісно.
+      </div>
+
+      <div class="faq">
+        <strong>А якщо AI відповідає англійською?</strong>
+        Додай у запит: «Відповідай українською мовою». Або в кінці кожного запиту — «Українською». Спрацьовує.
+      </div>
+
+      <div class="faq">
+        <strong>Я завантажила джерело, але NotebookLM його ніби не «бачить»</strong>
+        Перевір: (1) галочка біля джерела увімкнена (зліва), (2) формат файлу правильний (PDF, DOCX, TXT), (3) розмір не
+        більше 200 МБ. Якщо все добре, але не працює — спробуй видалити і завантажити знову.
+      </div>
+
+      <div class="faq">
+        <strong>Чи зберігаються мої блокноти?</strong>
+        Так, на твоєму Google-акаунті. Заходиш через notebooklm.google.com — усе на місці. Якщо страшно, що щось зникне
+        — час від часу копіюй важливі нотатки у Word/Notion.
+      </div>
+
+      <div class="faq">
+        <strong>Чи бачить хтось мої джерела?</strong>
+        Ні, блокноти приватні за замовчуванням. Можеш ділитись посиланнями, якщо хочеш, але без твоєї дії — ніхто не
+        побачить.
+      </div>
+
+      <div class="faq">
+        <strong>А якщо викладач запитає, чи я використовувала AI?</strong>
+        Скажи правду — так, NotebookLM як інструмент аналізу джерел. Це передбачено вимогами практики, це не «AI написав
+        за тебе». Ти зібрала джерела, ти ставила питання, ти редагувала, ти писала висновки.
+      </div>
+    </div>
+
+    <footer>
+      Гайд створено для виробничої практики, спеціальність «Менеджмент»<br>
+      NotebookLM — обов'язковий рівень «Задовільно». Без нього практика не зараховується.<br>
+      Удачі з дипломом! 🎓
+    </footer>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
