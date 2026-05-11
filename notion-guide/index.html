@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notion: покроковий гайд для студента</title>
+<style>
+  :root {
+    --primary: #2E3440;
+    --accent: #5E81AC;
+    --accent-light: #88C0D0;
+    --accent-bg: #EAF2F8;
+    --success: #7FA968;
+    --success-bg: #EFF5E8;
+    --warning: #D4A53C;
+    --warning-bg: #FBF3D9;
+    --danger: #BF616A;
+    --danger-bg: #FCE8E8;
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --border: #E5E5E0;
+    --text: #2E3440;
+    --text-muted: #5C6370;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #5E81AC 0%, #88C0D0 100%);
+    color: white;
+    padding: 36px 28px;
+    border-radius: 14px;
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .header .subtitle {
+    font-size: 17px;
+    opacity: 0.92;
+    margin-bottom: 18px;
+  }
+  .header .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.22);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-right: 8px;
+    margin-bottom: 4px;
+  }
+
+  /* Progress nav */
+  .progress-nav {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  .progress-nav h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+  }
+  .nav-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .nav-list a {
+    display: block;
+    padding: 10px 14px;
+    background: var(--bg);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .nav-list a:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent-light);
+    color: var(--accent);
+  }
+  .nav-list .num {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+
+  /* Section */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px 28px;
+    margin-bottom: 24px;
+  }
+  .section-header {
+    border-bottom: 2px solid var(--accent-bg);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .section-header .label {
+    display: inline-block;
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+  }
+  .section-header h2 {
+    font-size: 26px;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+  .section-header .time-estimate {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* Intro for each section */
+  .intro {
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  .intro strong { color: var(--accent); }
+
+  /* Typography */
+  .section h3 {
+    font-size: 19px;
+    margin: 26px 0 12px;
+    color: var(--primary);
+    line-height: 1.4;
+  }
+  .section h4 {
+    font-size: 16px;
+    margin: 18px 0 10px;
+    color: var(--accent);
+  }
+  .section p { margin-bottom: 12px; }
+  .section ul, .section ol { margin: 10px 0 16px 24px; }
+  .section li { margin-bottom: 6px; }
+
+  /* Steps */
+  .step {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 16px 18px 16px 60px;
+    margin: 14px 0;
+    position: relative;
+    border-left: 3px solid var(--accent);
+  }
+  .step-num {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    background: var(--accent);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .step strong { color: var(--primary); }
+  .step + .step { margin-top: 8px; }
+
+  /* Boxes */
+  .tip {
+    background: var(--warning-bg);
+    border-left: 4px solid var(--warning);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .tip strong { color: #8a6d1f; }
+  .tip-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #8a6d1f;
+  }
+
+  .warning {
+    background: var(--danger-bg);
+    border-left: 4px solid var(--danger);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .warning strong { color: var(--danger); }
+
+  .info {
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  /* Code/Key combos */
+  .key {
+    display: inline-block;
+    background: #ECEFF4;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 13px;
+    color: var(--primary);
+    border: 1px solid #D8DEE9;
+    box-shadow: 0 1px 0 #D8DEE9;
+    font-weight: 600;
+  }
+  code {
+    background: #ECEFF4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 13px;
+    color: var(--primary);
+  }
+
+  /* Copyable text */
+  .copy-text {
+    background: var(--success-bg);
+    border: 1px dashed var(--success);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #4d6a3a;
+    font-style: italic;
+  }
+  .copy-text::before {
+    content: "📋 Можна скопіювати: ";
+    font-style: normal;
+    font-weight: 600;
+    color: var(--success);
+  }
+
+  /* Mini table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--bg);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  /* Self-check */
+  .self-check {
+    background: var(--success-bg);
+    border: 2px solid var(--success);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 24px 0 8px;
+  }
+  .self-check h3 {
+    margin-top: 0 !important;
+    color: var(--success) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .self-check ul {
+    list-style: none;
+    margin-left: 0;
+  }
+  .self-check li {
+    padding: 8px 0 8px 32px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s;
+  }
+  .self-check li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    font-size: 20px;
+    color: var(--success);
+    line-height: 1;
+  }
+  .self-check li.done::before { content: "☑"; }
+  .self-check li.done {
+    opacity: 0.55;
+    text-decoration: line-through;
+  }
+
+  /* Result preview */
+  .result-preview {
+    background: linear-gradient(135deg, #F0F4F8 0%, #E4ECF3 100%);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .result-preview .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+  }
+
+  /* Big quote / motivation */
+  .motivation {
+    text-align: center;
+    padding: 24px;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 16px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  /* Visual block representations */
+  .visual-block {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .visual-block.callout {
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent);
+  }
+  .visual-block.quote {
+    border-left: 3px solid var(--primary);
+    font-style: italic;
+    color: var(--text-muted);
+  }
+  .visual-block.todo::before {
+    content: "☐ ";
+    color: var(--accent);
+  }
+  .visual-block.h2 {
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    padding-left: 0;
+    box-shadow: none;
+    margin-top: 16px;
+  }
+  .visual-block.divider {
+    height: 1px;
+    background: var(--border);
+    padding: 0;
+    border: none;
+  }
+
+  /* Toolbar emulation */
+  .ui-hint {
+    background: #2E3440;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: inline-block;
+    font-family: "SF Mono", Monaco, monospace;
+  }
+
+  /* FAQ */
+  .faq {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 10px 0;
+    background: var(--bg);
+  }
+  .faq strong { color: var(--accent); display: block; margin-bottom: 6px; }
+
+  /* Final block */
+  .final {
+    background: linear-gradient(135deg, #A3BE8C 0%, #88C0D0 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 32px 28px;
+    text-align: center;
+    margin: 28px 0;
+  }
+  .final h2 {
+    color: white;
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+  .final p { font-size: 16px; opacity: 0.95; margin-bottom: 6px; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    .section { padding: 22px 18px; }
+    .header { padding: 26px 20px; }
+    .header h1 { font-size: 24px; }
+    .step { padding-left: 54px; }
+  }
+
+  /* Section anchors offset */
+  .section { scroll-margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>📘 Notion: твій робочий простір з нуля</h1>
+    <div class="subtitle">Покроковий гайд для самостійного вивчення.<br>Робимо разом простір «Work-Life Balance 2026–2027» для практики.</div>
+    <span class="pill">🎓 Для практики менеджменту</span>
+    <span class="pill">⏱ ~6-8 годин</span>
+    <span class="pill">📱 Підходить новачкам</span>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section">
+    <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 14px;">👋 Привіт!</h2>
+    <p>Цей гайд проведе тебе крок за кроком через створення твого власного простору в Notion. Не потрібно нічого знати наперед — починаємо з нуля.</p>
+
+    <p>Notion — це <strong>один додаток, у якому ти ведеш усе</strong>: навчання, диплом, особисті справи, цілі, нотатки. Замість 10 різних блокнотів і табличок — одне місце.</p>
+
+    <h4>Що в тебе буде наприкінці</h4>
+    <ul>
+      <li>Свій робочий простір <strong>«Work-Life Balance 2026–2027»</strong></li>
+      <li>10 розділів: від плану диплому до трекера звичок</li>
+      <li>Календар завдань із трьома способами перегляду</li>
+      <li>Kanban-дошка для роботи над дипломом</li>
+      <li>База для 50 джерел до твоєї дипломної</li>
+      <li>Щотижневий шаблон для рефлексії</li>
+    </ul>
+
+    <div class="info">
+      <strong>📌 Як працювати з гайдом:</strong> читай послідовно, виконуй кроки прямо у Notion в іншому вікні. Не намагайся зробити все за раз — комфортний темп: 1-2 розділи за один присіст.
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="progress-nav">
+    <h3>📍 Структура гайду</h3>
+    <ul class="nav-list">
+      <li><a href="#part1"><span class="num">1</span>Реєстрація</a></li>
+      <li><a href="#part2"><span class="num">2</span>Інтерфейс</a></li>
+      <li><a href="#part3"><span class="num">3</span>Перші блоки</a></li>
+      <li><a href="#part4"><span class="num">4</span>Головна сторінка</a></li>
+      <li><a href="#part5"><span class="num">5</span>Підсторінки</a></li>
+      <li><a href="#part6"><span class="num">6</span>Бази даних</a></li>
+      <li><a href="#part7"><span class="num">7</span>Перегляди</a></li>
+      <li><a href="#part8"><span class="num">8</span>Kanban диплому</a></li>
+      <li><a href="#part9"><span class="num">9</span>База літератури</a></li>
+      <li><a href="#part10"><span class="num">10</span>Шаблон тижня</a></li>
+      <li><a href="#part11"><span class="num">11</span>Оживляємо Головну</a></li>
+      <li><a href="#part12"><span class="num">12</span>Спільний доступ</a></li>
+      <li><a href="#faq"><span class="num">?</span>Питання</a></li>
+    </ul>
+  </div>
+
+  <!-- PART 1 -->
+  <div class="section" id="part1">
+    <div class="section-header">
+      <span class="label">Частина 1</span>
+      <h2>Реєстрація та перший простір</h2>
+      <span class="time-estimate">⏱ ~10 хвилин</span>
+    </div>
+
+    <div class="intro">
+      <strong>Що зробимо:</strong> Створимо обліковий запис у Notion і даємо нашому майбутньому простору правильну назву одразу.
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>Відкрий сайт</strong><br>
+      Перейди на <code>notion.so</code> у браузері. Можна з телефону, але краще з ноутбука — буде зручніше.
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>Натисни «Sign up»</strong><br>
+      Кнопка справа вгорі. Вибери <strong>Continue with Google</strong> — найшвидше, не треба нічого вигадувати.
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>Дай відповіді на 2-3 питання</strong><br>
+      Notion запитає, для чого тобі акаунт. Вибери <strong>«For personal use»</strong> (для особистого користування). Якщо запитає про професію — «Student».
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <strong>Перейменуй простір</strong><br>
+      Зверху ліворуч ти побачиш щось на кшталт «Іванна's Notion». Клікни по назві — у меню вибери <strong>Settings</strong> → <strong>General</strong>. Зміни назву на:
+      <div class="copy-text">Work-Life Balance 2026–2027</div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-title">💡 Чому одразу таку назву?</div>
+      Бо це назва, яку вимагає практика. Краще зробити правильно з самого початку, ніж потім перейменовувати.
+    </div>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">У мене є акаунт у Notion</li>
+        <li onclick="this.classList.toggle('done')">Я бачу головний екран Notion з лівою панеллю</li>
+        <li onclick="this.classList.toggle('done')">Мій простір названо «Work-Life Balance 2026–2027»</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 2 -->
+  <div class="section" id="part2">
+    <div class="section-header">
+      <span class="label">Частина 2</span>
+      <h2>Орієнтуємось в інтерфейсі</h2>
+      <span class="time-estimate">⏱ ~10 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Перш ніж щось робити — давай розберемось, що де знаходиться. Це як новий телефон: спочатку треба зрозуміти, де що.
+    </div>
+
+    <h3>Три головні зони екрана</h3>
+
+    <h4>🅰️ Ліва панель (Sidebar)</h4>
+    <p>Усі твої сторінки тут. Зверху — назва простору, нижче — список усіх сторінок. Це як дерево папок.</p>
+
+    <h4>🅱️ Центральна частина</h4>
+    <p>Тут відкрита поточна сторінка. Усе, що ти редагуєш — посередині.</p>
+
+    <h4>🅲 Верхня панель</h4>
+    <p>Шлях до сторінки (хлібні крихти), кнопка <strong>Share</strong> (поділитися), три крапки <code>...</code> з додатковими діями.</p>
+
+    <h3>Гарячі клавіші, які реально економлять час</h3>
+    <table>
+      <tr><th>Клавіша</th><th>Що робить</th></tr>
+      <tr><td><span class="key">/</span></td><td>Меню вставки будь-якого блока — твій головний інструмент</td></tr>
+      <tr><td><span class="key">Ctrl</span> + <span class="key">N</span></td><td>Нова сторінка</td></tr>
+      <tr><td><span class="key">Ctrl</span> + <span class="key">P</span></td><td>Швидкий пошук по простору</td></tr>
+      <tr><td><span class="key">Ctrl</span> + <span class="key">\</span></td><td>Сховати/показати ліву панель</td></tr>
+      <tr><td><span class="key">Ctrl</span> + <span class="key">Z</span></td><td>Скасувати останню дію (найкращий друг)</td></tr>
+    </table>
+
+    <div class="info">
+      🖥 На Mac замість <span class="key">Ctrl</span> використовуй <span class="key">Cmd</span>.
+    </div>
+
+    <div class="tip">
+      <div class="tip-title">💡 Просто поклікай</div>
+      Витрать 5 хвилин — клікни по всьому, що бачиш. Зміни щось — натисни <span class="key">Ctrl</span>+<span class="key">Z</span> і скасуй. Зламати тут нічого не можна, експериментуй.
+    </div>
+  </div>
+
+  <!-- PART 3 -->
+  <div class="section" id="part3">
+    <div class="section-header">
+      <span class="label">Частина 3</span>
+      <h2>Блоки — це все</h2>
+      <span class="time-estimate">⏱ ~15 хвилин</span>
+    </div>
+
+    <div class="intro">
+      <strong>Головна ідея Notion:</strong> кожен елемент сторінки — це блок. Заголовок — блок. Текст — блок. Картинка — блок. Список завдань — блок. Усі вони вставляються однаково.
+    </div>
+
+    <h3>Як вставити будь-який блок: символ <span class="key">/</span></h3>
+    <p>Створи нову порожню сторінку (Sidebar → <code>+ Add a page</code>) і потренуйся. На новій сторінці натисни <span class="key">/</span> — з'явиться меню всіх блоків. Можна листати, можна вписати назву.</p>
+
+    <h3>Блоки, які тобі знадобляться (запам'ятай ці 8)</h3>
+
+    <table>
+      <tr><th>Що</th><th>Як викликати</th><th>Для чого</th></tr>
+      <tr><td>Заголовок H1</td><td><code>/h1</code></td><td>Великий заголовок сторінки</td></tr>
+      <tr><td>Заголовок H2</td><td><code>/h2</code></td><td>Заголовок розділу</td></tr>
+      <tr><td>Заголовок H3</td><td><code>/h3</code></td><td>Підзаголовок</td></tr>
+      <tr><td>Маркер. список</td><td><code>/bul</code></td><td>Список з крапками</td></tr>
+      <tr><td>Чек-лист</td><td><code>/to-do</code></td><td>Список з квадратиками</td></tr>
+      <tr><td>Цитата</td><td><code>/quote</code></td><td>Виділений текст (для гасла)</td></tr>
+      <tr><td>Callout</td><td><code>/call</code></td><td>Кольоровий блок з іконкою — «важливо!»</td></tr>
+      <tr><td>Toggle</td><td><code>/toggle</code></td><td>Згортаний блок — щоб не захаращувати</td></tr>
+    </table>
+
+    <h3>Як вони виглядають</h3>
+    <div class="visual-block h2">Це заголовок H2</div>
+    <div class="visual-block quote">«Це цитата — гарно виглядає для гасла»</div>
+    <div class="visual-block callout">💡 А це callout — для важливих ідей</div>
+    <div class="visual-block todo">А це пункт чек-листа</div>
+    <div class="visual-block divider"></div>
+
+    <h3>Корисні фішки</h3>
+    <ul>
+      <li><strong>Перетягування:</strong> наведи курсор зліва від блоку — побачиш <code>⋮⋮</code>. Тягни — і блок переїде куди завгодно.</li>
+      <li><strong>Дублювати блок:</strong> <span class="key">Ctrl</span>+<span class="key">D</span></li>
+      <li><strong>Видалити блок:</strong> клікни на блок і <span class="key">Backspace</span> кілька разів</li>
+      <li><strong>Кольорувати текст:</strong> виділи текст → з'явиться меню → клікни <code>A</code> з кольором</li>
+    </ul>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">Я вмію створювати нову сторінку</li>
+        <li onclick="this.classList.toggle('done')">Я знаю, як викликати меню <span class="key">/</span></li>
+        <li onclick="this.classList.toggle('done')">Я спробував заголовки H1, H2, H3</li>
+        <li onclick="this.classList.toggle('done')">Я створив бодай один callout і toggle</li>
+        <li onclick="this.classList.toggle('done')">Я знаю, як перетягувати блоки</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 4 -->
+  <div class="section" id="part4">
+    <div class="section-header">
+      <span class="label">Частина 4</span>
+      <h2>Збираємо Головну сторінку</h2>
+      <span class="time-estimate">⏱ ~30 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Це <strong>фасад твого простору</strong>. Перше, що бачиш, коли заходиш. Першу версію зробимо зараз — оживимо її пізніше (в Частині 11).
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>Створи Головну сторінку</strong><br>
+      У лівій панелі натисни <code>+ Add a page</code>. Назви її <strong>🏠 Головна</strong> (емодзі можна вибрати, клікнувши на іконку зліва від назви).
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>Додай обкладинку</strong><br>
+      Зверху сторінки наведи курсор — з'явиться <code>Add cover</code>. Клікни, потім <strong>Change cover</strong> → вибери з галереї Notion або завантаж своє фото.
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>Додай гасло (Quote)</strong><br>
+      Введи <code>/quote</code>, обери блок цитати. Напиши щось, що тебе мотивує. Ось приклад:
+      <div class="copy-text">Маленькі кроки щодня = великий результат у червні</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <strong>Додай блок «Поточний фокус»</strong><br>
+      Введи <code>/call</code>, постав іконку 🎯. Напиши, на чому ти зараз концентруєшся:
+      <div class="copy-text">🎯 Фокус місяця: завершити перший розділ диплому</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <strong>Зроби заголовок «Швидкий доступ»</strong><br>
+      <code>/h2</code> → напиши <strong>Швидкий доступ</strong>. Під ним зроби три колонки: <code>/2 columns</code>, а потім тягни ще одну рамку вправо.<br><br>
+      Поки що просто текст у колонках:
+      <ul>
+        <li>Колонка 1: <strong>📚 Дипломна робота</strong></li>
+        <li>Колонка 2: <strong>📅 Цей тиждень</strong></li>
+        <li>Колонка 3: <strong>💡 Ідеї та нотатки</strong></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <strong>Заголовок «Зони мого життя»</strong><br>
+      <code>/h2</code>. Під ним — маркований список:
+      <div class="copy-text">🎓 Навчання та диплом
+💼 Професійний розвиток
+🧘 Здоров'я та звички
+👥 Особисте</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <strong>Заголовок «Поточні цілі»</strong><br>
+      <code>/h2</code>. Під ним — чек-лист (<code>/to-do</code>) з 3-5 твоїх реальних цілей на цей місяць.
+    </div>
+
+    <div class="result-preview">
+      <div class="label">🎨 Як має виглядати твоя Головна</div>
+      Зверху — красива обкладинка та емодзі. Гасло. Кольоровий блок з фокусом. Три колонки швидкого доступу. Список зон життя. Поточні цілі.
+      <br><br>
+      <strong>Виглядає круто, правда?</strong>
+    </div>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">У Головної є обкладинка та іконка</li>
+        <li onclick="this.classList.toggle('done')">Є цитата-гасло</li>
+        <li onclick="this.classList.toggle('done')">Є callout з поточним фокусом</li>
+        <li onclick="this.classList.toggle('done')">Три колонки «Швидкий доступ»</li>
+        <li onclick="this.classList.toggle('done')">Список «Зони мого життя»</li>
+        <li onclick="this.classList.toggle('done')">Чек-лист поточних цілей</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 5 -->
+  <div class="section" id="part5">
+    <div class="section-header">
+      <span class="label">Частина 5</span>
+      <h2>Створюємо «скелет» — усі розділи</h2>
+      <span class="time-estimate">⏱ ~20 хвилин</span>
+    </div>
+
+    <div class="intro">
+      За вимогами практики у тебе має бути <strong>10 обов'язкових розділів</strong>. Зараз створимо їх усі — як підсторінки Головної. Заповнимо пізніше.
+    </div>
+
+    <h3>Як створити підсторінку</h3>
+    <p>На Головній сторінці введи <code>/page</code> і вибери <strong>Page</strong>. Або просто натисни <span class="key">Enter</span> на новому рядку і потім <code>/page</code>.</p>
+
+    <p>Створи такі 10 сторінок (для кожної додай іконку):</p>
+
+    <table>
+      <tr><th>№</th><th>Назва сторінки</th><th>Що буде всередині (пізніше)</th></tr>
+      <tr><td>1</td><td>📚 План дипломної роботи</td><td>Структура, Kanban-дошка, література</td></tr>
+      <tr><td>2</td><td>📅 Календар завдань</td><td>Усі завдання з різними переглядами</td></tr>
+      <tr><td>3</td><td>📂 Навчальні матеріали</td><td>Конспекти, посилання, ресурси</td></tr>
+      <tr><td>4</td><td>🎯 План особистого розвитку</td><td>Цілі року, навички</td></tr>
+      <tr><td>5</td><td>⏰ Тайм-менеджмент</td><td>Розклад тижня, методи</td></tr>
+      <tr><td>6</td><td>📋 Щотижневі цілі</td><td>База з шаблоном «Тиждень»</td></tr>
+      <tr><td>7</td><td>📝 Система нотаток</td><td>База думок, цитат, ідей</td></tr>
+      <tr><td>8</td><td>📦 Архів</td><td>Старі завершені матеріали</td></tr>
+    </table>
+
+    <p>Це 8 — їх вистачить як основи. Дві сторінки (<strong>База літератури</strong> та <strong>Kanban диплому</strong>) ми зробимо <em>всередині</em> сторінки «План дипломної роботи» — вони виходять окремими розділами автоматично.</p>
+
+    <div class="tip">
+      <div class="tip-title">💡 На кожну сторінку — пара рядків</div>
+      Не залишай порожніми. Напиши хоча б 2-3 речення, що там буде: «Тут я зберігатиму всі конспекти лекцій з менеджменту». Це допоможе тобі пам'ятати, що куди.
+    </div>
+
+    <h3>Як це має виглядати в Sidebar</h3>
+    <pre style="background: var(--bg); padding: 16px; border-radius: 8px; font-size: 13px; overflow-x: auto; line-height: 1.5;">
+🏠 Головна
+   ├── 📚 План дипломної роботи
+   ├── 📅 Календар завдань
+   ├── 📂 Навчальні матеріали
+   ├── 🎯 План особистого розвитку
+   ├── ⏰ Тайм-менеджмент
+   ├── 📋 Щотижневі цілі
+   ├── 📝 Система нотаток
+   └── 📦 Архів</pre>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">8 підсторінок створено</li>
+        <li onclick="this.classList.toggle('done')">У кожної є емодзі-іконка</li>
+        <li onclick="this.classList.toggle('done')">У кожної є хоча б один рядок опису</li>
+        <li onclick="this.classList.toggle('done')">У Sidebar вони видно під Головною</li>
+      </ul>
+    </div>
+
+    <div class="motivation">
+      Ти зараз пройшов половину шляху. Далі — найцікавіше: бази даних, які перетворять простір на справжню систему.
+    </div>
+  </div>
+
+  <!-- PART 6 -->
+  <div class="section" id="part6">
+    <div class="section-header">
+      <span class="label">Частина 6</span>
+      <h2>Бази даних — головна суперсила Notion</h2>
+      <span class="time-estimate">⏱ ~30 хвилин</span>
+    </div>
+
+    <div class="intro">
+      <strong>Що таке база даних у Notion?</strong> Уяви Excel-таблицю, але кожен рядок — це не просто рядок, а повноцінна сторінка. Це звучить дивно, але через 10 хвилин ти зрозумієш, наскільки це круто.
+    </div>
+
+    <h3>Приклад на пальцях</h3>
+    <p>Уяви, що у тебе є завдання «Написати підрозділ 1.1». В Excel — це один рядок з кількома клітинками. В Notion — це окрема сторінка, на якій усередині можна писати ідеї, копіювати цитати, додавати картинки. А зовні (у списку) — це той самий рядок з датою, статусом, пріоритетом.</p>
+
+    <h3>Створюємо першу базу: «Календар завдань»</h3>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>Зайди на сторінку 📅 Календар завдань</strong><br>
+      Вона вже існує (з Частини 5).
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>Створи базу</strong><br>
+      Введи <code>/database</code>. У меню з'явиться кілька варіантів. Вибери <strong>Database - Full page</strong> (це означає «база на всю сторінку»).
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>Налаштуй колонки (Properties)</strong><br>
+      За замовчуванням Notion створить колонки Name і Tags. Потрібно більше. Натисни <code>+</code> справа від останньої колонки і додавай:
+    </div>
+
+    <table>
+      <tr><th>Назва колонки</th><th>Тип (Property type)</th><th>Що це</th></tr>
+      <tr><td>Завдання</td><td>Title</td><td>Уже є — це назва завдання</td></tr>
+      <tr><td>Дедлайн</td><td>Date</td><td>Дата виконання</td></tr>
+      <tr><td>Статус</td><td>Status</td><td>Заплановано / В роботі / Готово</td></tr>
+      <tr><td>Пріоритет</td><td>Select</td><td>🔴 Високий / 🟡 Середній / 🟢 Низький</td></tr>
+      <tr><td>Зона</td><td>Multi-select</td><td>Диплом / Навчання / Особисте</td></tr>
+      <tr><td>Нотатки</td><td>Text</td><td>Будь-які додаткові деталі</td></tr>
+    </table>
+
+    <div class="tip">
+      <div class="tip-title">💡 Різниця між Select і Multi-select</div>
+      <strong>Select</strong> — можна вибрати ТІЛЬКИ ОДНУ опцію (наприклад, один пріоритет). <strong>Multi-select</strong> — можна вибрати КІЛЬКА (наприклад, завдання може стосуватися і Диплому, і Навчання).
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <strong>Заповни 5 тестових завдань</strong><br>
+      Просто щоб побачити, як це працює. Наприклад:
+      <ul>
+        <li>«Скласти план диплому» / Дедлайн: завтра / Статус: В роботі / Пріоритет: 🔴</li>
+        <li>«Прочитати 5 статей» / Через 3 дні / Заплановано / 🟡</li>
+        <li>«Спорт» / Сьогодні / В роботі / 🟢</li>
+        <li>«Зустріч з керівником диплому» / Цього тижня / Заплановано / 🔴</li>
+        <li>«Купити продукти» / Сьогодні / Заплановано / 🟢</li>
+      </ul>
+    </div>
+
+    <div class="result-preview">
+      <div class="label">✅ Що в тебе має вийти</div>
+      Таблиця з 5 рядками і 6 колонками. Виглядає як гарний Excel. Але кожен рядок — це сторінка: якщо клікнути по «Скласти план диплому» — відкриється повноцінна сторінка, де можна писати деталі.
+    </div>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">База створена як Full page</li>
+        <li onclick="this.classList.toggle('done')">Усі 6 колонок налаштовані</li>
+        <li onclick="this.classList.toggle('done')">Я зрозумів різницю Select і Multi-select</li>
+        <li onclick="this.classList.toggle('done')">Я додав 5 тестових завдань</li>
+        <li onclick="this.classList.toggle('done')">Я відкрив одне завдання і побачив, що це повноцінна сторінка</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 7 -->
+  <div class="section" id="part7">
+    <div class="section-header">
+      <span class="label">Частина 7</span>
+      <h2>Перегляди (Views) — одна база, кілька форм</h2>
+      <span class="time-estimate">⏱ ~25 хвилин</span>
+    </div>
+
+    <div class="intro">
+      <strong>Найцікавіша частина.</strong> Одна й та сама база даних може виглядати як таблиця, як календар, як Kanban-дошка — на твій вибір. Не треба нічого дублювати.
+    </div>
+
+    <p>Заходимо в базу «Календар завдань». Зверху біля назви бачиш вкладку (зазвичай «All» або «Default view»). Праворуч від неї — кнопка <code>+</code>. Це додавання нового перегляду.</p>
+
+    <h3>Перегляд 1: Календар</h3>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      Натисни <code>+</code> поряд із поточним переглядом.
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      Вибери <strong>Calendar</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      Назви перегляд <strong>📅 Календар</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      У налаштуваннях він автоматично використає колонку <strong>Дедлайн</strong> для розміщення завдань.
+    </div>
+
+    <div class="result-preview">Тепер ти бачиш свої 5 завдань на календарі. Можеш перетягувати їх між датами — і колонка «Дедлайн» оновиться сама.</div>
+
+    <h3>Перегляд 2: Kanban-дошка</h3>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      Знову <code>+</code> новий перегляд.
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      Вибери <strong>Board</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      Назви його <strong>📋 Дошка</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      Notion запитає, за чим групувати — вибери <strong>Статус</strong>.
+    </div>
+
+    <div class="result-preview">З'являться три колонки: Заплановано, В роботі, Готово. Завдання можна перетягувати між колонками мишкою. Як у Trello.</div>
+
+    <h3>Перегляд 3: «Цей тиждень» (з фільтром)</h3>
+
+    <p>Це наймагічніший перегляд — показує тільки те, що актуально саме зараз.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <code>+</code> новий перегляд → <strong>Table</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      Назви <strong>🔥 Цей тиждень</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      У верхньому правому куті бази → <strong>Filter</strong> → <strong>Дедлайн</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      Налаштуй: <strong>Дедлайн</strong> → <strong>is within</strong> → <strong>The next week</strong>.
+    </div>
+
+    <div class="result-preview">Тепер цей перегляд показує лише завдання на найближчий тиждень. Решта — приховані. Це твій «вікно фокусу».</div>
+
+    <h3>Як перемикатись між переглядами</h3>
+    <p>Зверху бази вкладки твоїх переглядів: <em>Default view</em> · <em>📅 Календар</em> · <em>📋 Дошка</em> · <em>🔥 Цей тиждень</em>. Клікаєш — і ті самі дані показуються інакше.</p>
+
+    <div class="tip">
+      <div class="tip-title">💡 Це і є магія баз даних</div>
+      Ти один раз ввів дані. А переглядати їх можеш як завгодно. Це найважливіше, що варто запам'ятати про Notion.
+    </div>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">У мене є перегляд Calendar</li>
+        <li onclick="this.classList.toggle('done')">У мене є перегляд Board, групований за Статусом</li>
+        <li onclick="this.classList.toggle('done')">У мене є відфільтрований перегляд «Цей тиждень»</li>
+        <li onclick="this.classList.toggle('done')">Я перевірив: перемикаючись, бачу одні й ті ж дані</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 8 -->
+  <div class="section" id="part8">
+    <div class="section-header">
+      <span class="label">Частина 8</span>
+      <h2>Kanban-дошка для диплому</h2>
+      <span class="time-estimate">⏱ ~20 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Тепер створимо <strong>окрему</strong> базу — для диплому. Це буде Kanban-дошка з розділами твоєї дипломної роботи: видно, який розділ ще не почато, який пишеться, який готовий.
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>Зайди на сторінку 📚 План дипломної роботи</strong>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>Створи вбудовану базу</strong><br>
+      Введи <code>/database</code>. Цього разу вибери <strong>Database - Inline</strong> (вбудована — не на всю сторінку, а як блок).
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>Налаштуй колонки:</strong>
+    </div>
+
+    <table>
+      <tr><th>Колонка</th><th>Тип</th><th>Опції / Що це</th></tr>
+      <tr><td>Розділ/підрозділ</td><td>Title</td><td>Назва частини роботи</td></tr>
+      <tr><td>Статус</td><td>Status</td><td>Не почато → Чернетка → Готово</td></tr>
+      <tr><td>Дедлайн</td><td>Date</td><td>Коли має бути готово</td></tr>
+      <tr><td>Готовність %</td><td>Number</td><td>Числа 0-100 (у налаштуваннях постав формат Bar)</td></tr>
+    </table>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <strong>Перемкни вигляд на Board</strong><br>
+      Зверху бази — налаштування поточного перегляду. Зміни його тип на <strong>Board</strong>. Групування — за <strong>Статусом</strong>.
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <strong>Додай реальні розділи диплому</strong><br>
+      Це залежить від твоєї теми, але приблизна структура така:
+      <ul>
+        <li>Вступ</li>
+        <li>Розділ 1. Теоретичні засади (підрозділ 1.1)</li>
+        <li>Розділ 1. Теоретичні засади (підрозділ 1.2)</li>
+        <li>Розділ 1. Теоретичні засади (підрозділ 1.3)</li>
+        <li>Висновки до розділу 1</li>
+        <li>Список літератури</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <strong>Постав статуси і дедлайни</strong><br>
+      Перетягни картки в правильні колонки. Все, що ще не почато — лишається в «Не почато», те, над чим уже працюєш — у «Чернетка».
+    </div>
+
+    <div class="result-preview">
+      <div class="label">🎯 Що в тебе вийшло</div>
+      Візуальна дошка прогресу диплому. З однго погляду видно, скільки розділів готово, скільки в роботі. Можеш перетягувати картки — і статус оновиться сам.
+    </div>
+
+    <div class="tip">
+      <div class="tip-title">💡 Це твій головний інструмент для диплому</div>
+      Заходь сюди щотижня. Перетягуй картки. Це найкращий спосіб не зливати дедлайн.
+    </div>
+  </div>
+
+  <!-- PART 9 -->
+  <div class="section" id="part9">
+    <div class="section-header">
+      <span class="label">Частина 9</span>
+      <h2>База літератури (для 50 джерел з NotebookLM)</h2>
+      <span class="time-estimate">⏱ ~20 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Згідно з вимогами практики, ти завантажуєш <strong>50 джерел у NotebookLM</strong>. Паралельно ти заносиш їх у цю базу — щоб мати структурований каталог і легко знаходити, що читав.
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>Залишайся на сторінці 📚 План дипломної роботи</strong><br>
+      Прокрути нижче Kanban-дошки. Залиш порожній рядок.
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>Додай заголовок</strong><br>
+      <code>/h2</code> → напиши <strong>📖 База літератури</strong>.
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>Створи нову inline-базу</strong><br>
+      <code>/database</code> → <strong>Database - Inline</strong>.
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <strong>Налаштуй колонки:</strong>
+    </div>
+
+    <table>
+      <tr><th>Колонка</th><th>Тип</th><th>Опції</th></tr>
+      <tr><td>Назва джерела</td><td>Title</td><td>—</td></tr>
+      <tr><td>Автор(и)</td><td>Text</td><td>—</td></tr>
+      <tr><td>Рік</td><td>Number</td><td>—</td></tr>
+      <tr><td>Тип</td><td>Select</td><td>Стаття / Книга / Дисертація / Сайт / Закон</td></tr>
+      <tr><td>Підрозділ</td><td>Select</td><td>1.1 / 1.2 / 1.3 / Загальне</td></tr>
+      <tr><td>Опрацьовано</td><td>Checkbox</td><td>Поставлю галочку коли прочитаю</td></tr>
+      <tr><td>URL</td><td>URL</td><td>Лінк на джерело</td></tr>
+      <tr><td>Ключові ідеї</td><td>Text</td><td>2-3 речення про що це</td></tr>
+    </table>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <strong>Додай перші 3 джерела</strong><br>
+      Просто для тренування. Решту заповниш паралельно з роботою у NotebookLM.
+    </div>
+
+    <div class="tip">
+      <div class="tip-title">💡 Як використовувати під час практики</div>
+      Кожного разу, коли завантажуєш джерело у NotebookLM — одразу додаєш рядок сюди. Це 30 секунд на джерело, але потім ти будеш точно знати, чим оперуєш у дипломі. На захисті це справляє сильне враження.
+    </div>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">Kanban-дошка диплому існує з реальними розділами</li>
+        <li onclick="this.classList.toggle('done')">База літератури налаштована з усіма колонками</li>
+        <li onclick="this.classList.toggle('done')">Я додав хоча б 3 джерела для тренування</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 10 -->
+  <div class="section" id="part10">
+    <div class="section-header">
+      <span class="label">Частина 10</span>
+      <h2>Шаблон «Щотижневий огляд»</h2>
+      <span class="time-estimate">⏱ ~20 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Зробимо так, щоб щотижня ти міг створити сторінку огляду <strong>в один клік</strong> — і одразу мав готову структуру для рефлексії.
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>Зайди на сторінку 📋 Щотижневі цілі</strong>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>Створи inline-базу</strong><br>
+      <code>/database</code> → <strong>Database - Inline</strong>.
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>Налаштуй колонки:</strong>
+      <ul>
+        <li><strong>Тиждень</strong> (Title) — наприклад, «Тиждень 8-14 липня»</li>
+        <li><strong>Дата початку</strong> (Date)</li>
+        <li><strong>Головна ціль тижня</strong> (Text)</li>
+        <li><strong>Оцінка тижня</strong> (Select): 🔥 Топ / 👍 Норм / 😕 Так собі</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <strong>Створи шаблон</strong><br>
+      Угорі праворуч біля кнопки <strong>New</strong> є маленька стрілочка <code>▼</code>. Натисни її → <strong>+ New template</strong>.
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <strong>Назви шаблон «Тиждень»</strong><br>
+      Усередині шаблону додай таку структуру:
+    </div>
+
+    <div class="copy-text" style="white-space: pre-line;">## 🎯 Три головні цілі тижня
+☐ Ціль 1
+☐ Ціль 2
+☐ Ціль 3
+
+## 📚 Диплом
+☐ Завдання...
+
+## 📖 Навчання
+☐ Завдання...
+
+## 💪 Звички
+☐ Ранкова прогулянка
+☐ Читання 30 хв на день
+☐ Спорт 3 рази
+
+## 💭 Підсумок тижня
+(заповнити в неділю ввечері)
+- Що вдалося?
+- Що пішло не так?
+- Чого навчився?</div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <strong>Збережи шаблон і протестуй</strong><br>
+      Закрий шаблон. Тепер натисни <code>▼</code> поряд із <strong>New</strong> — у списку буде твій «Тиждень». Клікни — створиться нова сторінка з усією структурою всередині.
+    </div>
+
+    <div class="result-preview">
+      <div class="label">⚡ Тепер у тебе</div>
+      Раз на тиждень створюєш новий запис із шаблону → одразу маєш порядок дня без жодного зайвого кліку. Це справжній бустер продуктивності.
+    </div>
+  </div>
+
+  <!-- PART 11 -->
+  <div class="section" id="part11">
+    <div class="section-header">
+      <span class="label">Частина 11</span>
+      <h2>Оживляємо Головну сторінку</h2>
+      <span class="time-estimate">⏱ ~15 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Пам'ятаєш Головну сторінку з Частини 4? Там були три порожні колонки «Швидкий доступ». Тепер у тебе є реальні бази — час їх туди підключити.
+    </div>
+
+    <h3>Що таке Linked View</h3>
+    <p>Це посилання на існуючу базу, але <strong>відображене в іншому місці</strong>. Усі дані одні й ті ж — просто видно з кількох сторінок. Це як ярлик, але живий.</p>
+
+    <h3>Колонка 1: «Цей тиждень» (з бази Календар завдань)</h3>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      Іди на Головну сторінку. У першій колонці «📚 Дипломна робота» зітри текст-заглушку.
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      Введи <code>/linked</code> → вибери <strong>Linked view of database</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      У списку знайди базу <strong>Календар завдань</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      Notion запропонує: «New view» або «Use existing view». Вибери <strong>Use existing view</strong> → твій перегляд <strong>🔥 Цей тиждень</strong>.
+    </div>
+
+    <div class="result-preview">У першій колонці Головної з'явилися завдання тижня. Можеш ставити галочки прямо звідси.</div>
+
+    <h3>Колонка 2: Прогрес диплому</h3>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      У другій колонці так само — <code>/linked</code>.
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      Знайди базу диплому. Вибери компактний перегляд (List або налаштуй фільтр «Тільки в роботі»).
+    </div>
+
+    <h3>Колонка 3: Останні нотатки / ідеї</h3>
+    <p>Якщо ти ще не наповнював «Систему нотаток» — поки що залиш просту цитату або список «На замітку». Заповниш пізніше.</p>
+
+    <div class="tip">
+      <div class="tip-title">💡 Wow-момент</div>
+      Тепер Головна сторінка — це <strong>живий центр управління</strong>. Заходиш — одразу бачиш, що треба зробити сьогодні, де ти з дипломом, останні думки. Більше не треба ходити по сторінках.
+    </div>
+
+    <div class="self-check">
+      <h3>✅ Перевір себе</h3>
+      <ul>
+        <li onclick="this.classList.toggle('done')">Шаблон «Тиждень» створено</li>
+        <li onclick="this.classList.toggle('done')">Я створив із шаблону хоча б один реальний запис</li>
+        <li onclick="this.classList.toggle('done')">На Головній є linked view з «Календаря завдань»</li>
+        <li onclick="this.classList.toggle('done')">На Головній є linked view з диплому</li>
+        <li onclick="this.classList.toggle('done')">Головна виглядає як «центр управління», а не «список папок»</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART 12 -->
+  <div class="section" id="part12">
+    <div class="section-header">
+      <span class="label">Частина 12</span>
+      <h2>Спільний доступ для викладача</h2>
+      <span class="time-estimate">⏱ ~5 хвилин</span>
+    </div>
+
+    <div class="intro">
+      Викладач має зайти у твій простір і подивитись. Зробити це <strong>обов'язково до захисту</strong> — не в останній момент!
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      Зайди на Головну сторінку (або на батьківську сторінку всього простору).
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      Угорі праворуч натисни <strong>Share</strong>.
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      У вікні внизу — секція <strong>Publish</strong> або <strong>Share to web</strong>. Увімкни перемикач.
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      Налаштуй права: <strong>Can view</strong> (тільки переглядати) — цього достатньо.
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      Скопіюй посилання (<strong>Copy link</strong>) і збережи його — у замітку чи в чат з собою.
+    </div>
+
+    <div class="warning">
+      <strong>⚠️ Перевір перед захистом:</strong> відкрий посилання в <em>режимі інкогніто</em> у браузері. Якщо все відкривається без логіну — окей. Якщо просить увійти — налаштуй доступ ще раз.
+    </div>
+
+    <div class="info">
+      <strong>📌 Що писати у формі здачі:</strong> просто скопійоване посилання. Викладач відкриває — бачить твій простір. Усе.
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="final">
+    <h2>🎉 Готово! Простір зібрано.</h2>
+    <p>У тебе є робочий простір «Work-Life Balance 2026–2027» з усіма обов'язковими розділами,</p>
+    <p>трьома базами даних і шаблоном щотижневого огляду.</p>
+    <p style="margin-top: 14px;"><strong>Це рівень «Відмінно» за вимогами практики.</strong></p>
+  </div>
+
+  <!-- WHAT NEXT -->
+  <div class="section">
+    <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 16px;">🚀 Що далі?</h2>
+
+    <h3>Перед захистом</h3>
+    <ul>
+      <li><strong>Наповни простір реальними даними.</strong> 15-20 завдань у календарі, 50 джерел у літературі, 2-3 щотижневі огляди.</li>
+      <li><strong>Додай 2 рекомендованих розділи.</strong> Найпростіше: трекер звичок (база з датою + чекбоксами) і сторінка самоаналізу.</li>
+      <li><strong>Пройдись очима по всьому простору.</strong> Усе має іконки. Жодної сторінки з назвою «Untitled». Жодного незрозумілого блоку.</li>
+      <li><strong>Прорепетируй захист.</strong> Ти маєш 5-7 хвилин. Покажи: Головна → Календар → Kanban диплому → Література → Щотижневий огляд. По хвилині на кожне.</li>
+    </ul>
+
+    <h3>Як зробити простір ще крутішим (необов'язково, але +бали)</h3>
+    <ul>
+      <li><strong>Трекер звичок:</strong> база з полем Date і 5-7 чекбоксами (ранкова руханка, читання, вода, сон 8 год). Перегляд — Calendar.</li>
+      <li><strong>База ідей:</strong> проста таблиця з Title і Multi-select тегами. Кидай туди все, що приходить у голову.</li>
+      <li><strong>Сторінка самоаналізу:</strong> щомісяця — короткий звіт собі. 3 питання: що вдалося / що ні / висновок.</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 16px;">❓ Часті питання</h2>
+
+    <div class="faq">
+      <strong>Я зробив помилку — як скасувати?</strong>
+      <span class="key">Ctrl</span>+<span class="key">Z</span>. Notion дозволяє відкочувати дуже багато кроків назад. Сміливо експериментуй.
+    </div>
+
+    <div class="faq">
+      <strong>Не можу вставити блок — нічого не відбувається</strong>
+      Переконайся, що курсор стоїть на порожньому рядку. Спробуй ще раз <code>/</code> і просто почни друкувати назву блоку, наприклад <code>quote</code>.
+    </div>
+
+    <div class="faq">
+      <strong>Як видалити цілу сторінку?</strong>
+      У Sidebar — правий клік на назві → <strong>Delete</strong>. Сторінка йде у Trash, звідки її можна повернути.
+    </div>
+
+    <div class="faq">
+      <strong>База даних — куди поділись мої колонки?</strong>
+      Прокрути базу вправо — деякі колонки можуть бути за межами екрана. Або в налаштуваннях перегляду перевір, чи всі колонки увімкнені (<strong>Properties</strong>).
+    </div>
+
+    <div class="faq">
+      <strong>Я хочу скопіювати чийсь шаблон з інтернету. Можна?</strong>
+      Так. У Notion є кнопка <strong>Duplicate</strong> на будь-якій шері сторінці. Але для практики краще зроби свій — викладач одразу побачить різницю.
+    </div>
+
+    <div class="faq">
+      <strong>Notion англійською. Можна перекласти?</strong>
+      Зараз інтерфейс Notion ще не має української мови. Але <em>увесь твій контент</em> ти пишеш українською. Тільки кнопки лишаються англійськими — звикнеш за пару днів.
+    </div>
+
+    <div class="faq">
+      <strong>А якщо я хочу працювати з телефону?</strong>
+      Завантаж додаток Notion з App Store / Google Play. Усе синхронізується автоматично. Але створювати простір зручніше з ноутбука — з телефону краще додавати нотатки на ходу.
+    </div>
+
+    <div class="faq">
+      <strong>Скільки часу займе зробити все це?</strong>
+      Якщо йти крок за кроком, не відволікаючись: 6-8 годин чистого часу. Можна розбити на 3-4 дні по 2 години.
+    </div>
+  </div>
+
+  <footer>
+    Гайд створено для виробничої практики, спеціальність «Менеджмент»<br>
+    Удачі на захисті! 🎓
+  </footer>
+
+</div>
+
+<script>
+  // Localstorage for self-check items is not available - keep purely visual
+  // Smooth scroll for anchors
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
