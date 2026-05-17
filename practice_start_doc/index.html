@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Виробнича практика — повний огляд</title>
+  <style>
+    :root {
+      --primary: #2E3440;
+      --notion-color: #5E81AC;
+      --notion-bg: #EAF2F8;
+      --notebooklm-color: #6B5B95;
+      --notebooklm-bg: #F0EBF7;
+      --canva-color: #00C4CC;
+      --canva-bg: #E0F7F8;
+      --success: #7FA968;
+      --success-bg: #EFF5E8;
+      --warning: #D4A53C;
+      --warning-bg: #FBF3D9;
+      --danger: #BF616A;
+      --danger-bg: #FCE8E8;
+      --bg: #FAFAF7;
+      --card: #FFFFFF;
+      --border: #E5E5E0;
+      --text: #2E3440;
+      --text-muted: #5C6370;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #2E3440 0%, #4C566A 100%);
+      color: white;
+      padding: 44px 32px;
+      border-radius: 14px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header .subtitle {
+      font-size: 17px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .header .meta-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header .pill {
+      background: rgba(255, 255, 255, 0.18);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    /* Section */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 30px 28px;
+      margin-bottom: 24px;
+    }
+
+    .section>h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--bg);
+    }
+
+    .section h3 {
+      font-size: 19px;
+      margin: 24px 0 12px;
+      color: var(--primary);
+    }
+
+    .section h4 {
+      font-size: 16px;
+      margin: 16px 0 10px;
+      color: var(--text-muted);
+    }
+
+    .section p {
+      margin-bottom: 12px;
+    }
+
+    .section ul,
+    .section ol {
+      margin: 10px 0 14px 24px;
+    }
+
+    .section li {
+      margin-bottom: 6px;
+    }
+
+    /* Welcome intro */
+    .welcome {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .welcome strong {
+      color: var(--primary);
+    }
+
+    /* Levels grid */
+    .levels-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .level-card {
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level-card.satisfactory {
+      background: var(--notebooklm-bg);
+      border-left: 6px solid var(--notebooklm-color);
+    }
+
+    .level-card.good {
+      background: var(--canva-bg);
+      border-left: 6px solid var(--canva-color);
+    }
+
+    .level-card.excellent {
+      background: var(--notion-bg);
+      border-left: 6px solid var(--notion-color);
+    }
+
+    .level-card .level-num {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 48px;
+      font-weight: 800;
+      opacity: 0.18;
+      line-height: 1;
+    }
+
+    .level-card .level-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .level-card .level-grade {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+    }
+
+    .level-card.satisfactory .level-grade {
+      background: var(--notebooklm-color);
+      color: white;
+    }
+
+    .level-card.good .level-grade {
+      background: var(--canva-color);
+      color: white;
+    }
+
+    .level-card.excellent .level-grade {
+      background: var(--notion-color);
+      color: white;
+    }
+
+    .level-card .level-tool {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .level-card .level-result {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .level-card .level-result strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+      margin: 16px 0;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--notion-color);
+    }
+
+    .timeline-item.notebooklm::before {
+      border-color: var(--notebooklm-color);
+    }
+
+    .timeline-item.canva::before {
+      border-color: var(--canva-color);
+    }
+
+    .timeline-item.notion::before {
+      border-color: var(--notion-color);
+    }
+
+    .timeline-item.defense::before {
+      border-color: var(--danger);
+      background: var(--danger);
+    }
+
+    .timeline-item .date {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item .event {
+      font-size: 16px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item .description {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-card .label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* Boxes */
+    .info {
+      background: var(--notion-bg);
+      border-left: 4px solid var(--notion-color);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .tip {
+      background: var(--warning-bg);
+      border-left: 4px solid var(--warning);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .tip strong {
+      color: #8a6d1f;
+    }
+
+    .warning {
+      background: var(--danger-bg);
+      border-left: 4px solid var(--danger);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .warning strong {
+      color: var(--danger);
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg);
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Format card */
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .format-card {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .format-card .icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .format-card h4 {
+      margin-top: 0;
+      color: var(--primary);
+      text-transform: none;
+      font-size: 15px;
+    }
+
+    .format-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Tool flow */
+    .tool-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 24px 0;
+    }
+
+    .tool-flow .tool-step {
+      background: var(--card);
+      border: 2px solid;
+      border-radius: 12px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .tool-flow .tool-step.notebooklm {
+      border-color: var(--notebooklm-color);
+    }
+
+    .tool-flow .tool-step.canva {
+      border-color: var(--canva-color);
+    }
+
+    .tool-flow .tool-step.notion {
+      border-color: var(--notion-color);
+    }
+
+    .tool-flow .tool-step .step-name {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .tool-flow .tool-step .step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .tool-flow .arrow {
+      font-size: 24px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 700px) {
+      .tool-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-flow .arrow {
+        transform: rotate(90deg);
+        justify-self: center;
+      }
+    }
+
+    /* Defense format */
+    .defense-card {
+      background: linear-gradient(135deg, #2E3440 0%, #4C566A 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+
+    .defense-card h3 {
+      color: white !important;
+      margin-top: 0 !important;
+    }
+
+    .defense-card .defense-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .defense-card .defense-pill {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .defense-card ol {
+      margin-left: 24px;
+    }
+
+    .defense-card li {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Submission form */
+    .form-card {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+
+    .form-card h3 {
+      color: var(--success) !important;
+      margin-top: 0 !important;
+    }
+
+    .form-card ol li {
+      padding: 4px 0;
+    }
+
+    /* Resource link */
+    .resources {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .resource-link {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .resource-link:hover {
+      border-color: var(--notion-color);
+      background: white;
+    }
+
+    .resource-link .resource-icon {
+      font-size: 24px;
+    }
+
+    .resource-link .resource-name {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .resource-link .resource-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* Final motivation */
+    .final-motivation {
+      background: linear-gradient(135deg, #A3BE8C 0%, #88C0D0 100%);
+      color: white;
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+      margin: 24px 0;
+    }
+
+    .final-motivation h2 {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 12px;
+      border: none;
+      padding: 0;
+    }
+
+    .final-motivation p {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .section {
+        padding: 22px 18px;
+      }
+
+      .header {
+        padding: 28px 20px;
+      }
+
+      .header h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>🎓 Виробнича практика</h1>
+      <div class="subtitle">Менеджмент · 4 семестр · Notion · NotebookLM · Canva</div>
+      <div class="meta-pills">
+        <span class="pill">📅 1 липня – 15 серпня</span>
+        <span class="pill">⏱ 1,5 місяця</span>
+        <span class="pill">🎯 3 рівні оцінювання</span>
+      </div>
+    </div>
+
+    <!-- WELCOME -->
+    <div class="section">
+      <h2>👋 Вітаю на виробничій практиці!</h2>
+      <div class="welcome">
+        <p>За наступні <strong>півтора місяця</strong> ти не просто пройдеш формальну практику — ти <strong>зробиш
+            реальну роботу для свого диплому</strong> і отримаєш навички, які потім використовуватимеш у професійній
+          діяльності.</p>
+
+        <p>Ми працюємо з трьома цифровими інструментами: <strong>Notion</strong> (особистий робочий простір),
+          <strong>NotebookLM</strong> (AI-помічник для аналізу джерел) і <strong>Canva</strong> (візуалізація). Кожен
+          інструмент — це окремий рівень оцінки.
+        </p>
+
+        <p>Найкраща новина: <strong>усе, що ти зробиш на практиці — буде використано в твоєму дипломі</strong>. Не
+          «практика заради практики», а реальний фундамент для дипломної роботи.</p>
+      </div>
+
+      <div class="info">
+        <strong>📌 Що матимеш на руках наприкінці практики:</strong>
+        <ul style="margin-top: 8px;">
+          <li>Перший розділ дипломної роботи (20-30 сторінок з 50 науковими джерелами)</li>
+          <li>Презентацію диплому на 10 слайдів</li>
+          <li>Особистий робочий простір у Notion</li>
+          <li>Навички роботи з AI для академічних задач</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- KEY STATS -->
+    <div class="section">
+      <h2>📊 Цифри практики</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number">50</div>
+          <div class="label">наукових джерел</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">3</div>
+          <div class="label">звіти по підрозділах</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">10</div>
+          <div class="label">слайдів презентації</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">10</div>
+          <div class="label">розділів у Notion</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">20-30</div>
+          <div class="label">сторінок 1 розділу</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">1,5</div>
+          <div class="label">місяця роботи</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVELS -->
+    <div class="section">
+      <h2>🎯 Три рівні оцінювання</h2>
+      <p>Твоя оцінка залежить від того, скільки інструментів ти опануєш. Кожен наступний рівень — додатковий інструмент.
+      </p>
+
+      <div class="levels-grid">
+
+        <!-- LEVEL 1 -->
+        <div class="level-card satisfactory">
+          <div class="level-num">1</div>
+          <div class="level-title">Рівень «ЗАДОВІЛЬНО»</div>
+          <span class="level-grade">Обов'язковий для всіх</span>
+          <div class="level-tool">🤖 Інструмент: <strong>NotebookLM</strong> · Термін: 1–20 липня</div>
+
+          <p>Базовий рівень. Без виконання цієї частини практика не зараховується.</p>
+
+          <h4 style="margin-top: 16px;">Що зробити:</h4>
+          <ul>
+            <li>Зареєструватися у NotebookLM, створити блокнот</li>
+            <li>Визначити тему диплому та план 1 розділу</li>
+            <li>Завантажити <strong>50 джерел</strong> (без повторень)</li>
+            <li>Сформувати <strong>3 звіти</strong> — по одному на кожен підрозділ</li>
+            <li>Написати <strong>аналітичні висновки</strong> до 1 розділу</li>
+            <li>Підготувати список літератури за ДСТУ</li>
+            <li>Написати <strong>перший розділ дипломної роботи</strong></li>
+          </ul>
+
+          <div class="level-result">
+            <strong>На виході:</strong>
+            Готовий перший розділ дипломної (20-30 сторінок) + 50 джерел у NotebookLM + 3 звіти
+          </div>
+        </div>
+
+        <!-- LEVEL 2 -->
+        <div class="level-card good">
+          <div class="level-num">2</div>
+          <div class="level-title">Рівень «ДОБРЕ»</div>
+          <span class="level-grade">Усе вище + Canva</span>
+          <div class="level-tool">🎨 Інструмент: <strong>Canva</strong> · Після NotebookLM-частини</div>
+
+          <p>Усі вимоги рівня «Задовільно» + презентація в Canva.</p>
+
+          <h4 style="margin-top: 16px;">Додатково зробити:</h4>
+          <ul>
+            <li>Створити презентацію в Canva на <strong>10 слайдів</strong></li>
+            <li>Єдиний стиль оформлення</li>
+            <li>Використати: <strong>схеми, діаграми, інфографіку</strong></li>
+            <li>Включити висновки</li>
+            <li>Додати список використаних джерел</li>
+          </ul>
+
+          <h4 style="margin-top: 16px;">Структура 10 слайдів:</h4>
+          <ul style="font-size: 14px;">
+            <li>1. Тема дипломної</li>
+            <li>2. Актуальність теми</li>
+            <li>3. Мета дослідження</li>
+            <li>4. Теоретичні підходи</li>
+            <li>5. Аналіз літератури</li>
+            <li>6. Основні поняття</li>
+            <li>7. Аналітичні висновки</li>
+            <li>8. SWOT-аналіз або схема</li>
+            <li>9. Практичне значення</li>
+            <li>10. Висновки</li>
+          </ul>
+
+          <div class="level-result">
+            <strong>На виході:</strong>
+            Усе з рівня 1 + презентація 10 слайдів у PDF та з онлайн-посиланням
+          </div>
+        </div>
+
+        <!-- LEVEL 3 -->
+        <div class="level-card excellent">
+          <div class="level-num">3</div>
+          <div class="level-title">Рівень «ВІДМІННО»</div>
+          <span class="level-grade">Усе вище + Notion</span>
+          <div class="level-tool">📘 Інструмент: <strong>Notion</strong> · Паралельно з іншими</div>
+
+          <p>Усі вимоги рівнів «Задовільно» і «Добре» + персональний робочий простір.</p>
+
+          <h4 style="margin-top: 16px;">Додатково зробити:</h4>
+          <p>Створити робочий простір <strong>«Work-Life Balance 2026–2027»</strong>, який відображає:</p>
+          <ul>
+            <li>Навчання</li>
+            <li>Написання дипломної роботи</li>
+            <li>Особисті справи</li>
+            <li>Професійний розвиток</li>
+            <li>Планування часу</li>
+            <li>Баланс між роботою та навчанням</li>
+          </ul>
+
+          <h4 style="margin-top: 16px;">10 обов'язкових розділів:</h4>
+          <ul style="font-size: 14px;">
+            <li>Головна сторінка</li>
+            <li>План дипломної роботи</li>
+            <li>Календар виконання завдань</li>
+            <li>База літератури</li>
+            <li>Навчальні матеріали</li>
+            <li>План особистого розвитку</li>
+            <li>Тайм-менеджмент</li>
+            <li>Щотижневі цілі</li>
+            <li>Система нотаток</li>
+            <li>Архів матеріалів</li>
+          </ul>
+
+          <h4 style="margin-top: 16px;">Рекомендовано додати:</h4>
+          <ul style="font-size: 14px;">
+            <li>Kanban-дошка</li>
+            <li>Трекер звичок</li>
+            <li>Система дедлайнів</li>
+            <li>База ідей</li>
+            <li>Сторінка самоаналізу</li>
+          </ul>
+
+          <div class="level-result">
+            <strong>На виході:</strong>
+            Усе з рівнів 1 і 2 + персональний робочий простір Notion з усіма розділами
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL FLOW -->
+    <div class="section">
+      <h2>🔗 Як інструменти працюють разом</h2>
+      <p>Це не три окремі завдання — це <strong>один процес</strong>. Те, що ти робиш в одному інструменті, перетікає в
+        інший.</p>
+
+      <div class="tool-flow">
+        <div class="tool-step notebooklm">
+          <div class="step-name">🤖 NotebookLM</div>
+          <div class="step-desc">Аналіз джерел<br>3 звіти<br>1 розділ диплому</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="tool-step canva">
+          <div class="step-name">🎨 Canva</div>
+          <div class="step-desc">Візуалізація<br>10 слайдів<br>Презентація</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="tool-step notion">
+          <div class="step-name">📘 Notion</div>
+          <div class="step-desc">Організація<br>10 розділів<br>Робочий простір</div>
+        </div>
+      </div>
+
+      <h3>Логіка перетоку</h3>
+      <ul>
+        <li><strong>NotebookLM → Canva:</strong> текст висновків, цитати, класифікації, SWOT — усе бере з звітів
+          NotebookLM</li>
+        <li><strong>NotebookLM → Notion:</strong> усі 50 джерел заносиш паралельно в базу «Література» в Notion;
+          висновки — в «Систему нотаток»</li>
+        <li><strong>Canva → Notion:</strong> готову презентацію зберігаєш у розділі «Навчальні матеріали» Notion</li>
+        <li><strong>Усе → Диплом:</strong> зміст 1 розділу диплому — це структуровані звіти з NotebookLM</li>
+      </ul>
+
+      <div class="tip">
+        <strong>💡 Найважливіше:</strong> працюй з усіма трьома паралельно, не послідовно. Завантажив джерело у
+        NotebookLM — одразу занеси в базу Notion. Зробив звіт по 1.1 — одразу починай продумувати слайд 4 в Canva.
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="section">
+      <h2>📅 Календарний план</h2>
+      <p>Це орієнтовний план — можеш адаптувати під себе. Головне — встигати в загальні дедлайни.</p>
+
+      <div class="timeline">
+
+        <div class="timeline-item notebooklm">
+          <div class="date">1–7 ЛИПНЯ</div>
+          <div class="event">Старт: NotebookLM, базова організація</div>
+          <div class="description">Реєстрація у трьох інструментах. Сформувати план 1 розділу диплому. Перші 10-15
+            джерел у NotebookLM. Паралельно — створити простір у Notion (хоча б Головна + база «Література»).</div>
+        </div>
+
+        <div class="timeline-item notebooklm">
+          <div class="date">8–14 ЛИПНЯ</div>
+          <div class="event">Збір джерел</div>
+          <div class="description">Завантажити решту джерел до 50. Перевірка на дублі. Усі — в базі «Література» Notion.
+          </div>
+        </div>
+
+        <div class="timeline-item notebooklm">
+          <div class="date">15–20 ЛИПНЯ</div>
+          <div class="event">Робота з AI: 3 звіти</div>
+          <div class="description">Робота з NotebookLM: 3 звіти по 1.1, 1.2, 1.3. Аналітичні висновки. Перший варіант 1
+            розділу диплому.</div>
+        </div>
+
+        <div class="timeline-item canva">
+          <div class="date">21–28 ЛИПНЯ</div>
+          <div class="event">Презентація в Canva</div>
+          <div class="description">10 слайдів. SWOT-аналіз. Схеми. Експорт у PDF.</div>
+        </div>
+
+        <div class="timeline-item notion">
+          <div class="date">29 ЛИПНЯ – 7 СЕРПНЯ</div>
+          <div class="event">Доопрацювання Notion-простору</div>
+          <div class="description">Завершення всіх 10 розділів. Шаблон щотижневого огляду. Linked views на Головній.
+            Додаткові розділи.</div>
+        </div>
+
+        <div class="timeline-item notion">
+          <div class="date">8–14 СЕРПНЯ</div>
+          <div class="event">Фінальна доробка</div>
+          <div class="description">Редагування 1 розділу. Перевірка на плагіат. Список літератури за ДСТУ. Перевірка
+            всіх доступів до файлів.</div>
+        </div>
+
+        <div class="timeline-item defense">
+          <div class="date">до 15 СЕРПНЯ</div>
+          <div class="event">📤 Здача робіт у Google Classroom</div>
+          <div class="description">Усі матеріали (NotebookLM, Canva, Notion, 1 розділ диплому) завантажуються у
+            відповідну папку в Google Classroom.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMAT -->
+    <div class="section">
+      <h2>📝 Формат роботи</h2>
+
+      <div class="format-grid">
+        <div class="format-card">
+          <div class="icon">🎥</div>
+          <h4>Лекції в Zoom</h4>
+          <p>Викладач пояснює, демонструє екран, відповідає на питання в чаті</p>
+        </div>
+        <div class="format-card">
+          <div class="icon">💬</div>
+          <h4>Командна робота</h4>
+          <p>Через Telegram або Notion, коментарі асинхронно</p>
+        </div>
+        <div class="format-card">
+          <div class="icon">📤</div>
+          <h4>Здача завдань</h4>
+          <p>Через Google Classroom — кладеш у відповідну папку</p>
+        </div>
+        <div class="format-card">
+          <div class="icon">📚</div>
+          <h4>Самостійна робота</h4>
+          <p>Гайди для кожного інструмента — крок за кроком</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMISSION -->
+    <div class="section">
+      <h2>📤 Як здавати роботу</h2>
+      <p>Усі матеріали практики здаються через <strong>Google Classroom</strong> — кладеш файли та посилання у
+        відповідну папку до 15 серпня.</p>
+
+      <div class="form-card">
+        <h3>Що має бути у папці Класруму</h3>
+        <ol>
+          <li>Посилання на блокнот <strong>NotebookLM</strong> (доступ для перегляду)</li>
+          <li>Посилання на презентацію <strong>Canva</strong> (Anyone with link — Can view) + PDF-файл презентації</li>
+          <li>Посилання на робочий простір <strong>Notion</strong> (Share to web — Can view)</li>
+          <li>Файл <strong>1 розділу дипломної роботи</strong> (.docx або .pdf)</li>
+          <li>Файл <strong>списку літератури</strong> за ДСТУ (50 джерел)</li>
+        </ol>
+      </div>
+
+      <div class="warning">
+        <strong>⚠️ Перевір доступи перед здачею!</strong><br>
+        Найчастіша проблема — посилання надіслане, але викладач не може його відкрити. Перевір кожне посилання у режимі
+        інкогніто (Ctrl+Shift+N) — якщо відкривається без логіну, значить, все добре.
+      </div>
+
+      <div class="info">
+        <strong>📌 Що враховує викладач під час перевірки:</strong>
+        <ul style="margin-top: 8px;">
+          <li><strong>NotebookLM</strong> — 50 джерел без повторень, наповнені нотатки Studio</li>
+          <li><strong>Canva</strong> — 10 слайдів у єдиному стилі за вимогами структури</li>
+          <li><strong>Notion</strong> — усі 10 обов'язкових розділів, заповнені бази даних</li>
+          <li><strong>1 розділ диплому</strong> — 25-35 сторінок з посиланнями на джерела, висновки, оформлення за
+            вимогами</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MATERIALS -->
+    <div class="section">
+      <h2>📚 Навчальні матеріали</h2>
+      <p>На кожен інструмент є <strong>покроковий гайд для самостійного вивчення</strong>. Викладач надасть посилання
+        окремо. У гайдах:</p>
+      <ul>
+        <li>Покрокові інструкції — де клікнути, що ввести</li>
+        <li>Готові тексти, шаблони, промпти для копіювання</li>
+        <li>Скріншоти і приклади</li>
+        <li>Часті питання і помилки</li>
+        <li>Чек-листи самоперевірки</li>
+      </ul>
+
+      <h3>Посилання на інструменти</h3>
+      <div class="resources">
+        <a href="https://notebooklm.google.com" target="_blank" class="resource-link">
+          <span class="resource-icon">🤖</span>
+          <div>
+            <div class="resource-name">NotebookLM</div>
+            <div class="resource-desc">notebooklm.google.com</div>
+          </div>
+        </a>
+        <a href="https://www.canva.com" target="_blank" class="resource-link">
+          <span class="resource-icon">🎨</span>
+          <div>
+            <div class="resource-name">Canva</div>
+            <div class="resource-desc">canva.com</div>
+          </div>
+        </a>
+        <a href="https://www.notion.so" target="_blank" class="resource-link">
+          <span class="resource-icon">📘</span>
+          <div>
+            <div class="resource-name">Notion</div>
+            <div class="resource-desc">notion.so</div>
+          </div>
+        </a>
+        <a href="https://scholar.google.com" target="_blank" class="resource-link">
+          <span class="resource-icon">🔍</span>
+          <div>
+            <div class="resource-name">Google Scholar</div>
+            <div class="resource-desc">для пошуку джерел · scholar.google.com</div>
+          </div>
+        </a>
+        <a href="https://irbis-nbuv.gov.ua/aref/" target="_blank" class="resource-link">
+          <span class="resource-icon">📚</span>
+          <div>
+            <div class="resource-name">Бібліотека Вернадського</div>
+            <div class="resource-desc">українські дисертації · irbis-nbuv.gov.ua/aref/</div>
+          </div>
+        </a>
+        <a href="https://zoom.us" target="_blank" class="resource-link">
+          <span class="resource-icon">🎥</span>
+          <div>
+            <div class="resource-name">Zoom</div>
+            <div class="resource-desc">для лекцій · zoom.us</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- COMMON QUESTIONS -->
+    <div class="section">
+      <h2>❓ Часті питання на старті</h2>
+
+      <h3>«Я ніколи не користувався цими програмами. Складно буде?»</h3>
+      <p>Якщо ти користуєшся смартфоном — впораєшся. Усі три інструменти інтуїтивні. Гайди розписують усе крок за кроком
+        — навіть як зареєструватись. Не намагайся вивчити одразу — освоюй один інструмент за раз.</p>
+
+      <h3>«Чи треба купувати щось платне?»</h3>
+      <p>Ні. <strong>Усі три інструменти безкоштовні</strong> в обсязі, який потрібен для практики:</p>
+      <ul>
+        <li><strong>NotebookLM</strong> — повністю безкоштовний</li>
+        <li><strong>Canva</strong> — є студентський план Canva for Education (безкоштовно), якщо не активувати — базової
+          версії теж вистачає</li>
+        <li><strong>Notion</strong> — особистий план безкоштовний без обмежень</li>
+      </ul>
+
+      <h3>«Можна не робити рівень "Відмінно"?»</h3>
+      <p>Можна — отримаєш «Добре» або «Задовільно». Але <strong>Notion-простір — це інвестиція в себе</strong>, яка
+        залишається тобі назавжди. Багато випускників ведуть свої справи в Notion і після університету.</p>
+
+      <h3>«Чи можна писати диплом за допомогою AI?»</h3>
+      <p>NotebookLM — це AI-помічник для аналізу твоїх джерел, не автор. Він не пише диплом за тебе — він допомагає
+        швидше знайти потрібну інформацію в твоїх джерелах. Усі тексти ти редагуєш своїми словами. Це передбачено
+        вимогами практики.</p>
+
+      <h3>«Що якщо мій науковий керівник не схвалить тему до 1 липня?»</h3>
+      <p>Почни з того, що є — навіть приблизна тема дозволяє почати збирати джерела. Уточнюй тему паралельно з збором
+        матеріалів. Найгірше — чекати «ідеальної теми» і не починати.</p>
+
+      <h3>«А якщо я не встигаю до 15 серпня?»</h3>
+      <p>Дедлайни строгі, але реалістичні. Якщо не встигаєш — попередь викладача якомога раніше. Завжди можна перейти з
+        рівня «Відмінно» на «Добре» — це краще, ніж зривати все.</p>
+    </div>
+
+    <!-- FINAL -->
+    <div class="final-motivation">
+      <h2>🚀 Готовий почати?</h2>
+      <p>За півтора місяця ти не просто здаси практику —</p>
+      <p>ти отримаєш <strong>фундамент для диплому</strong> і <strong>навички, які залишаться з тобою назавжди</strong>.
+      </p>
+      <p style="margin-top: 16px; font-size: 14px;">Перше заняття — старт. Усе можливо.</p>
+    </div>
+
+    <footer>
+      Виробнича практика · Менеджмент · 4 семестр<br>
+      Документ підготовлено для першого заняття 🎓
+    </footer>
+
+  </div>
+</body>
+
+</html>
