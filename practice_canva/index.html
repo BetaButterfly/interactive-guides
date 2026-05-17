@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Програма навчання: Canva — практика 4 семестр</title>
+<style>
+  :root {
+    --primary: #2E3440;
+    --accent: #00C4CC;
+    --accent-dark: #008B91;
+    --accent-light: #7BE5EA;
+    --success: #A3BE8C;
+    --warning: #EBCB8B;
+    --danger: #BF616A;
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --border: #E5E5E0;
+    --text: #2E3440;
+    --text-muted: #4C566A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 20px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #00C4CC 0%, #7B61FF 100%);
+    color: white;
+    padding: 40px 32px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 28px; margin-bottom: 8px; font-weight: 700; }
+  .header .subtitle { font-size: 16px; opacity: 0.92; margin-bottom: 16px; }
+  .header .meta {
+    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px;
+    font-size: 14px;
+  }
+  .header .meta span {
+    background: rgba(255,255,255,0.18);
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--card);
+    padding: 6px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { background: var(--bg); }
+  .tab-btn.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h3 {
+    font-size: 17px;
+    margin: 20px 0 10px;
+    color: var(--primary);
+  }
+  .card h4 {
+    font-size: 15px;
+    margin: 14px 0 8px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card p { margin-bottom: 10px; }
+  .card ul, .card ol { margin: 10px 0 14px 20px; }
+  .card li { margin-bottom: 6px; }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+  }
+  .badge-primary { background: #D6F5F7; color: var(--accent-dark); }
+  .badge-success { background: #E8F0E0; color: #5d7a3f; }
+  .badge-warning { background: #FBF3D9; color: #8a6d1f; }
+  .badge-danger { background: #F5DDDF; color: var(--danger); }
+
+  /* Lesson block */
+  .lesson-block {
+    border-left: 4px solid var(--accent);
+    background: #EBFAFB;
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .lesson-block h4 {
+    color: var(--accent-dark);
+    margin-bottom: 8px;
+  }
+
+  /* Time slot */
+  .time-slot {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .time-slot:last-child { border-bottom: none; }
+  .time-slot .time {
+    font-weight: 600;
+    color: var(--accent-dark);
+    font-size: 14px;
+  }
+  .time-slot .activity strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--primary);
+  }
+  .time-slot .activity { font-size: 14px; }
+
+  /* Step */
+  .step {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--accent-light);
+  }
+  .step-number {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+
+  /* Boxes */
+  .tip {
+    background: #FFF8E1;
+    border-left: 4px solid var(--warning);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .tip strong { color: #8a6d1f; }
+
+  .warning-box {
+    background: #FCE8E8;
+    border-left: 4px solid var(--danger);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .warning-box strong { color: var(--danger); }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--bg);
+    font-weight: 600;
+    color: var(--primary);
+  }
+  tr:hover td { background: #FAFAF7; }
+
+  /* Collapsible */
+  .collapsible {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .collapsible-header {
+    background: var(--bg);
+    padding: 14px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .collapsible-header:hover { background: #F0F0EC; }
+  .collapsible-header .arrow {
+    transition: transform 0.2s;
+    color: var(--accent);
+  }
+  .collapsible.open .arrow { transform: rotate(90deg); }
+  .collapsible-body {
+    display: none;
+    padding: 16px 18px;
+    border-top: 1px solid var(--border);
+  }
+  .collapsible.open .collapsible-body { display: block; }
+
+  /* Grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* Section card */
+  .section-card {
+    background: #EBFAFB;
+    border: 1px solid #C7E9EC;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .section-card h4 {
+    color: var(--accent-dark);
+    margin-bottom: 8px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 15px;
+  }
+  .section-card p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+  /* Checklist */
+  .checklist { list-style: none; margin-left: 0; }
+  .checklist li {
+    padding-left: 28px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* Code/key */
+  code, .key {
+    background: #ECEFF4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 13px;
+    color: var(--primary);
+  }
+
+  /* Highlight */
+  .highlight {
+    background: linear-gradient(180deg, transparent 60%, #FBF3D9 60%);
+    font-weight: 500;
+  }
+
+  /* Slide mockup */
+  .slide-mock {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 12px 0;
+    aspect-ratio: 16/9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .slide-mock .slide-num {
+    font-size: 11px;
+    color: var(--accent-dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .slide-mock .slide-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .slide-mock .slide-content {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* Color palette */
+  .palette {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+  .palette-color {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  /* Footer */
+  .footer-note {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🎨 Програма навчання: Canva</h1>
+    <div class="subtitle">Створення презентації дипломної роботи на основі матеріалів з NotebookLM</div>
+    <div class="meta">
+      <span>👥 Спеціальність: Менеджмент</span>
+      <span>⏱ Формат: 2 заняття по 2 години</span>
+      <span>🎯 Рівень: «Добре»</span>
+      <span>🎨 Результат: презентація на 10 слайдів</span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab(0)">🎯 Огляд</button>
+    <button class="tab-btn" onclick="showTab(1)">📅 Заняття 1</button>
+    <button class="tab-btn" onclick="showTab(2)">📅 Заняття 2</button>
+    <button class="tab-btn" onclick="showTab(3)">🎨 Дизайн-принципи</button>
+    <button class="tab-btn" onclick="showTab(4)">📊 10 слайдів</button>
+    <button class="tab-btn" onclick="showTab(5)">📚 Домашнє завдання</button>
+    <button class="tab-btn" onclick="showTab(6)">✅ Критерії оцінки</button>
+  </div>
+
+  <!-- TAB 0: OVERVIEW -->
+  <div class="tab-content active">
+    <div class="card">
+      <h2>🎯 Місце Canva в практиці</h2>
+      <p>Canva — це <strong>середній рівень («Добре»)</strong>. Після того, як студент опанував NotebookLM і написав теоретичний матеріал, він має <strong>візуалізувати ключові ідеї у презентації</strong> на 10 слайдів.</p>
+
+      <p>Логіка проста: <strong>NotebookLM дав зміст → Canva його упаковує</strong>. Без NotebookLM-частини презентація не має змісту. Без Canva — зміст не презентабельний.</p>
+
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="section-card">
+          <h4>✅ Чому Canva, а не PowerPoint</h4>
+          <p>Готові професійні шаблони. Безкоштовна для студентів. Не треба знати дизайн — система підкаже. Спільна робота через посилання.</p>
+        </div>
+        <div class="section-card">
+          <h4>🎯 Головна ціль практики</h4>
+          <p>Не просто «зробити слайди», а навчити студентів <em>візуально мислити</em>: перетворювати текст на схеми, інфографіку, діаграми.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 24px;">Що студент отримує</h3>
+      <ul>
+        <li>Зареєстрований акаунт Canva з безкоштовним планом для студентів</li>
+        <li>Презентація на 10 слайдів у єдиному стилі</li>
+        <li>3+ візуальних елементи: SWOT-аналіз, схема процесу, інфографіка</li>
+        <li>Готовий файл .pdf для подачі та посилання на онлайн-перегляд</li>
+        <li>Навичка створювати презентації, які не виглядають як з 2005 року</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📐 Логіка курсу</h2>
+      <div class="lesson-block">
+        <h4>Заняття 1 — Основи Canva та структура презентації</h4>
+        <p>Реєстрація, інтерфейс, шаблони. Принципи дизайну (правило 6×6, контраст, ієрархія). Створення перших 5 слайдів з матеріалів NotebookLM.</p>
+      </div>
+      <div class="lesson-block">
+        <h4>Заняття 2 — Візуальні елементи та фіналізація</h4>
+        <p>SWOT-аналіз, схеми, діаграми, інфографіка. Робота з кольоровою палітрою і типографією. Завершення презентації, експорт.</p>
+      </div>
+
+      <div class="tip">
+        <strong>💡 Ключовий принцип:</strong> студент НЕ малює з нуля — він використовує готові шаблони і змінює їх під свою тему. Це швидко і виглядає професійно.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔗 Зв'язок з іншими інструментами практики</h2>
+      <div class="grid-3">
+        <div class="section-card">
+          <h4>NotebookLM → Canva</h4>
+          <p>Текст висновків, цитати, класифікації, SWOT — все береться з звітів NotebookLM.</p>
+        </div>
+        <div class="section-card">
+          <h4>Notion → Canva</h4>
+          <p>Список літератури з бази Notion лягає на слайд 10. Тема диплому — з плану дипломної роботи.</p>
+        </div>
+        <div class="section-card">
+          <h4>Canva → Захист</h4>
+          <p>На захисті студент демонструє Canva як один з трьох інструментів. Слайди показують теоретичне знання.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: LESSON 1 -->
+  <div class="tab-content">
+    <div class="card">
+      <h2>📅 Заняття 1. Основи Canva та структура презентації</h2>
+      <span class="badge badge-primary">2 години</span>
+      <span class="badge badge-success">Інструмент: Canva</span>
+
+      <h3>🎯 Цілі заняття</h3>
+      <ul>
+        <li>Студент зареєстрований у Canva, активований Education-план</li>
+        <li>Розуміє інтерфейс і вміє користуватися готовими шаблонами</li>
+        <li>Знає 5 базових принципів презентаційного дизайну</li>
+        <li>Створив перші 5 слайдів презентації диплому</li>
+      </ul>
+
+      <h3>⏰ Хронометраж</h3>
+
+      <div class="time-slot">
+        <div class="time">0:00–0:15</div>
+        <div class="activity">
+          <strong>Вступ і мотивація</strong>
+          Що таке Canva. Покажіть 2-3 приклади дуже хороших і дуже поганих презентацій — щоб студент побачив різницю. Зв'язок Canva з матеріалом NotebookLM.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">0:15–0:30</div>
+        <div class="activity">
+          <strong>Реєстрація + Education-план</strong>
+          Реєстрація через Google. Як отримати безкоштовний Canva for Education (через домен ВНЗ або підтвердження статусу). Інтерфейс: пошук шаблонів, головна сторінка, проєкти.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">0:30–0:50</div>
+        <div class="activity">
+          <strong>5 принципів дизайну</strong>
+          Правило 6×6. Контраст. Ієрархія. Єдність стилю. «Less is more». Кожен принцип — з прикладом «погано/добре» на екрані.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">0:50–1:00</div>
+        <div class="activity">
+          <strong>☕ Перерва</strong>
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:00–1:30</div>
+        <div class="activity">
+          <strong>Вибір шаблону + структура з 10 слайдів</strong>
+          Як шукати правильний шаблон (ключові слова, фільтри). Огляд структури майбутньої презентації (див. вкладку «10 слайдів»). Студенти вибирають свій шаблон.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:30–1:50</div>
+        <div class="activity">
+          <strong>Створюємо перші 5 слайдів разом</strong>
+          Титульний → Актуальність → Мета → Теоретичні підходи → Аналіз літератури. Студенти повторюють за викладачем, але зі своєю темою.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:50–2:00</div>
+        <div class="activity">
+          <strong>ДЗ + Q&A</strong>
+          Доробити перші 5 слайдів до заняття 2. Підібрати кольорову палітру.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🛠 Покрокова практика заняття 1</h2>
+
+      <div class="collapsible open">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Крок 1. Реєстрація та Education-план</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <ol>
+            <li>Перейти на <code>canva.com</code></li>
+            <li>Sign up → через Google або email університету</li>
+            <li>Вибрати тип акаунта — <strong>Student</strong></li>
+            <li>За можливості — активувати <strong>Canva for Education</strong>: безкоштовно для студентів. Дає доступ до Premium-шаблонів, Pro-елементів, Magic-функцій</li>
+            <li>Підтвердити через скан студентського квитка або email домену ВНЗ</li>
+          </ol>
+          <div class="tip">
+            <strong>💡 Якщо Education не активується:</strong> базового безкоштовного плану цілком достатньо для практики. Premium-фішки приємні, але не критичні.
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Крок 2. Інтерфейс Canva — три зони</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <h4>На головній (canva.com після входу)</h4>
+          <ul>
+            <li><strong>Зверху:</strong> великий пошук шаблонів («Презентації», «Інфографіка», «Постер»)</li>
+            <li><strong>Зліва:</strong> категорії дизайнів, ваші проєкти, бренд-кіт</li>
+            <li><strong>Центр:</strong> рекомендовані шаблони та ваші останні роботи</li>
+          </ul>
+
+          <h4>У редакторі (коли відкрита презентація)</h4>
+          <ul>
+            <li><strong>Зліва:</strong> панель з вкладками: Дизайн, Елементи, Текст, Завантаження, Малювання, Проєкти, Apps</li>
+            <li><strong>Центр:</strong> робоче полотно зі слайдом</li>
+            <li><strong>Знизу:</strong> ескізи всіх слайдів (можна перетягувати, дублювати)</li>
+            <li><strong>Зверху:</strong> назва файлу, кнопка <strong>Share</strong>, Download</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Крок 3. Як вибрати правильний шаблон</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <p>На головній — у пошук вписати <strong>«Diploma presentation»</strong>, <strong>«Thesis presentation»</strong>, <strong>«Academic presentation»</strong>, <strong>«Дипломна»</strong> або <strong>«Презентація»</strong>.</p>
+
+          <h4>Критерії хорошого шаблону</h4>
+          <ul>
+            <li>✅ Спокійні кольори (синій, темно-зелений, нейтральний — не яскраво-рожевий і не неоновий)</li>
+            <li>✅ Класичні шрифти без зайвої декоративності</li>
+            <li>✅ Багато простору, не перенасичено графікою</li>
+            <li>✅ Є слайди з різними блоками (текст + графіка, тільки текст, таблиці)</li>
+          </ul>
+
+          <h4>Чого уникати</h4>
+          <ul>
+            <li>❌ Шаблони для весілля, дитячі, маркетингові з яскравими емодзі</li>
+            <li>❌ Темні фони (важко читати на проєкторі)</li>
+            <li>❌ Рукописні шрифти на основному тексті</li>
+            <li>❌ Шаблони з більше ніж 3 акцентними кольорами</li>
+          </ul>
+
+          <div class="warning-box">
+            <strong>⚠️ Premium-шаблони:</strong> у Canva є шаблони з короною (👑) — це Premium. Без Pro-плану їх можна редагувати, але при експорті буде водяний знак. Education-план знімає це обмеження. Якщо немає Education — обирай шаблон без корони.
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Крок 4. Базове редагування слайдів</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <h4>Текст</h4>
+          <ul>
+            <li>Подвійний клік на текст — починаєш редагувати</li>
+            <li>Виділяєш текст — зверху з'являється панель: шрифт, розмір, колір, жирність, вирівнювання</li>
+            <li>Для нового тексту — лівий бар <strong>Text</strong> → Add a heading / subheading / body</li>
+          </ul>
+
+          <h4>Зображення та елементи</h4>
+          <ul>
+            <li>Лівий бар <strong>Elements</strong> — мільйони ілюстрацій, ікон, форм, ліній</li>
+            <li>Пошук українською або англійською (англійською — більше результатів)</li>
+            <li>Перетягуєш елемент на слайд → можеш міняти розмір, колір, оберт</li>
+          </ul>
+
+          <h4>Дублювання і видалення</h4>
+          <ul>
+            <li>Дублювати слайд: правий клік внизу на ескіз → <strong>Duplicate page</strong></li>
+            <li>Видалити: правий клік → <strong>Delete page</strong></li>
+            <li>Зміна порядку: перетягувати ескізи знизу</li>
+          </ul>
+
+          <div class="tip">
+            <strong>💡 Покажіть студентам гарячі клавіші:</strong> <code>Ctrl+D</code> — дублювати, <code>Ctrl+Z</code> — скасувати, <code>T</code> — швидко додати текст.
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Крок 5. Створюємо перші 5 слайдів разом</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <p>Студенти повторюють за вами, але зі своєю темою дипломної. Слайди 1-5 — це найпростіша частина, бо це переважно текст з матеріалів NotebookLM.</p>
+
+          <div class="step"><span class="step-number">1</span><strong>Слайд 1 — Титульний.</strong> Тема диплому. Прізвище студента. ВНЗ. Рік. Можна додати: «Презентація до дипломної роботи».</div>
+
+          <div class="step"><span class="step-number">2</span><strong>Слайд 2 — Актуальність.</strong> 3-4 пункти, чому ця тема важлива. Беруться зі вступу до 1 розділу диплому.</div>
+
+          <div class="step"><span class="step-number">3</span><strong>Слайд 3 — Мета та завдання.</strong> Мета — одне речення. Завдання — 3-5 пунктів.</div>
+
+          <div class="step"><span class="step-number">4</span><strong>Слайд 4 — Теоретичні підходи.</strong> 2-3 ключові підходи з 1.1 NotebookLM. Прізвища авторів. Стислий зміст кожного підходу.</div>
+
+          <div class="step"><span class="step-number">5</span><strong>Слайд 5 — Аналіз літератури.</strong> Скільки джерел опрацьовано, основні висновки з огляду літератури. Можна додати кругову діаграму типів джерел.</div>
+
+          <div class="tip">
+            <strong>💡 Принцип:</strong> кожен слайд має 1 ідею. Якщо хочеться напхати — краще зробити 2 слайди.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LESSON 2 -->
+  <div class="tab-content">
+    <div class="card">
+      <h2>📅 Заняття 2. Візуальні елементи та фіналізація</h2>
+      <span class="badge badge-primary">2 години</span>
+      <span class="badge badge-warning">Складніше заняття</span>
+
+      <h3>🎯 Цілі заняття</h3>
+      <ul>
+        <li>Студент уміє створити SWOT-аналіз у Canva</li>
+        <li>Знає, як побудувати схему процесу або блок-схему</li>
+        <li>Розуміє основи кольорової палітри і типографії</li>
+        <li>Завершив усі 10 слайдів презентації</li>
+        <li>Експортував файл у PDF і має посилання на онлайн-перегляд</li>
+      </ul>
+
+      <h3>⏰ Хронометраж</h3>
+
+      <div class="time-slot">
+        <div class="time">0:00–0:15</div>
+        <div class="activity">
+          <strong>Швидкий огляд ДЗ + питання</strong>
+          У всіх готові перші 5 слайдів? Розбір типових проблем: «не можу змінити фон», «текст не вміщується», «де знайти ікону».
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">0:15–0:45</div>
+        <div class="activity">
+          <strong>SWOT-аналіз у Canva</strong>
+          Демонстрація: пошук шаблону SWOT, заповнення, переміщення на слайд. Студенти створюють свій SWOT для теми диплому.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">0:45–1:10</div>
+        <div class="activity">
+          <strong>Схеми та діаграми</strong>
+          Як зробити схему процесу (з 4-5 кроків). Як вставити кругову/стовпчикову діаграму. Інструмент Apps → Charts.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:10–1:20</div>
+        <div class="activity">
+          <strong>☕ Перерва</strong>
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:20–1:40</div>
+        <div class="activity">
+          <strong>Завершення слайдів 6-10</strong>
+          Слайди: Основні поняття → Аналітичні висновки → SWOT/схема → Практичне значення → Висновки + Список джерел.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:40–1:55</div>
+        <div class="activity">
+          <strong>Експорт і шерінг</strong>
+          Як експортувати у PDF (для подачі). Як отримати посилання на онлайн-перегляд (для здачі). Магічні функції: Magic Resize, Magic Animate.
+        </div>
+      </div>
+
+      <div class="time-slot">
+        <div class="time">1:55–2:00</div>
+        <div class="activity">
+          <strong>Дедлайни і вимоги до захисту</strong>
+          Що саме треба показати. Як надіслати викладачу.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🛠 Покрокова практика заняття 2</h2>
+
+      <div class="collapsible open">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>SWOT-аналіз — крок за кроком</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <h4>Спосіб 1: готовий шаблон</h4>
+          <ol>
+            <li>На лівому барі — <strong>Elements</strong></li>
+            <li>У пошук — <strong>SWOT analysis</strong> або <strong>SWOT матриця</strong></li>
+            <li>Знайти підходящий стиль, перетягнути на слайд</li>
+            <li>Заповнити чотири квадрати: Strengths, Weaknesses, Opportunities, Threats</li>
+            <li>Підлаштувати кольори під палітру презентації</li>
+          </ol>
+
+          <h4>Спосіб 2: побудувати вручну</h4>
+          <ol>
+            <li>Додати 4 однакові прямокутники (Elements → Shapes)</li>
+            <li>Розмістити у форматі 2×2</li>
+            <li>Підписати кожен: S, W, O, T (або повними назвами)</li>
+            <li>Розфарбувати кожен у свій колір (традиційно: S — зелений, W — червоний, O — синій, T — помаранчевий)</li>
+            <li>Додати по 3-4 пункти у кожен</li>
+          </ol>
+
+          <h4>Що писати в SWOT для дипломної</h4>
+          <p>SWOT має стосуватися <strong>об'єкта дослідження</strong>, а не самої роботи. Якщо тема «Управління персоналом у малому бізнесі»:</p>
+          <ul>
+            <li><strong>S (Сильні):</strong> Гнучкість малого бізнесу, тісний контакт керівника з працівниками</li>
+            <li><strong>W (Слабкі):</strong> Обмежені ресурси, відсутність HR-відділу</li>
+            <li><strong>O (Можливості):</strong> Цифрові HR-інструменти, аутсорсинг функцій</li>
+            <li><strong>T (Загрози):</strong> Конкуренція за кадри, плинність</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Схеми та блок-схеми процесу</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <h4>Шлях до готового шаблону</h4>
+          <ol>
+            <li><strong>Elements</strong> → пошук <strong>«flowchart»</strong>, <strong>«process»</strong>, <strong>«timeline»</strong>, <strong>«діаграма»</strong></li>
+            <li>Вибрати шаблон з 4-6 кроків (типове для дипломних)</li>
+            <li>Підставити свої кроки</li>
+          </ol>
+
+          <h4>Як побудувати схему вручну</h4>
+          <ol>
+            <li>4-5 однакових прямокутників або кругів (Elements → Shapes)</li>
+            <li>Між ними — стрілки (Elements → Lines and shapes)</li>
+            <li>Підписати кожен крок коротко (2-3 слова, не довге речення)</li>
+            <li>Зробити перший і останній — акцентний колір, проміжні — нейтральні</li>
+          </ol>
+
+          <h4>Приклади корисних схем для диплому</h4>
+          <ul>
+            <li><strong>Етапи прийняття управлінського рішення</strong> (для тем з менеджменту)</li>
+            <li><strong>Процес стратегічного планування</strong></li>
+            <li><strong>Алгоритм відбору персоналу</strong></li>
+            <li><strong>Цикл маркетингового дослідження</strong></li>
+            <li><strong>Структура мотивації за Маслоу</strong> (піраміда)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Діаграми (кругові, стовпчикові)</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <ol>
+            <li>На лівому барі — <strong>Elements</strong> → прокрутити вниз до секції <strong>Charts</strong></li>
+            <li>Вибрати тип: Pie chart (кругова), Bar chart (стовпчикова), Line chart (лінійна)</li>
+            <li>Перетягнути на слайд</li>
+            <li>У панелі праворуч відкриється вікно з даними</li>
+            <li>Ввести свої значення і підписи</li>
+            <li>Діаграма автоматично перемалюється</li>
+          </ol>
+
+          <h4>Приклади для дипломної</h4>
+          <ul>
+            <li><strong>Кругова:</strong> структура джерел (статті 60% / монографії 25% / закони 15%)</li>
+            <li><strong>Стовпчикова:</strong> кількість публікацій по роках</li>
+            <li><strong>Лінійна:</strong> динаміка показника, який досліджуєте</li>
+          </ul>
+
+          <div class="tip">
+            <strong>💡 Magic Bullets:</strong> для статистичних даних з диплому — створи діаграму прямо в Canva, не вставляй скріншоти з Excel. Виглядає чистіше.
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Експорт та шерінг</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <h4>Експорт у PDF (для подачі)</h4>
+          <ol>
+            <li>Зверху праворуч — <strong>Share</strong> → <strong>Download</strong></li>
+            <li>File type: <strong>PDF Standard</strong> (для перегляду) або <strong>PDF Print</strong> (для друку)</li>
+            <li>Pages: All</li>
+            <li><strong>Download</strong></li>
+          </ol>
+
+          <h4>Посилання на онлайн-перегляд</h4>
+          <ol>
+            <li><strong>Share</strong> → у полі <strong>Collaboration link</strong> → змінити з «only people with access» на <strong>«Anyone with the link»</strong></li>
+            <li>Право доступу: <strong>Can view</strong> (тільки переглядати)</li>
+            <li>Копіювати посилання — це те, що йде викладачу</li>
+          </ol>
+
+          <h4>Експорт у PPTX (на запасний варіант)</h4>
+          <p>Share → Download → File type: <strong>PowerPoint (.pptx)</strong>. Зручно мати запасну копію, якщо на захисті немає інтернету.</p>
+
+          <div class="warning-box">
+            <strong>⚠️ Часта проблема:</strong> Premium-елементи в безкоштовній версії при експорті дають водяний знак. Перевірте презентацію перед здачею — там не має бути жодних «Free version» написів.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: DESIGN PRINCIPLES -->
+  <div class="tab-content">
+    <div class="card">
+      <h2>🎨 5 принципів дизайну презентацій</h2>
+      <p>Студенти-менеджери не дизайнери, тому варто дати їм мінімальний робочий набір принципів — і цього вистачить для хорошої презентації.</p>
+    </div>
+
+    <div class="card">
+      <h2>1. Правило 6×6</h2>
+      <p>Максимум <strong>6 рядків тексту</strong> на слайді, максимум <strong>6 слів у рядку</strong>. Усе, що більше — або поділити на 2 слайди, або скоротити.</p>
+
+      <div class="grid-2">
+        <div>
+          <h4>❌ Погано (10 рядків)</h4>
+          <div class="slide-mock">
+            <div class="slide-num">Slide 4</div>
+            <div class="slide-title">Теоретичні підходи</div>
+            <div class="slide-content">
+              • Іваненко (2020) розглядає управління...<br>
+              • Петренко (2021) дає визначення як...<br>
+              • Сидоренко (2022) пропонує підхід...<br>
+              • Коваленко (2023) описує функції...<br>
+              • ... ще 6 рядків з деталями
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4>✅ Добре (4 рядки)</h4>
+          <div class="slide-mock">
+            <div class="slide-num">Slide 4</div>
+            <div class="slide-title">Три ключові підходи</div>
+            <div class="slide-content">
+              <strong>Системний</strong> — Іваненко (2020)<br>
+              <strong>Процесний</strong> — Петренко (2021)<br>
+              <strong>Ситуаційний</strong> — Сидоренко (2022)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>💡 Принцип:</strong> на слайді — тези, а не весь текст диплому. Подробиці студент розкаже усно.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2. Контраст</h2>
+      <p>Текст має бути <strong>добре видимим на тлі</strong>. Темний шрифт на світлому тлі — або навпаки.</p>
+
+      <div class="grid-2">
+        <div>
+          <h4>❌ Погано (низький контраст)</h4>
+          <div style="background: #C8D6E5; padding: 20px; border-radius: 8px; color: #95A5A6;">
+            Світло-сірий текст на блакитному тлі — на проєкторі взагалі не видно
+          </div>
+        </div>
+        <div>
+          <h4>✅ Добре (високий контраст)</h4>
+          <div style="background: white; padding: 20px; border-radius: 8px; color: #2E3440; border: 1px solid var(--border);">
+            <strong>Чорний текст на білому тлі</strong> — класика, читається з останнього ряду
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ Перевірка контрасту:</strong> увімкніть монохромний режим на телефоні і подивіться слайди в чорно-білому. Якщо текст і досі читається — контраст хороший.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3. Ієрархія</h2>
+      <p>Око глядача має автоматично знати: <strong>спершу читати заголовок, потім тези, потім деталі</strong>. Це досягається розміром шрифту і кольором.</p>
+
+      <table>
+        <tr><th>Елемент</th><th>Розмір</th><th>Стиль</th></tr>
+        <tr><td>Заголовок слайда (H1)</td><td>36-44 пт</td><td>Жирний, акцентний колір</td></tr>
+        <tr><td>Підзаголовок (H2)</td><td>24-28 пт</td><td>Звичайний, темний</td></tr>
+        <tr><td>Основний текст</td><td>16-20 пт</td><td>Звичайний, темний</td></tr>
+        <tr><td>Підписи / виноски</td><td>12-14 пт</td><td>Сірий</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>4. Єдність стилю</h2>
+      <p>Усі 10 слайдів — в одному стилі. Це найважливіша вимога з положення про практику.</p>
+
+      <h3>Що має бути однакове на всіх слайдах</h3>
+      <ul>
+        <li><strong>Кольорова палітра</strong> — 2-3 основні кольори + 1 акцентний</li>
+        <li><strong>Шрифт</strong> — один для заголовків, один для тексту (макс. 2)</li>
+        <li><strong>Стиль ікон</strong> — або всі lineart, або всі заповнені, не змішувати</li>
+        <li><strong>Стиль фото</strong> — або всі реалістичні, або всі ілюстрації</li>
+        <li><strong>Розташування заголовків</strong> — завжди в тому самому місці</li>
+      </ul>
+
+      <h3>Як забезпечити єдність</h3>
+      <ol>
+        <li>Вибрати один шаблон і триматись його</li>
+        <li>Дублювати слайди, а не створювати з нуля (так зберігається стиль)</li>
+        <li>Використати функцію <strong>Styles</strong> у лівому барі — можна вибрати готову палітру і застосувати до всієї презентації</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>5. «Less is more»</h2>
+      <p>Чим менше зайвого — тим краще. Білий простір (порожнє місце на слайді) — це не «недозаповнений слайд», це <strong>прийом дизайну</strong>.</p>
+
+      <h3>Що видалити, якщо сумніваєтесь</h3>
+      <ul>
+        <li>Зайві ікони, які не несуть сенсу («просто щоб не пусто»)</li>
+        <li>Декоративні елементи, які відволікають від тексту</li>
+        <li>Тіні, градієнти, 3D-ефекти (якщо їх немає в шаблоні)</li>
+        <li>Тривіальні слова: «Дякую за увагу!», «Чи маєте питання?» — це окремий слайд може бути, але без перенасичення</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🎨 Готові кольорові палітри для дипломної</h2>
+      <p>Якщо студент не знає, які кольори вибрати — ось 3 перевірені палітри.</p>
+
+      <h3>Класична академічна</h3>
+      <div class="palette">
+        <div class="palette-color" style="background: #1A3A5C;">#1A3A5C</div>
+        <div class="palette-color" style="background: #4A6FA5;">#4A6FA5</div>
+        <div class="palette-color" style="background: #6B8FB8;">#6B8FB8</div>
+        <div class="palette-color" style="background: #D4A847;">#D4A847</div>
+        <div class="palette-color" style="background: #F5F5F0; color: #333; text-shadow: none;">#F5F5F0</div>
+      </div>
+      <p>Темно-синій основний, золотий акцент. Виглядає серйозно, підходить для серйозних тем.</p>
+
+      <h3>Сучасна корпоративна</h3>
+      <div class="palette">
+        <div class="palette-color" style="background: #2E5A4B;">#2E5A4B</div>
+        <div class="palette-color" style="background: #5B8C7D;">#5B8C7D</div>
+        <div class="palette-color" style="background: #A8C4B8;">#A8C4B8</div>
+        <div class="palette-color" style="background: #E8704C;">#E8704C</div>
+        <div class="palette-color" style="background: #FAF8F3; color: #333; text-shadow: none;">#FAF8F3</div>
+      </div>
+      <p>Темно-зелений, помаранчевий акцент. Свіжий, але стриманий вигляд.</p>
+
+      <h3>Мінімалістична</h3>
+      <div class="palette">
+        <div class="palette-color" style="background: #2E3440;">#2E3440</div>
+        <div class="palette-color" style="background: #4C566A;">#4C566A</div>
+        <div class="palette-color" style="background: #88C0D0;">#88C0D0</div>
+        <div class="palette-color" style="background: #BF616A;">#BF616A</div>
+        <div class="palette-color" style="background: #ECEFF4; color: #333; text-shadow: none;">#ECEFF4</div>
+      </div>
+      <p>Темно-сірий з блакитними та червоними акцентами. Стильно, сучасно.</p>
+
+      <div class="tip">
+        <strong>💡 Як використати готову палітру в Canva:</strong> у лівому барі → <strong>Styles</strong> → можна ввести HEX-коди або обрати готову. Усі елементи презентації автоматично перекрасяться.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: 10 SLIDES -->
+  <div class="tab-content">
+    <div class="card">
+      <h2>📊 Структура з 10 слайдів</h2>
+      <p>Це обов'язкова структура згідно з положенням про практику. Орієнтовна, але всі 10 пунктів мають бути.</p>
+    </div>
+
+    <div class="card">
+      <h2>📑 Слайд за слайдом</h2>
+
+      <div class="lesson-block">
+        <h4>Слайд 1 — Тема дипломної роботи</h4>
+        <p><strong>Що:</strong> Назва теми, ПІБ студента, ВНЗ, рік, ПІБ керівника (за бажанням).</p>
+        <p><strong>Тип:</strong> Титульний — мінімум тексту, акцент на тему.</p>
+        <p><strong>Лайфхак:</strong> візуально красивий титул задає тон усій презентації.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 2 — Актуальність теми</h4>
+        <p><strong>Що:</strong> 3-4 пункти, чому ця тема важлива зараз. Можна додати статистику або кейс.</p>
+        <p><strong>Звідки взяти:</strong> вступ до 1 розділу диплому, висновки до 1.3 з NotebookLM.</p>
+        <p><strong>Тип:</strong> текстовий з акцентними ілюстраціями.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 3 — Мета дослідження</h4>
+        <p><strong>Що:</strong> Мета (1 речення) + 3-5 завдань.</p>
+        <p><strong>Звідки взяти:</strong> вступ до диплому. Якщо ще не написано — формулюється на основі плану розділів.</p>
+        <p><strong>Тип:</strong> чіткий список або інфографіка з нумерацією.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 4 — Теоретичні підходи</h4>
+        <p><strong>Що:</strong> 2-3 основні підходи до досліджуваного питання з іменами авторів.</p>
+        <p><strong>Звідки взяти:</strong> звіт 1.1 з NotebookLM, секція «теоретичні підходи».</p>
+        <p><strong>Тип:</strong> таблиця-порівняння або картки з підходами.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 5 — Аналіз літератури</h4>
+        <p><strong>Що:</strong> Скільки джерел опрацьовано, основні висновки з огляду. Можна додати кругову діаграму.</p>
+        <p><strong>Звідки взяти:</strong> загальна статистика твоїх 50 джерел з NotebookLM + аналітичні висновки.</p>
+        <p><strong>Тип:</strong> інфографіка з числами + 2-3 ключові висновки.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 6 — Основні поняття</h4>
+        <p><strong>Що:</strong> 3-5 ключових термінів дипломної з визначеннями.</p>
+        <p><strong>Звідки взяти:</strong> звіт 1.1 з NotebookLM, секція «визначення».</p>
+        <p><strong>Тип:</strong> картки «термін → визначення» або словник-стиль.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 7 — Аналітичні висновки</h4>
+        <p><strong>Що:</strong> 3-4 ключові висновки з 1 розділу.</p>
+        <p><strong>Звідки взяти:</strong> аналітичні висновки до 1 розділу (з Частини 10 NotebookLM-гайду).</p>
+        <p><strong>Тип:</strong> пронумерований список з ілюстраціями.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 8 — SWOT-аналіз або схема</h4>
+        <p><strong>Що:</strong> Візуальний елемент — SWOT-аналіз об'єкта дослідження АБО схема процесу/класифікації.</p>
+        <p><strong>Звідки взяти:</strong> побудувати на основі звітів NotebookLM (там є класифікації, складові, виклики/перспективи — це і є SWOT).</p>
+        <p><strong>Тип:</strong> візуальний — це найкрасивіший слайд презентації.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 9 — Практичне значення</h4>
+        <p><strong>Що:</strong> Де і як можна використати результати дослідження.</p>
+        <p><strong>Звідки взяти:</strong> для теоретичного етапу — можна вказати «теоретична база для практичної частини». Якщо є експериментальна частина — описати її значення.</p>
+        <p><strong>Тип:</strong> текст + 2-3 ілюстрації.</p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>Слайд 10 — Висновки + Список джерел</h4>
+        <p><strong>Що:</strong> 3-4 узагальнюючі висновки + посилання на список літератури (50 джерел). Можна додати «Дякую за увагу» наприкінці або зробити окремий слайд 11.</p>
+        <p><strong>Звідки взяти:</strong> загальні висновки до 1 розділу. Список — з бази «Література» в Notion.</p>
+        <p><strong>Тип:</strong> фінальний слайд — лаконічний.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📐 Розподіл типів слайдів</h2>
+      <p>Презентація має бути <strong>різноманітною</strong>. Якщо всі 10 слайдів — це просто текст списком, виглядає нудно. Розподіл за типами:</p>
+      <table>
+        <tr><th>Тип</th><th>Слайди</th><th>Скільки</th></tr>
+        <tr><td>Титульний / фінальний</td><td>1, 10</td><td>2</td></tr>
+        <tr><td>Текстові (тези)</td><td>2, 3, 9</td><td>3</td></tr>
+        <tr><td>З таблицею / порівнянням</td><td>4, 6</td><td>2</td></tr>
+        <tr><td>З діаграмою / інфографікою</td><td>5, 7</td><td>2</td></tr>
+        <tr><td>Зі схемою / SWOT</td><td>8</td><td>1</td></tr>
+      </table>
+      <p>Результат: 3 текстові + 2 з таблицями + 2 з діаграмами + 1 SWOT + 2 титульні. <strong>Збалансовано і різноманітно.</strong></p>
+    </div>
+  </div>
+
+  <!-- TAB 5: HOMEWORK -->
+  <div class="tab-content">
+    <div class="card">
+      <h2>📚 Домашнє завдання після Заняття 1</h2>
+      <span class="badge badge-primary">Термін: до заняття 2</span>
+
+      <h3>Що зробити</h3>
+      <ol>
+        <li>Завершити слайди 1-5 повністю (титульний, актуальність, мета, теоретичні підходи, аналіз літератури)</li>
+        <li>Обрати кольорову палітру і триматись її</li>
+        <li>Перевірити, що шрифти однакові на всіх слайдах</li>
+        <li>Підготувати чернетки слайдів 6-10 (хоча б структуру)</li>
+      </ol>
+
+      <h3>Як здати</h3>
+      <p>Надіслати посилання на Canva-проєкт (з режимом <strong>Anyone with the link → Can view</strong>). Можна також скріншот зроблених слайдів у чат.</p>
+    </div>
+
+    <div class="card">
+      <h2>📚 Фінальне домашнє завдання</h2>
+      <span class="badge badge-danger">До захисту практики</span>
+
+      <h3>Що має бути готовим</h3>
+      <ul class="checklist">
+        <li>Усі 10 слайдів заповнені</li>
+        <li>Єдиний стиль на всіх слайдах</li>
+        <li>Мінімум 3 візуальних елементи: SWOT, схема, діаграма</li>
+        <li>Слайд з висновками (3-4 ключові висновки з 1 розділу)</li>
+        <li>Слайд або секція зі списком джерел</li>
+        <li>Виправлений правопис і відсутні typos</li>
+        <li>Експортовано у PDF</li>
+        <li>Налаштований публічний лінк для перегляду</li>
+      </ul>
+
+      <h3>Що показати на захисті</h3>
+      <p>Студент відкриває презентацію Canva в режимі демонстрації (<strong>Present</strong> → Standard) і коротко (3-4 хв) проходить усіма слайдами. Не читає — розповідає своїми словами те, що на екрані.</p>
+
+      <div class="warning-box">
+        <strong>⚠️ Часті помилки:</strong>
+        <ul style="margin-top: 6px;">
+          <li>«Я зробив 15 слайдів» — занадто багато, не за вимогами</li>
+          <li>«Кожен слайд в своєму стилі» — не зараховується як «єдиний стиль»</li>
+          <li>«Багато тексту дрібним шрифтом» — порушення правила 6×6</li>
+          <li>«Не експортував у PDF» — викладач не може перевірити</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: CRITERIA -->
+  <div class="tab-content">
+    <div class="card">
+      <h2>✅ Критерії оцінювання Canva-частини</h2>
+      <p>Згідно з положенням про практику, Canva — це <strong>другий рівень («Добре»)</strong>. Виконується після NotebookLM-частини.</p>
+
+      <h3>Що перевіряється</h3>
+      <table>
+        <tr><th>Критерій</th><th>На що дивитись</th><th>Вага</th></tr>
+        <tr><td>10 слайдів</td><td>Точно 10 (можна 11 з фінальним «Дякую»)</td><td>★★★</td></tr>
+        <tr><td>Єдиний стиль</td><td>Однакові кольори, шрифти, розташування</td><td>★★★</td></tr>
+        <tr><td>Структура за положенням</td><td>Усі 10 розділів з вимог</td><td>★★★</td></tr>
+        <tr><td>Схеми</td><td>Мінімум 1 схема процесу або структури</td><td>★★</td></tr>
+        <tr><td>Діаграми</td><td>Мінімум 1 діаграма (кругова/стовпчикова)</td><td>★★</td></tr>
+        <tr><td>Інфографіка</td><td>Мінімум 1 слайд з інфографікою</td><td>★★</td></tr>
+        <tr><td>Висновки</td><td>Чіткий слайд з висновками</td><td>★★</td></tr>
+        <tr><td>Список джерел</td><td>Має бути або на окремому слайді, або в дескриптіонах</td><td>★★</td></tr>
+        <tr><td>Зв'язок з NotebookLM</td><td>Видно, що матеріал з реальної теорії, а не вигаданий</td><td>★★</td></tr>
+        <tr><td>Демонстрація на захисті</td><td>Уміння розказати своїми словами</td><td>★★</td></tr>
+      </table>
+
+      <h3>Чек-лист готовності до здачі</h3>
+      <ul class="checklist">
+        <li>10 слайдів (мінімум — рівно 10, максимум — 11 з фіналом)</li>
+        <li>Усі обов'язкові розділи присутні</li>
+        <li>Один шаблон, одна палітра, один шрифт</li>
+        <li>Принаймні 1 SWOT або схема</li>
+        <li>Принаймні 1 діаграма</li>
+        <li>Без водяних знаків Premium</li>
+        <li>Без помилок у тексті</li>
+        <li>Експорт у PDF готовий</li>
+        <li>Посилання на онлайн-перегляд налаштовано (Anyone can view)</li>
+        <li>Студент уміє розказати презентацію за 3-4 хвилини</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🎤 Сценарій захисту Canva-частини (3-4 хвилини)</h2>
+
+      <div class="lesson-block">
+        <h4>0:00–0:20 — Відкриття</h4>
+        <p><em>«Презентація моєї дипломної роботи на тему [тема]. Десять слайдів — структура за вимогами практики. Створена в Canva на основі теоретичного матеріалу, опрацьованого в NotebookLM.»</em></p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>0:20–1:30 — Прохід слайдами 1-5</h4>
+        <p><em>«Перший слайд — титульний. Другий — актуальність теми, ось три ключові аргументи. Третій — мета і завдання. Четвертий — три теоретичні підходи, які я виділила. П'ятий — статистика опрацьованих джерел.»</em></p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>1:30–2:30 — Прохід слайдами 6-8 (найважливіші)</h4>
+        <p><em>«Слайд 6 — ключові поняття. Слайд 7 — аналітичні висновки. А ось слайд 8 — SWOT-аналіз об'єкта мого дослідження. Сильні сторони — гнучкість, тісний контакт. Слабкі — обмежені ресурси. Можливості — цифрові інструменти. Загрози — плинність кадрів.»</em></p>
+      </div>
+
+      <div class="lesson-block">
+        <h4>2:30–3:30 — Слайди 9-10 і фінал</h4>
+        <p><em>«Практичне значення — теоретична база для другого розділу. Висновки — три ключові узагальнення. У списку — 50 джерел за ДСТУ. Дякую за увагу!»</em></p>
+      </div>
+
+      <div class="tip">
+        <strong>💡 Викладачу:</strong> якщо студент читає з слайдів — це показник, що він не готувався. Хороша презентація — це коли студент <em>розповідає</em>, а слайди лише підкріплюють його думку.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Програма підготовлена для виробничої практики (4 семестр) · Canva як рівень «Добре»
+  </div>
+
+</div>
+
+<script>
+  function showTab(idx) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.tab-content').forEach((c, i) => {
+      c.classList.toggle('active', i === idx);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleCollapsible(header) {
+    header.parentElement.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
