@@ -8,16 +8,16 @@
   :root {
     --primary: #2E3440;
     --accent: #00C4CC;
-    --accent-dark: #008B91;
+    --accent-dark: #006B70;
     --accent-light: #7BE5EA;
     --accent-bg: #E0F7F8;
-    --purple: #7B61FF;
+    --purple: #4B35D1;
     --purple-bg: #EFEAFE;
-    --success: #7FA968;
+    --success: #3E6B2D;
     --success-bg: #EFF5E8;
     --warning: #D4A53C;
     --warning-bg: #FBF3D9;
-    --danger: #BF616A;
+    --danger: #9B3D44;
     --danger-bg: #FCE8E8;
     --bg: #FAFAF7;
     --card: #FFFFFF;
@@ -105,7 +105,7 @@
   .nav-list .num {
     display: inline-block;
     background: var(--accent);
-    color: white;
+    color: var(--primary);
     width: 22px;
     height: 22px;
     border-radius: 50%;
@@ -193,7 +193,7 @@
     left: 16px;
     top: 16px;
     background: var(--accent);
-    color: white;
+    color: var(--primary);
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -213,11 +213,11 @@
     margin: 16px 0;
     font-size: 14px;
   }
-  .tip strong { color: #8a6d1f; }
+  .tip strong { color: #6B5318; }
   .tip-title {
     font-weight: 600;
     margin-bottom: 4px;
-    color: #8a6d1f;
+    color: #6B5318;
   }
 
   .warning {
@@ -515,7 +515,7 @@
 </style>
 </head>
 <body>
-<div class="container">
+<main class="container">
 
   <!-- HEADER -->
   <div class="header">
@@ -531,10 +531,10 @@
     <h2 style="color: var(--primary); font-size: 22px; margin-bottom: 14px;">👋 Привіт!</h2>
     <p>Цей гайд проведе тебе крок за кроком через створення презентації твоєї дипломної роботи в Canva. <strong>Тобі не потрібно бути дизайнером</strong> — Canva все робить за тебе, треба лише знати, де клікнути.</p>
 
-    <h4>Як це працює</h4>
+    <h3>Як це працює</h3>
     <p>Логіка проста: <strong>NotebookLM дав тобі зміст — Canva його упаковує</strong>. Тобто весь матеріал для слайдів вже є — у твоїх звітах по 1.1, 1.2, 1.3 і у висновках. У Canva ти просто переносиш ключові тези на красиві слайди.</p>
 
-    <h4>Що в тебе буде наприкінці</h4>
+    <h3>Що в тебе буде наприкінці</h3>
     <ul>
       <li>Презентація на <strong>10 слайдів</strong> у єдиному стилі</li>
       <li>SWOT-аналіз твого об'єкта дослідження</li>
@@ -1595,7 +1595,7 @@
     Удачі на захисті! 🎓
   </footer>
 
-</div>
+</main>
 
 <script>
   document.querySelectorAll('a[href^="#"]').forEach(a => {
