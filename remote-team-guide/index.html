@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Гайд: Керування віддаленими командами</title>
+<style>
+  :root {
+    --navy: #0f1f3d;
+    --blue: #1a3a6b;
+    --accent: #2d7dd2;
+    --accent-light: #4a9fe8;
+    --teal: #0d9488;
+    --amber: #d97706;
+    --red: #dc2626;
+    --green: #16a34a;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --border: #e2e8f0;
+    --tag-bg: #e0eaf8;
+    --tag-text: #1a3a6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, #1e4d8c 100%);
+    color: white;
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(45,125,210,0.18);
+  }
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-label {
+    display: inline-block;
+    background: rgba(45,125,210,0.3);
+    border: 1px solid rgba(74,159,232,0.4);
+    color: #a0c4f1;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 span { color: #4a9fe8; }
+  .hero-sub {
+    font-size: 16px;
+    color: #94b8d9;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num {
+    display: block;
+    font-size: 28px;
+    font-weight: 800;
+    color: #4a9fe8;
+    line-height: 1;
+  }
+  .hero-stat .lbl {
+    font-size: 11px;
+    color: #7fa8c9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* NAV TABS */
+  .nav-wrap {
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-tabs {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    user-select: none;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .nav-tab:hover { color: var(--accent); background: #f8faff; }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* CONTENT */
+  .content { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card-icon.blue { background: #e0eaf8; }
+  .card-icon.teal { background: #d1faf5; }
+  .card-icon.amber { background: #fef3c7; }
+  .card-icon.red { background: #fee2e2; }
+  .card-icon.green { background: #dcfce7; }
+  .card-icon.purple { background: #ede9fe; }
+
+  .card-title { font-size: 17px; font-weight: 700; color: var(--text); flex: 1; }
+  .card-desc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .toggle-btn {
+    font-size: 18px;
+    color: var(--text-secondary);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .card.collapsed .toggle-btn { transform: rotate(-90deg); }
+  .card-body { }
+  .card.collapsed .card-body { display: none; }
+
+  /* LISTS */
+  .check-list { list-style: none; }
+  .check-list li {
+    padding: 8px 0 8px 30px;
+    position: relative;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .warn-list { list-style: none; }
+  .warn-list li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .warn-list li:last-child { border-bottom: none; }
+  .warn-list li::before {
+    content: '⚠';
+    position: absolute;
+    left: 0;
+    font-size: 13px;
+  }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 3px 3px 3px 0;
+    letter-spacing: 0.3px;
+  }
+  .tag.green { background: #dcfce7; color: #15803d; }
+  .tag.amber { background: #fef3c7; color: #92400e; }
+  .tag.red { background: #fee2e2; color: #991b1b; }
+  .tag.purple { background: #ede9fe; color: #6d28d9; }
+
+  /* GRIDS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 660px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* MINI CARDS */
+  .mini-card {
+    background: #f8faff;
+    border: 1px solid #dce8f8;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .mini-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .mini-card p, .mini-card li {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .mini-card ul { list-style: none; }
+  .mini-card ul li { padding: 4px 0 4px 18px; position: relative; }
+  .mini-card ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 12px; }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: linear-gradient(135deg, #e8f4fd, #f0f8ff);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .highlight.amber {
+    background: linear-gradient(135deg, #fffbeb, #fef9ec);
+    border-left-color: var(--amber);
+  }
+  .highlight.green {
+    background: linear-gradient(135deg, #f0fdf4, #f7fef9);
+    border-left-color: var(--green);
+  }
+  .highlight.red {
+    background: linear-gradient(135deg, #fef2f2, #fff5f5);
+    border-left-color: var(--red);
+  }
+  .highlight strong { color: var(--navy); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-header .icon { font-size: 26px; }
+  .section-header h2 { font-size: 22px; font-weight: 800; color: var(--navy); }
+  .section-header .sub { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* PROGRESS BAR */
+  .progress-item { margin-bottom: 14px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+  .progress-fill.blue { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+  .progress-fill.teal { background: linear-gradient(90deg, var(--teal), #14b8a6); }
+  .progress-fill.amber { background: linear-gradient(90deg, var(--amber), #f59e0b); }
+  .progress-fill.red { background: linear-gradient(90deg, var(--red), #ef4444); }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--teal));
+  }
+  .tl-item { position: relative; margin-bottom: 22px; }
+  .tl-dot {
+    position: absolute;
+    left: -23px; top: 3px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .tl-dot.blue { background: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .tl-dot.teal { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
+  .tl-dot.amber { background: var(--amber); box-shadow: 0 0 0 2px var(--amber); }
+  .tl-dot.green { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+  .tl-week { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .tl-content { font-size: 14px; color: var(--text); }
+  .tl-content strong { color: var(--navy); }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th {
+    background: #f1f5f9;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--navy);
+    border-bottom: 2px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #f8faff; }
+
+  /* CHECKLIST INTERACTIVE */
+  .interactive-check { list-style: none; }
+  .interactive-check li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .interactive-check li:last-child { border-bottom: none; }
+  .interactive-check li.done { opacity: 0.5; }
+  .interactive-check li.done .ic-text { text-decoration: line-through; }
+  .ic-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .interactive-check li.done .ic-box {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+    font-size: 11px;
+  }
+  .ic-text { flex: 1; line-height: 1.45; }
+
+  /* FORMULA */
+  .formula-box {
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: white;
+    border-radius: 12px;
+    padding: 24px 28px;
+    text-align: center;
+    margin: 20px 0;
+  }
+  .formula-box .formula-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #7aa8d4;
+    margin-bottom: 10px;
+  }
+  .formula-box .formula-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #e0eaf8;
+  }
+  .formula-box .formula-text span { color: #4a9fe8; }
+
+  /* SCORE TRACKER */
+  .score-tracker {
+    background: linear-gradient(135deg, #e8f5e9, #f0fdf4);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .score-num { font-size: 42px; font-weight: 800; color: var(--green); line-height: 1; }
+  .score-label { font-size: 12px; color: #15803d; font-weight: 600; margin-top: 4px; }
+  .score-sub { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+
+  /* QUOTE */
+  .pm-quote {
+    border-left: 4px solid var(--teal);
+    padding: 12px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+    background: #f0fdf8;
+    border-radius: 0 8px 8px 0;
+  }
+  .pm-quote .qsrc { font-style: normal; font-size: 12px; color: var(--text-secondary); margin-top: 6px; display: block; }
+
+  /* PILL ROW */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pill .pill-icon { font-size: 15px; }
+
+  /* TOOL CARD */
+  .tool-row { display: flex; flex-direction: column; gap: 10px; }
+  .tool-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #f8faff;
+    border: 1px solid #dce8f8;
+    border-radius: 10px;
+  }
+  .tool-emoji { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .tool-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .tool-desc { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+  .tool-when { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 4px; }
+
+  /* ALERT */
+  .alert {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 13px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alert.info { background: #e0eaf8; border: 1px solid #b8d0f0; }
+  .alert.warn { background: #fffbeb; border: 1px solid #fde68a; }
+  .alert.success { background: #dcfce7; border: 1px solid #86efac; }
+  .alert.danger { background: #fee2e2; border: 1px solid #fca5a5; }
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { line-height: 1.5; }
+  .alert-text strong { color: var(--navy); display: block; margin-bottom: 2px; }
+
+  /* COPY BTN */
+  .copy-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    float: right;
+    margin-top: -4px;
+  }
+  .copy-btn:hover { background: #1a5fa8; }
+  .copy-btn.copied { background: var(--green); }
+
+  /* TEMPLATE BOX */
+  .template-box {
+    background: #f8faff;
+    border: 1px solid #dce8f8;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 12px 0;
+    position: relative;
+  }
+  .template-box pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+    color: var(--text);
+  }
+
+  h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+  p { font-size: 14px; color: var(--text); margin-bottom: 8px; line-height: 1.65; }
+  .mt8 { margin-top: 8px; }
+  .mt16 { margin-top: 16px; }
+  .mt20 { margin-top: 20px; }
+  .mb12 { margin-bottom: 12px; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Практичний гайд для PM</div>
+    <h1>Керування <span>віддаленими командами</span>:<br>від хаосу до результату</h1>
+    <p class="hero-sub">Конкретні техніки, шаблони та підходи для проєктного менеджера. Тільки те, що реально працює.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num">7</span>
+        <span class="lbl">Ключових блоків</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">40+</span>
+        <span class="lbl">Практичних порад</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">12</span>
+        <span class="lbl">Готових шаблонів</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">0</span>
+        <span class="lbl">Води та теорії</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('setup')"> Структура</button>
+    <button class="nav-tab" onclick="showTab('communication')"> Комунікація</button>
+    <button class="nav-tab" onclick="showTab('motivation')"> Мотивація</button>
+    <button class="nav-tab" onclick="showTab('trust')"> Довіра</button>
+    <button class="nav-tab" onclick="showTab('onboarding')"> Онбординг</button>
+    <button class="nav-tab" onclick="showTab('tools')"> Інструменти</button>
+    <button class="nav-tab" onclick="showTab('checklist')"> Чекліст PM</button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ===== SETUP ===== -->
+  <div id="tab-setup" class="section active">
+    <div class="section-header">
+      <span class="icon"></span>
+      <div>
+        <h2>Структура та процеси</h2>
+        <div class="sub">Як побудувати роботу команди, щоб усе не тримовалось на вас особисто</div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">Формула ефективної віддаленої команди</div>
+      <div class="formula-text">
+        <span>Чіткі очікування</span> + <span>Правильний ритм</span> + <span>Видимість роботи</span> = Команда, яка рухається сама
+      </div>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="card" id="card-rules">
+      <div class="card-header" onclick="toggleCard('card-rules')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">Правила гри: Team Operating Agreement</div>
+          <div class="card-desc">Перше, що потрібно зробити з новою або існуючою командою</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="highlight">
+          <strong>Що це:</strong> Документ на 1–2 сторінки, де команда разом домовляється про правила взаємодії. Не ви нав'язуєте — всі підписуються разом. Це ключово.
+        </div>
+        <h3 class="mt16">Що має бути в документі:</h3>
+        <div class="grid-2">
+          <div class="mini-card">
+            <h4> Доступність</h4>
+            <ul>
+              <li>Коли ти на зв'язку (core hours)</li>
+              <li>Скільки часу на відповідь в чаті (15 хв / 1 год / до кінця дня)</li>
+              <li>Що робити, якщо потрібна термінова допомога</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Комунікація</h4>
+            <ul>
+              <li>Де обговорюємо задачі (Slack? Jira?)</li>
+              <li>Де приймаємо рішення (Confluence/Notion)</li>
+              <li>Що пишемо в sync, що — async</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Зустрічі</h4>
+            <ul>
+              <li>Які мітинги обов'язкові для всіх</li>
+              <li>Чи можна виходити без відео</li>
+              <li>Хто пише нотатки і де зберігає</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Результати</h4>
+            <ul>
+              <li>Як визначаємо "зроблено" (Definition of Done)</li>
+              <li>Де відстежуємо прогрес</li>
+              <li>Як ескалюємо блокери</li>
+            </ul>
+          </div>
+        </div>
+        <div class="alert warn mt16">
+          <span class="alert-icon"></span>
+          <div class="alert-text"><strong>PM-практика:</strong> Проведіть 1-годинний воркшоп і напишіть цей документ разом. Це не ваше завдання — це завдання команди. Ваша роль — фасилітувати та зафіксувати. Раз на квартал переглядайте разом.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="card" id="card-rhythm">
+      <div class="card-header" onclick="toggleCard('card-rhythm')">
+        <div class="card-icon teal"></div>
+        <div style="flex:1">
+          <div class="card-title">Ритм команди: що і коли проводити</div>
+          <div class="card-desc">Мітинги заради мітингів вбивають мотивацію. Ось що реально потрібно</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Мітинг</th>
+              <th>Частота</th>
+              <th>Тривалість</th>
+              <th>Мета</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Daily Standup</strong></td>
+              <td>Щодня</td>
+              <td>15 хв</td>
+              <td>Що зробив / що роблю / блокери. Тільки синхронізація, не звіт!</td>
+            </tr>
+            <tr>
+              <td><strong>Weekly Team Sync</strong></td>
+              <td>Щотижня</td>
+              <td>30-45 хв</td>
+              <td>Пріоритети тижня, рішення, оновлення від PM</td>
+            </tr>
+            <tr>
+              <td><strong>1:1 з кожним</strong></td>
+              <td>Раз на 2 тижні</td>
+              <td>30 хв</td>
+              <td>Настрій, блокери, розвиток, фідбек</td>
+            </tr>
+            <tr>
+              <td><strong>Sprint Review / Demo</strong></td>
+              <td>Раз на 2 тижні</td>
+              <td>1 год</td>
+              <td>Показуємо результат — важливо для мотивації</td>
+            </tr>
+            <tr>
+              <td><strong>Ретроспектива</strong></td>
+              <td>Раз на місяць</td>
+              <td>1 год</td>
+              <td>Що вдалось / що ні / що міняємо</td>
+            </tr>
+            <tr>
+              <td><strong>Team Building</strong></td>
+              <td>Раз на квартал</td>
+              <td>2+ год</td>
+              <td>Неформальне спілкування, ігри, знайомство людей</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="highlight amber mt16">
+          <strong>Правило мінімуму:</strong> Якщо ви скасовуєте мітинг — поясніть, чому. Якщо він не потрібен — скасуйте назавжди. Не тримайте зустрічі на всякий випадок. Це крадіжка часу команди.
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card" id="card-visibility">
+      <div class="card-header" onclick="toggleCard('card-visibility')">
+        <div class="card-icon amber"></div>
+        <div style="flex:1">
+          <div class="card-title">Видимість без мікроменеджменту</div>
+          <div class="card-desc">Як знати стан справ, не шпигуючи за командою</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <p>Найбільша помилка дистанційних PM — або вони нічого не знають, або задовбують людей звітами. Обидва сценарії — погані.</p>
+        <h3 class="mt16">Що реально дає видимість:</h3>
+        <ul class="check-list">
+          <li><strong>Задачі в трекері з оновленим статусом</strong> — кожен сам оновлює. Ви не питаєте "як справи?" — ви дивитесь на борд.</li>
+          <li><strong>Async check-in (текстовий)</strong> — раз на тиждень кожен пише 3 рядки: що зробив, що далі, чи є блокери. У Slack або Notion.</li>
+          <li><strong>Метрики, а не активність</strong> — вас цікавить результат, а не скільки годин людина онлайні.</li>
+          <li><strong>Відкриті питання в 1:1</strong> — "Що тебе зараз найбільше гальмує?" дає більше, ніж 10 статус-зустрічей.</li>
+          <li><strong>Dashboard / Weekly Summary</strong> — автоматизований стан задач.</li>
+        </ul>
+        <div class="alert danger mt16">
+          <span class="alert-icon"></span>
+          <div class="alert-text"><strong>Не робіть ніколи:</strong> Не питайте людей "а ти зараз що робиш?" в месенджері. Це руйнує довіру і демотивує. Якщо не бачите прогресу — дивіться трекер, потім питайте конкретно про задачу.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="card" id="card-async">
+      <div class="card-header" onclick="toggleCard('card-async')">
+        <div class="card-icon purple"></div>
+        <div style="flex:1">
+          <div class="card-title">Async-культура: менше дзвінків — більше результату</div>
+          <div class="card-desc">Як зробити так, щоб рішення ухвалювались без синхронних зустрічей</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3> Sync (мітинг) — коли:</h3>
+            <ul class="warn-list mt8">
+              <li>Конфлікт, який потрібно розв'язати</li>
+              <li>Складне рішення з багатьма варіантами</li>
+              <li>Брейнштормінг нових ідей</li>
+              <li>Перший тиждень нового члена команди</li>
+            </ul>
+          </div>
+          <div>
+            <h3> Async — для всього іншого:</h3>
+            <ul class="check-list mt8">
+              <li>Оновлення статусу</li>
+              <li>Прості погодження і рев'ю</li>
+              <li>Обмін документами і матеріалами</li>
+              <li>Питання з однозначною відповіддю</li>
+            </ul>
+          </div>
+        </div>
+        <h3 class="mt20">Правила async-комунікації:</h3>
+        <ul class="check-list">
+          <li>Пишіть <strong>повні, самодостатні повідомлення</strong> — "Що думаєш?" без контексту змушує людину витрачати час на уточнення</li>
+          <li>Додавайте <strong>дедлайн відповіді</strong> — "Дай знати до п'ятниці" краще, ніж мовчазне очікування</li>
+          <li>Використовуйте <strong>Loom / відео-повідомлення</strong> для складних тем — 3 хв відео замінює 20 хв мітингу</li>
+          <li>Зберігайте <strong>рішення в документах</strong>, не в чаті — Slack/Teams — це швидка розмова, не архів</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COMMUNICATION ===== -->
+  <div id="tab-communication" class="section">
+    <div class="section-header">
+      <span class="icon"></span>
+      <div>
+        <h2>Комунікація</h2>
+        <div class="sub">Як говорити з командою, щоб вас чули, а не просто слухали</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-comm1">
+      <div class="card-header" onclick="toggleCard('card-comm1')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">Правила PM-комунікації в дистанційній команді</div>
+          <div class="card-desc">Слова — ваш головний інструмент управління. Ними треба вміти користуватись</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="mini-card">
+            <h4> Будьте конкретними</h4>
+            <p><strong>Погано:</strong> "Треба пришвидшитись"<br><strong>Добре:</strong> "До п'ятниці 17:00 потрібен робочий прототип форми реєстрації"</p>
+          </div>
+          <div class="mini-card">
+            <h4> Давайте контекст</h4>
+            <p><strong>Погано:</strong> "Зроби XYZ"<br><strong>Добре:</strong> "Нам потрібна XYZ, бо клієнт показав нам [причина], це вплине на [наслідок]"</p>
+          </div>
+          <div class="mini-card">
+            <h4> Підтверджуйте розуміння</h4>
+            <p>Після постановки задачі: "Що потрібно для старту?" або "Скажи своїми словами, що ти будеш робити". Не з недовіри — щоб синхронізуватися.</p>
+          </div>
+          <div class="mini-card">
+            <h4> Давайте фідбек швидко</h4>
+            <p>Мовчання = невизначеність. Якщо бачите роботу — відреагуйте. "Виглядає добре, продовжуй" коштує 5 секунд і дає людині ясність.</p>
+          </div>
+        </div>
+
+        <h3 class="mt20">Канали комунікації — хто за що відповідає:</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Канал</th><th>Використовується для</th><th>Очікуваний час відповіді</th></tr>
+          </thead>
+          <tbody>
+            <tr><td> Slack/Teams особисто</td><td>Термінові питання, уточнення</td><td>15-30 хвилин</td></tr>
+            <tr><td> Slack/Teams канал</td><td>Оголошення, обговорення задач</td><td>До кінця дня</td></tr>
+            <tr><td> Email</td><td>Офіційні рішення, документи</td><td>1 робочий день</td></tr>
+            <tr><td> Trello/Jira/Linear</td><td>Статуси задач, деталі</td><td>Немає, async</td></tr>
+            <tr><td> Notion/Confluence</td><td>Рішення, специфікації, знання</td><td>Немає, async</td></tr>
+            <tr><td> Дзвінок/Відео</td><td>Складні питання, конфлікти</td><td>За домовленістю</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" id="card-1on1">
+      <div class="card-header" onclick="toggleCard('card-1on1')">
+        <div class="card-icon green"></div>
+        <div style="flex:1">
+          <div class="card-title">1:1 зустрічі: як проводити щоб це не були "звіти"</div>
+          <div class="card-desc">Найважливіший інструмент утримання і мотивації. Більшість PM роблять це неправильно</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="highlight">
+          <strong>Ключовий принцип:</strong> 1:1 — це зустріч людини, а не PM. Порядок денний задає вона. Ваша роль — слухати, допомагати прибрати перешкоди, дати фідбек.
+        </div>
+        <h3 class="mt16">Структура 1:1 (30 хв):</h3>
+        <div class="timeline mt8">
+          <div class="tl-item">
+            <div class="tl-dot blue"></div>
+            <div class="tl-week">Хвилини 1–5</div>
+            <div class="tl-content"><strong>Розігрів:</strong> Як ти? Що зараз найважливіше для тебе? — щиро, не для галочки. Якщо людина каже нормально, уточніть.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot teal"></div>
+            <div class="tl-week">Хвилини 5–15</div>
+            <div class="tl-content"><strong>Порядок денний людини:</strong> Що вона хоче обговорити? Блокери, питання, ідеї. Не перебивайте зі своїм.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot amber"></div>
+            <div class="tl-week">Хвилини 15–25</div>
+            <div class="tl-content"><strong>Фідбек і розвиток:</strong> Конкретний фідбек по роботі. Що людина хоче розвивати? Чи є що покращити у взаємодії?</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-week">Хвилини 25–30</div>
+            <div class="tl-content"><strong>Ваші оновлення:</strong> Тільки те, що важливо знати саме цій людині. Контекст, рішення, зміни.</div>
+          </div>
+        </div>
+
+        <h3 class="mt20">Питання, які реально відкривають людей:</h3>
+        <ul class="check-list">
+          <li>Що зараз найбільше тебе гальмує в роботі?</li>
+          <li>Що я як PM міг би робити інакше, щоб тобі було легше?</li>
+          <li>Чи є щось, про що ти хотів би поговорити, але не знав як підняти?</li>
+          <li>Що тебе зараз найбільше enергізує в проєкті?</li>
+          <li>Якби ти міг змінити одну річ у тому, як ми працюємо — що б це було?</li>
+        </ul>
+        <div class="alert info mt16">
+          <span class="alert-icon"></span>
+          <div class="alert-text"><strong>Практика:</strong> Зберігайте спільний нотатник для кожного 1:1. Туди пишуть обидва: питання, фідбек, домовленості. Між зустрічами обидва можуть додавати туди теми.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-feedback">
+      <div class="card-header" onclick="toggleCard('card-feedback')">
+        <div class="card-icon amber"></div>
+        <div style="flex:1">
+          <div class="card-title">Як давати фідбек дистанційно</div>
+          <div class="card-desc">В тексті легко помилитись з тоном. Ось як цього уникнути</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <h3>Модель SBI — просто і ефективно:</h3>
+        <div class="grid-3 mt8">
+          <div class="mini-card">
+            <h4>S — Situation (Ситуація)</h4>
+            <p>Де і коли це сталося? Конкретно, без узагальнень.</p>
+          </div>
+          <div class="mini-card">
+            <h4>B — Behavior (Поведінка)</h4>
+            <p>Що саме людина зробила? Тільки факти, без оцінок.</p>
+          </div>
+          <div class="mini-card">
+            <h4>I — Impact (Вплив)</h4>
+            <p>Який ефект це мало на команду, клієнта, результат?</p>
+          </div>
+        </div>
+
+        <h3 class="mt20">Приклад позитивного фідбеку:</h3>
+        <div class="template-box">
+          <button class="copy-btn" onclick="copyText(this, 'Вчора на демо (S) ти взяв на себе всі технічні питання від клієнта і відповів чітко та впевнено (B) — це сильно підвищило довіру клієнта і зняло тиск з мене (I). Дякую, це було важливо.')">Копіювати</button>
+          <pre>"Вчора на демо (S) ти взяв на себе всі технічні питання від клієнта і відповів чітко та впевнено (B) — це сильно підвищило довіру клієнта і зняло тиск з мене (I). Дякую, це було важливо."</pre>
+        </div>
+
+        <h3 class="mt16">Приклад розвивального фідбеку:</h3>
+        <div class="template-box">
+          <button class="copy-btn" onclick="copyText(this, 'На мітингу в понеділок (S) ти кілька разів перебивав Олену під час її пояснення (B) — вона зупинялася і, здається, почувалась некомфортно, це вповільнило обговорення (I). Як думаєш, чому так виходить? Хочу, щоб наступного разу ми давали всім договорити.')">Копіювати</button>
+          <pre>"На мітингу в понеділок (S) ти кілька разів перебивав Олену під час її пояснення (B) — вона зупинялася і почувалася некомфортно, це вповільнило обговорення (I). Як думаєш, чому так виходить?"</pre>
+        </div>
+
+        <div class="alert warn mt16">
+          <span class="alert-icon"></span>
+          <div class="alert-text"><strong>Важливо:</strong> Критичний фідбек — тільки в особистій розмові (дзвінок або відео), ніколи в загальному чаті або листі. Публічна критика руйнує довіру і не виправляє поведінку.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-conflict">
+      <div class="card-header" onclick="toggleCard('card-conflict')">
+        <div class="card-icon red"></div>
+        <div style="flex:1">
+          <div class="card-title">Конфлікти та напруга в дистанційній команді</div>
+          <div class="card-desc">Як розпізнати рано і вирішити до того, як стане гірше</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="highlight red">
+          <strong>Правило:</strong> Конфлікти в тексті завжди виглядають гірше, ніж є насправді. Якщо помічаєте напругу в чаті — виводьте розмову у відео. Ніколи не вирішуйте конфлікти в переписці.
+        </div>
+        <h3 class="mt16">Сигнали, що щось йде не так:</h3>
+        <ul class="warn-list">
+          <li>Людина стала рідше писати у загальний чат</li>
+          <li>Різкі або лаконічні відповіді там, де раніше була деталізація</li>
+          <li>Пропускає мітинги або тримається тихо під час них</li>
+          <li>Сповільнився прогрес по задачах без пояснень</li>
+          <li>Інші члени команди натякають, що "є якась напруга"</li>
+        </ul>
+        <h3 class="mt16">Алгоритм вирішення конфлікту:</h3>
+        <div class="timeline mt8">
+          <div class="tl-item">
+            <div class="tl-dot blue"></div>
+            <div class="tl-week">Крок 1</div>
+            <div class="tl-content"><strong>Дізнайтеся картину з обох боків</strong> — окремо, приватно. Не займайте сторону одразу.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot amber"></div>
+            <div class="tl-week">Крок 2</div>
+            <div class="tl-content"><strong>Організуйте спільний відеодзвінок</strong> — з вами як фасилітатором. Мета: почути обидва боки, знайти спільну мову.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot teal"></div>
+            <div class="tl-week">Крок 3</div>
+            <div class="tl-content"><strong>Зосередьтесь на інтересах, а не позиціях</strong> — "Чого ти хочеш досягти?" а не "Хто правий".</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-week">Крок 4</div>
+            <div class="tl-content"><strong>Зафіксуйте домовленості</strong> — що обидві сторони робитимуть по-іншому. Перевірте через тиждень.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MOTIVATION ===== -->
+  <div id="tab-motivation" class="section">
+    <div class="section-header">
+      <span class="icon"></span>
+      <div>
+        <h2>Мотивація та залученість</h2>
+        <div class="sub">Як зробити так, щоб люди хотіли працювати, а не просто відпрацьовували години</div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>Реальність:</strong> Дистанційні команди мають вищий ризик вигорання і відчуженості. Мотивація тут — не наслідок хорошої атмосфери, а результат ваших конкретних дій як PM.
+    </div>
+
+    <div class="card mt16" id="card-motiv1">
+      <div class="card-header" onclick="toggleCard('card-motiv1')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">Три рушії внутрішньої мотивації (і як їх активувати)</div>
+          <div class="card-desc">Засновано на дослідженнях Drive (Pink). Дієвіше за будь-який бонус</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-3">
+          <div class="mini-card">
+            <h4> Автономія</h4>
+            <p><strong>Що це:</strong> Людина сама вирішує як досягти мети, а не тільки виконує інструкції.</p>
+            <p class="mt8"><strong>Як зробити:</strong></p>
+            <ul>
+              <li>Ставте задачу і очікування, а не кроки виконання</li>
+              <li>Питайте "Як ти плануєш це зробити?" замість "Роби ось так"</li>
+              <li>Дайте право на власний підхід, навіть якщо він не ваш</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Майстерність</h4>
+            <p><strong>Що це:</strong> Відчуття, що людина росте і вдосконалюється у своїй справі.</p>
+            <p class="mt8"><strong>Як зробити:</strong></p>
+            <ul>
+              <li>Давайте задачі на межі зони комфорту (не надто легкі, не надто складні)</li>
+              <li>Давайте розвивальний фідбек, не лише оцінку</li>
+              <li>Помічайте і називайте прогрес вголос</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Сенс (Purpose)</h4>
+            <p><strong>Що це:</strong> Розуміння, навіщо ця робота існує і як вона впливає на людей.</p>
+            <p class="mt8"><strong>Як зробити:</strong></p>
+            <ul>
+              <li>Пояснюйте "чому" перед кожним великим завданням</li>
+              <li>Показуйте, як задача впливає на клієнта/продукт/місію</li>
+              <li>Святкуйте результати, які мають значення</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pm-quote mt20">
+          "Люди не виходять з компаній — вони виходять від менеджерів, які не пояснюють, навіщо, не довіряють і не помічають прогресу."
+          <span class="qsrc">— Загальновідома мудрість HR-досліджень</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-recognition">
+      <div class="card-header" onclick="toggleCard('card-recognition')">
+        <div class="card-icon green"></div>
+        <div style="flex:1">
+          <div class="card-title">Визнання та подяка: конкретно і без фальші</div>
+          <div class="card-desc">Правильна подяка — безкоштовний і один з найефективніших мотиваторів</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3> Не працює:</h3>
+            <ul class="warn-list mt8">
+              <li>"Молодець, так тримати!" — загально, без деталей</li>
+              <li>Подяка тільки за результат, не за зусилля</li>
+              <li>Похвала в приватному, коли треба публічно</li>
+              <li>Похвала раз на квартал на перформанс-рев'ю</li>
+              <li>"Хороша робота, але..." — але перекреслює все</li>
+            </ul>
+          </div>
+          <div>
+            <h3> Працює:</h3>
+            <ul class="check-list mt8">
+              <li>Конкретно: що саме зробила людина і який ефект це мало</li>
+              <li>Вчасно: максимум протягом 24 годин після події</li>
+              <li>Публічно (якщо людина комфортна): у загальному каналі</li>
+              <li>Регулярно: не тільки в особливих випадках</li>
+              <li>Персонально: знайте, що важливо кожній людині</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="mt20">Шаблон публічної подяки в командному чаті:</h3>
+        <div class="template-box">
+          <button class="copy-btn" onclick="copyText(this, ' Хочу відзначити [Ім\'я]!\n\nЦього тижня [конкретна ситуація]. [Ім\'я] зробив(ла) [конкретна дія], завдяки чому [конкретний результат або ефект].\n\nЦе саме той рівень ініціативи/якості/підходу, який робить нашу команду сильнішою. Дякую! 💪')">Копіювати</button>
+          <pre> Хочу відзначити [Ім'я]!
+
+Цього тижня [конкретна ситуація]. [Ім'я] зробив(ла) [конкретна дія], завдяки чому [конкретний результат або ефект].
+
+Це саме той рівень ініціативи/якості/підходу, який робить нашу команду сильнішою. Дякую! </pre>
+        </div>
+
+        <h3 class="mt20">Практичні ідеї визнання для дистанційних команд:</h3>
+        <div class="pill-row">
+          <div class="pill"><span class="pill-icon"></span> "Employee of the Sprint" в Slack</div>
+          <div class="pill"><span class="pill-icon"></span> Подарункова картка на Amazon/Rozetka</div>
+          <div class="pill"><span class="pill-icon"></span> Подяка на загальному мітингу компанії</div>
+          <div class="pill"><span class="pill-icon"></span> Публічний шаутаут у Slack від PM</div>
+          <div class="pill"><span class="pill-icon"></span> Додатковий вільний день</div>
+          <div class="pill"><span class="pill-icon"></span> Оплата курсу за вибором людини</div>
+          <div class="pill"><span class="pill-icon"></span> Можливість презентувати роботу C-level</div>
+          <div class="pill"><span class="pill-icon"></span> Менторство від більш досвідченого колеги</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-energy">
+      <div class="card-header" onclick="toggleCard('card-energy')">
+        <div class="card-icon amber"></div>
+        <div style="flex:1">
+          <div class="card-title">Захист від вигорання: що PM повинен відстежувати</div>
+          <div class="card-desc">Дистанційна робота стирає межу між роботою і відпочинком. Це ваша зона відповідальності</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <h3>Ранні сигнали вигорання в людини:</h3>
+        <div class="grid-2 mt8">
+          <ul class="warn-list">
+            <li>Затримується на роботі — відповідає о 22:00</li>
+            <li>Якість роботи падає, хоча раніше була висока</li>
+            <li>Стає мовчазнішою на мітингах</li>
+            <li>Частіше хворіє або бере sick leave</li>
+          </ul>
+          <ul class="warn-list">
+            <li>Скаржиться на перевантаження, але не просить допомоги</li>
+            <li>Ентузіазм щодо нових ідей зникає</li>
+            <li>Більше помилок у звичних задачах</li>
+            <li>Відмовляється від задач, які раніше брала охоче</li>
+          </ul>
+        </div>
+        <h3 class="mt20">Що робити як PM:</h3>
+        <ul class="check-list">
+          <li><strong>Моделюйте поведінку:</strong> Не пишіть команді о 23:00. Якщо пишете — кажіть "відповідь не потрібна зараз". Ваша поведінка задає норму.</li>
+          <li><strong>Захищайте capacity:</strong> Не дозволяйте стейкхолдерам перевантажувати команду. Ваша робота — фільтр.</li>
+          <li><strong>Питайте прямо в 1:1:</strong> "Ти нормально справляєшся з навантаженням?" і слухайте не тільки відповідь, але й як кажуть.</li>
+          <li><strong>Нормалізуйте відпочинок:</strong> Публічно говоріть про важливість відключення. "Ми не героїзуємо переробки."</li>
+          <li><strong>Слідкуйте за overtime:</strong> Якщо хтось постійно затримується — це проблема планування, а не відданості.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" id="card-growth">
+      <div class="card-header" onclick="toggleCard('card-growth')">
+        <div class="card-icon purple"></div>
+        <div style="flex:1">
+          <div class="card-title">Розвиток команди: як тримати людей зацікавленими довгостроково</div>
+          <div class="card-desc">Люди залишаються там, де вони ростуть. Забезпечте ріст — забезпечите утримання</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="highlight green">
+          <strong>Головне питання для кожного члена команди:</strong> "Де ця людина хоче бути через рік і як наш проєкт допомагає їй туди дістатися?"
+        </div>
+        <h3 class="mt16">Інструменти розвитку без великого бюджету:</h3>
+        <ul class="check-list">
+          <li><strong>Growth goals в 1:1</strong> — разом визначте 1-2 навички, які людина хоче розвинути. Давайте задачі, які цьому сприяють.</li>
+          <li><strong>Ротація ролей всередині команди</strong> — "Цього спринту ти ведеш стендап" або "Ти спілкуєшся з клієнтом замість мене".</li>
+          <li><strong>Sharing sessions</strong> — раз на місяць хтось з команди показує щось нове всім. 20 хв, добровільно.</li>
+          <li><strong>Пари на задачах</strong> — junior + senior разом. Обидва вчаться: один — робити, другий — пояснювати.</li>
+          <li><strong>Budget на навчання</strong> — навіть $200/рік на Udemy або книжки — це сигнал, що ви інвестуєте в людину.</li>
+          <li><strong>Stretch assignments</strong> — задача трохи вище поточного рівня, з вашою підтримкою. Не кидати плавати, але і не тримати в басейні.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TRUST ===== -->
+  <div id="tab-trust" class="section">
+    <div class="section-header">
+      <span class="icon"></span>
+      <div>
+        <h2>Довіра та психологічна безпека</h2>
+        <div class="sub">Без цього все інше не працює. Це фундамент, а не надбудова</div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">Рівняння довіри (Covey)</div>
+      <div class="formula-text">
+        Довіра = (<span>Чесність + Надійність + Компетентність</span>) ÷ <span>Самоорієнтація</span>
+      </div>
+    </div>
+
+    <div class="card mt20" id="card-psych">
+      <div class="card-header" onclick="toggleCard('card-psych')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">Психологічна безпека: що це і чому це #1 фактор продуктивності</div>
+          <div class="card-desc">Google витратив $12M на дослідження командної ефективності. Ось що знайшли</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="highlight">
+          <strong>Психологічна безпека</strong> — це коли людина може сказати "я не знаю", визнати помилку, запропонувати ідею або не погодитися — без страху бути осміяною, покараною чи знехтуваною. Це #1 предиктор ефективності команди за даними Project Aristotle (Google).
+        </div>
+        <h3 class="mt20">Як PM будує психологічну безпеку:</h3>
+        <ul class="check-list">
+          <li><strong>Визнавайте свої помилки публічно</strong> — "Я помилився в оцінці, ось що ми робимо далі". Це дозволяє іншим теж помилятись без страху.</li>
+          <li><strong>Дякуйте за погані новини</strong> — коли хтось приносить поганий фідбек або визнає проблему, ваша перша реакція формує культуру. "Дякую, що сказав — це важливо знати" > "Чому так сталося?"</li>
+          <li><strong>Не вбивайте ідеї відразу</strong> — навіть якщо ідея погана, спочатку почуйте її до кінця. "Цікаво, розкажи більше" відкриває людей.</li>
+          <li><strong>Моделюйте вразливість</strong> — "Я не впевнений у цьому рішенні, що думаєте?" або "Мені потрібна ваша допомога з цим".</li>
+          <li><strong>Реагуйте на проблеми, не на людей</strong> — "Що сталося з задачею?" замість "Чому ти не зробив?"</li>
+          <li><strong>Захищайте людей від зовнішньої агресії</strong> — якщо стейкхолдер налітає на команду, ваша роль — буфер. Беріть вогонь на себе.</li>
+        </ul>
+        <h3 class="mt20">Питання для оцінки рівня безпеки у команді:</h3>
+        <div class="alert info">
+          <span class="alert-icon"></span>
+          <div class="alert-text">Задайте анонімно (Google Forms): <strong>"Чи комфортно тобі визнавати помилку перед командою?"</strong> / <strong>"Чи відчуваєш, що твою думку чують?"</strong> — якщо більше 30% відповідають "ні" — є серйозна проблема.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-trust2">
+      <div class="card-header" onclick="toggleCard('card-trust2')">
+        <div class="card-icon teal"></div>
+        <div style="flex:1">
+          <div class="card-title">Побудова зв'язку між людьми в розподіленій команді</div>
+          <div class="card-desc">Людям потрібно знати одне одного як людей, не лише як виконавців задач</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <h3>Практичні ідеї для побудови зв'язку:</h3>
+        <div class="grid-2 mt8">
+          <div class="mini-card">
+            <h4> Щоденні/тижневі ритуали</h4>
+            <ul>
+              <li>"Monday mood" — кожен пише 1 слово або emoji про настрій</li>
+              <li>Water cooler канал у Slack для несерйозних розмов</li>
+              <li>Питання тижня: "Що ти їв на сніданок?" або "Яка твоя суперсила?"</li>
+              <li>"Wins of the week" — кожен називає 1 перемогу за тиждень</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Активності та ігри</h4>
+            <ul>
+              <li>Virtual coffee — рандомні пари раз на 2 тижні (Donut app)</li>
+              <li>Online escape room або quiz раз на квартал</li>
+              <li>Show-and-tell: кожен показує щось з домашнього офісу</li>
+              <li>Team playlist у Spotify — кожен додає пісню</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Пізнання одне одного</h4>
+            <ul>
+              <li>Особистий README кожного: як я працюю, що мене дратує, коли я найпродуктивніший</li>
+              <li>"16 personalities" або WorkStyle DNA — обговорення в команді</li>
+              <li>Career timeline — кожен розповідає свій шлях (15 хв на мітингу)</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Офлайн-зустрічі</h4>
+            <ul>
+              <li>Хоча б раз на рік — живий team offsite (навіть 2 дні)</li>
+              <li>Якщо є спільне місто — обід раз на місяць</li>
+              <li>Workation — команда разом в коворкінгу тижень</li>
+            </ul>
+          </div>
+        </div>
+        <div class="alert success mt16">
+          <span class="alert-icon"></span>
+          <div class="alert-text"><strong>Дослідження показують:</strong> Команди, де люди знають щось особисте одне про одного, вирішують конфлікти в 2-3 рази швидше і частіше просять допомоги замість того, щоб мовчки застрягати.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-pm-trust">
+      <div class="card-header" onclick="toggleCard('card-pm-trust')">
+        <div class="card-icon amber"></div>
+        <div style="flex:1">
+          <div class="card-title">Як PM будує особисту довіру команди до себе</div>
+          <div class="card-desc">Довіра — не посада, це поведінка. Ось конкретні дії</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="progress-item">
+          <div class="progress-label"><span>Виконуєте обіцянки та дедлайни</span><span>Найважливіше</span></div>
+          <div class="progress-bar"><div class="progress-fill blue" style="width:95%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Захищаєте команду від зовнішнього тиску</span><span>Критично</span></div>
+          <div class="progress-bar"><div class="progress-fill blue" style="width:90%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Будьте послідовними у рішеннях</span><span>Дуже важливо</span></div>
+          <div class="progress-bar"><div class="progress-fill teal" style="width:85%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Визнаєте помилки і змінюєте курс</span><span>Важливо</span></div>
+          <div class="progress-bar"><div class="progress-fill teal" style="width:80%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Даєте контекст про "великий план"</span><span>Важливо</span></div>
+          <div class="progress-bar"><div class="progress-fill amber" style="width:75%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Цікавитесь людьми поза роботою</span><span>Помітно впливає</span></div>
+          <div class="progress-bar"><div class="progress-fill amber" style="width:65%"></div></div>
+        </div>
+
+        <div class="highlight red mt20">
+          <strong>Найшвидший спосіб зруйнувати довіру:</strong> пообіцяти і не зробити. Навіть "дрібниці" типу "я уточню і поверну відповідь" — якщо не повертаєтеся, люди це помічають і перестають вірити великим обіцянкам.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ONBOARDING ===== -->
+  <div id="tab-onboarding" class="section">
+    <div class="section-header">
+      <span class="icon"></span>
+      <div>
+        <h2>Онбординг нових людей</h2>
+        <div class="sub">Перший місяць вирішує все. Більшість людей вирішують залишитись або піти в перші 90 днів</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-ob1">
+      <div class="card-header" onclick="toggleCard('card-ob1')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">30-60-90 план онбордингу</div>
+          <div class="card-desc">Покрокова структура для введення нової людини в команду</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot blue"></div>
+            <div class="tl-week">День 1-3: Welcome</div>
+            <div class="tl-content">
+              <strong>Ціль: людина не почувається загубленою</strong>
+              <ul style="margin-top:8px; list-style:none;">
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--accent)">→</span> Особисто зустрів(ла) людину на відеодзвінку в перший день</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--accent)">→</span> Всі доступи і інструменти готові до приходу (не змушуєте чекати)</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--accent)">→</span> Buddy / наставник з команди призначений ще до старту</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--accent)">→</span> Welcome-повідомлення в загальному каналі від PM</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--accent)">→</span> Перша задача: проста і з відчутним результатом за 1-2 дні</li>
+              </ul>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot teal"></div>
+            <div class="tl-week">Тиждень 1-2: Занурення</div>
+            <div class="tl-content">
+              <strong>Ціль: людина розуміє контекст і команду</strong>
+              <ul style="margin-top:8px; list-style:none;">
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--teal)">→</span> 1:1 з кожним членом команди (15-20 хв, неформально)</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--teal)">→</span> Огляд продукту, архітектури, процесів — не dump, а сесії з питаннями</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--teal)">→</span> Доступ до всіх документів і можливість задавати "дурні питання"</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--teal)">→</span> Перша реальна задача з підтримкою buddy</li>
+              </ul>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot amber"></div>
+            <div class="tl-week">Місяць 1: Адаптація</div>
+            <div class="tl-content">
+              <strong>Ціль: людина робить реальний внесок і відчуває себе частиною команди</strong>
+              <ul style="margin-top:8px; list-style:none;">
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--amber)">→</span> Повна участь у всіх командних ритуалах (standup, retro, demo)</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--amber)">→</span> Перший закритий milestone самостійно</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--amber)">→</span> 30-денний check-in: що вдалось, що складно, що б змінив(ла)</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--amber)">→</span> Визначення особистих цілей розвитку разом з PM</li>
+              </ul>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-week">Місяці 2-3: Стабілізація</div>
+            <div class="tl-content">
+              <strong>Ціль: людина повністю інтегрована і продуктивна</strong>
+              <ul style="margin-top:8px; list-style:none;">
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--green)">→</span> Перший перформанс-чекін з конкретним фідбеком</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--green)">→</span> Перша можливість вести якийсь процес самостійно</li>
+                <li style="padding:4px 0 4px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--green)">→</span> 90-денний ретро: оцінка досвіду онбордингу і що покращити</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-ob2">
+      <div class="card-header" onclick="toggleCard('card-ob2')">
+        <div class="card-icon green">📄</div>
+        <div style="flex:1">
+          <div class="card-title">Welcome-повідомлення від PM: шаблон</div>
+          <div class="card-desc">Перше враження формується за секунди. Зробіть його теплим і конкретним</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="template-box">
+          <button class="copy-btn" onclick="copyText(this, 'Привіт, [Ім\'я]! \n\nЯ [твоє ім'я], PM цього проєкту. Радий(а), що ти з нами.\n\nКілька речей, які допоможуть тобі швидко освоїтись:\n\n📌 Твій buddy — [Ім\'я buddy]. Він/вона допоможе з будь-якими питаннями в перші тижні.\n\n📅 Сьогодні о [час] нас з тобою чекає короткий welcome-дзвінок (30 хв) — розповім про команду і що чекає далі.\n\n📚 Основні документи — [посилання на Notion/Confluence]. Почни з розділу «Старт».\n\n❓ Якщо щось незрозуміло — пиши мені або [buddy] напряму. Немає поганих питань, особливо в перші тижні.\n\nЩо плануємо на перший тиждень:\n- [Задача 1]\n- [Зустрічі з командою]\n- [Огляд продукту]\n\nДо зустрічі сьогодні! 🙌')">Копіювати</button>
+          <pre>Привіт, [Ім'я]! 
+
+Я [твоє ім'я], PM цього проєкту. Радий(а), що ти з нами.
+
+Кілька речей, які допоможуть тобі швидко освоїтись:
+
+📌 Твій buddy — [Ім'я buddy]. Він/вона допоможе з будь-якими питаннями в перші тижні.
+
+📅 Сьогодні о [час] нас з тобою чекає короткий welcome-дзвінок (30 хв) — розповім про команду і що чекає далі.
+
+📚 Основні документи — [посилання]. Почни з розділу «Старт».
+
+❓ Якщо щось незрозуміло — пиши мені або [buddy] напряму. Немає поганих питань.
+
+Що плануємо на перший тиждень:
+- [Задача 1]
+- [Зустрічі з командою]
+- [Огляд продукту]
+
+До зустрічі сьогодні! </pre>
+        </div>
+        <div class="highlight amber mt16">
+          <strong>Помилки онбордингу:</strong> Перший день без задачі ("просто ознайомся"), відсутній buddy, доступи "ще не готові", людина не знає, до кого звертатися, першу тиждень ніхто не перевіряє як справи. Кожна з цих помилок коштує вам довіри і темпу нової людини.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOOLS ===== -->
+  <div id="tab-tools" class="section">
+    <div class="section-header">
+      <span class="icon">🛠️</span>
+      <div>
+        <h2>Інструменти для дистанційних команд</h2>
+        <div class="sub">Що використовувати і для чого — без зайвого</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-tools1">
+      <div class="card-header" onclick="toggleCard('card-tools1')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">Стек інструментів: мінімальний і достатній</div>
+          <div class="card-desc">Більше інструментів ≠ краща команда. Менше і використане правильно — завжди краще</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="tool-row">
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Slack / Microsoft Teams</div>
+              <div class="tool-desc">Основна комунікація. Структуруйте канали: #проект-загальний, #проект-dev, #проект-random, #проект-announcements. Уникайте важливих рішень в чаті — вони губляться.</div>
+              <div class="tool-when">Правило: Рішення документуються. Чат — для розмов, не для архіву.</div>
+            </div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Jira / Linear / Trello / Asana</div>
+              <div class="tool-desc">Трекінг задач і прогресу. Кожна задача — це власник, статус і дедлайн. Якщо задачі немає в трекері — її не існує для PM.</div>
+              <div class="tool-when">Правило: Оновлення статусу — відповідальність виконавця, не PM. Задавайте цю норму з першого дня.</div>
+            </div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Notion / Confluence</div>
+              <div class="tool-desc">База знань і документів. Сюди йдуть: рішення, специфікації, процеси, ретроспективи, Team Agreement. Якщо є питання "а де це записано?" — відповідь завжди тут.</div>
+              <div class="tool-when">Правило: "Якщо не записано — не існує." Записуйте після кожного важливого рішення.</div>
+            </div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Loom / Screen Studio</div>
+              <div class="tool-desc">Відеоповідомлення для async-комунікації. 3-хвилинне відео краще пояснює складне рішення або фідбек по дизайну, ніж 20 рядків тексту.</div>
+              <div class="tool-when">Коли: code review, огляд дизайну, складне пояснення, фідбек по роботі де важливий тон.</div>
+            </div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Zoom / Google Meet</div>
+              <div class="tool-desc">Відеозустрічі. Увімкнене відео — норма для командних мітингів (за домовленістю). Записуйте важливі зустрічі — тим, хто пропустив, не треба переповідати.</div>
+              <div class="tool-when">Правило: Є порядок денний — є зустріч. Немає порядку денного — скасуйте або відправте повідомлення.</div>
+            </div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Miro / FigJam</div>
+              <div class="tool-desc">Онлайн дошки для брейнстормінгу, планування, ретроспектив. Замінює фізичну дошку в офісі. Використовуйте для ретро, планування спринтів, воркшопів.</div>
+              <div class="tool-when">Коли: будь-яка сесія, де потрібна візуалізація або робота групою одночасно.</div>
+            </div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-emoji"></div>
+            <div>
+              <div class="tool-name">Donut (Slack app)</div>
+              <div class="tool-desc">Автоматично з'єднує людей для random virtual coffee. Чудово для побудови зв'язків між членами команди, які не перетинаються по задачах.</div>
+              <div class="tool-when">Коли: команда більше 5 людей. Налаштуйте раз — працює само.</div>
+            </div>
+          </div>
+        </div>
+        <div class="alert warn mt16">
+          <span class="alert-icon"></span>
+          <div class="alert-text"><strong>Обережно:</strong> Не вводьте новий інструмент без чіткої відповіді на питання "що конкретно він вирішує і що ми зупиняємо взамін?" Інструментальний хаос знищує продуктивність швидше за відсутність інструментів.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-tools2">
+      <div class="card-header" onclick="toggleCard('card-tools2')">
+        <div class="card-icon teal"></div>
+        <div style="flex:1">
+          <div class="card-title">AI-інструменти для PM дистанційної команди</div>
+          <div class="card-desc">Що реально прискорює роботу PM сьогодні</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="mini-card">
+            <h4> Нотатки та саммарі</h4>
+            <ul>
+              <li>Otter.ai / Fireflies — транскрипція і резюме мітингів автоматично</li>
+              <li>Notion AI — підсумки документів, генерація структури</li>
+              <li>ChatGPT/Claude — чернетки листів, фідбеку, планів</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Планування та аналіз</h4>
+            <ul>
+              <li>Linear AI — автоматичний тайм-трекінг задач</li>
+              <li>Jira AI — ескімований час виконання</li>
+              <li>Claude/GPT для аналізу ретроспектив і виявлення патернів</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> Автоматизація</h4>
+            <ul>
+              <li>Zapier / Make — автозв'язок між Slack, Jira, Notion</li>
+              <li>Slack Workflows — автоматичні нагадування, check-in форми</li>
+              <li>Notion автоматизація — оновлення дашбордів</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4> PM-специфічне</h4>
+            <ul>
+              <li>Loom AI — автоматичні chapters і summary відео</li>
+              <li>Gamma — швидке створення презентацій по тексту</li>
+              <li>Claude для написання ретро-питань, agenda, комунікацій</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHECKLIST ===== -->
+  <div id="tab-checklist" class="section">
+    <div class="section-header">
+      <span class="icon"></span>
+      <div>
+        <h2>Чекліст PM дистанційної команди</h2>
+        <div class="sub">Натискайте на пункти, щоб відмічати виконані. Скидається при оновленні сторінки.</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-cl1">
+      <div class="card-header" onclick="toggleCard('card-cl1')">
+        <div class="card-icon blue"></div>
+        <div style="flex:1">
+          <div class="card-title">Базова структура (зробіть раз)</div>
+          <div class="card-desc">Фундамент, без якого все інше не працює стабільно</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <ul class="interactive-check" id="check-base">
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Team Operating Agreement написаний разом з командою і всі підписали (або погодились з ним)</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Канали комунікації чітко визначені: що в Slack, що в Jira, що в Notion</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Definition of Done погоджена і задокументована</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Onboarding-процес існує у вигляді документа і чекліста</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Всі інструменти налаштовані і доступи є у кожного члена команди</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Ритм мітингів встановлений і занесений у календарі всіх</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Є спільне місце для зберігання рішень (Notion / Confluence)</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Buddy-система для нових людей визначена</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" id="card-cl2">
+      <div class="card-header" onclick="toggleCard('card-cl2')">
+        <div class="card-icon teal"></div>
+        <div style="flex:1">
+          <div class="card-title">Щотижневий ритм PM</div>
+          <div class="card-desc">Що ви робите кожного тижня, щоб команда рухалась</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <ul class="interactive-check">
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Переглянув(ла) трекер задач — знаю хто де і що застряло</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Провів(ла) Weekly Team Sync з чітким порядком денним</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Публічно відзначив(ла) хоча б одну конкретну перемогу команди</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Прибрав(ла) хоча один блокер для команди</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Дав(ла) фідбек хоча б одній людині (конкретний, вчасний)</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Оновив(ла) стейкхолдерів про статус проєкту (якщо потрібно)</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Перевірив(ла) навантаження команди — ніхто не перевантажений</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" id="card-cl3">
+      <div class="card-header" onclick="toggleCard('card-cl3')">
+        <div class="card-icon amber"></div>
+        <div style="flex:1">
+          <div class="card-title">Щомісячний ритм PM</div>
+          <div class="card-desc">Системні дії, які тримають команду здоровою довгостроково</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <ul class="interactive-check">
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Провів(ла) 1:1 з кожним членом команди (якість, не кількість)</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Провів(ла) ретроспективу і записав(ла) action items з дедлайнами</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Перевірив(ла) цілі розвитку кожної людини — чи є прогрес?</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Виконав(ла) хоча б одну team-building активність або неформальну зустріч</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Переглянув(ла) Team Agreement — чи є що оновити?</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Анонімно зібрав(ла) пульс-фідбек від команди (1-2 питання)</div>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="ic-box">✓</div>
+            <div class="ic-text">Подивився(лась) на ситуацію глобально: ми рухаємось у правильному напрямку?</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="score-area" class="score-tracker" style="display:none">
+      <div class="score-num" id="score-num">0%</div>
+      <div class="score-label">завдань виконано</div>
+      <div class="score-sub" id="score-msg">Починайте відмічати завдання вище!</div>
+    </div>
+
+    <div class="card mt20" id="card-redflags">
+      <div class="card-header" onclick="toggleCard('card-redflags')">
+        <div class="card-icon red"></div>
+        <div style="flex:1">
+          <div class="card-title">Red flags: сигнали що PM-підхід потрібно переглянути</div>
+          <div class="card-desc">Честно перевірте — чи є у вас хоча б один з них?</div>
+        </div>
+        <div class="toggle-btn">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <ul class="warn-list">
+            <li>Люди не оновлюють задачі в трекері самі</li>
+            <li>Ви перші дізнаєтесь про проблеми від клієнта, а не команди</li>
+            <li>На ретро всі мовчать або кажуть "все добре"</li>
+            <li>Нові люди не виходять на повну потужність за 2 місяці</li>
+            <li>Ви проводите більше 50% часу в мітингах</li>
+          </ul>
+          <ul class="warn-list">
+            <li>Люди не просять допомоги, поки не зависли на тиждень</li>
+            <li>Ви знаєте задачі, але не знаєте як себе почуває команда</li>
+            <li>Команда не вносить пропозицій щодо процесів</li>
+            <li>Звільнення для вас завжди сюрприз</li>
+            <li>Без вас команда зупиняється</li>
+          </ul>
+        </div>
+        <div class="highlight red mt16">
+          <strong>Якщо більше 3 пунктів — це сигнал до серйозного розмовного сеансу з командою. Почніть з питання: "Що я можу зробити по-іншому, щоб вам було легше?"</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Гайд для проєктних менеджерів • Керування віддаленими командами • Версія 1.0
+</footer>
+
+<script>
+  // Tab switching
+  function showTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Card toggle
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('collapsed');
+  }
+
+  // Interactive checklist
+  function toggleCheck(li) {
+    li.classList.toggle('done');
+    if (li.classList.contains('done')) {
+      li.querySelector('.ic-box').textContent = '✓';
+    } else {
+      li.querySelector('.ic-box').textContent = '';
+    }
+    updateScore();
+  }
+
+  function updateScore() {
+    const all = document.querySelectorAll('.interactive-check li');
+    const done = document.querySelectorAll('.interactive-check li.done');
+    if (all.length === 0) return;
+    const pct = Math.round((done.length / all.length) * 100);
+    document.getElementById('score-area').style.display = 'block';
+    document.getElementById('score-num').textContent = pct + '%';
+    const msgs = ['Починайте відмічати завдання вище!', 'Гарний початок!', 'Ви на правильному шляху!', 'Вже більше половини — чудово!', 'Майже все! Фінальний ривок!', 'Все виконано — ви сильний PM! 🏆'];
+    const idx = Math.min(Math.floor(pct / 20), 5);
+    document.getElementById('score-msg').textContent = msgs[idx];
+  }
+
+  // Copy button
+  function copyText(btn, text) {
+    if (!text) {
+      // Find closest template-box and get pre text
+      const box = btn.closest('.template-box');
+      const pre = box ? box.querySelector('pre') : null;
+      text = pre? pre.textContent: '';
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Скопійовано';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(() => {
+      btn.textContent = 'Виберіть текст вручну';
+      setTimeout(() => { btn.textContent = 'Копіювати'; }, 2000);
+    });
+  }
+
+  // Progress bars animation on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const fills = document.querySelectorAll('.progress-fill');
+    fills.forEach(f => {
+      const w = f.style.width;
+      f.style.width = '0%';
+      setTimeout(() => { f.style.width = w; }, 300);
+    });
+  });
+</script>
+</body>
+</html>
