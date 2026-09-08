@@ -1,0 +1,40 @@
+name: Update README
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Generate README
+        run: |
+          cat > README.md << 'EOF'
+          # 📂 Проєкти
+          
+          | Проєкт | Відкрити |
+          |--------|----------|
+          EOF
+          
+          for dir in */; do
+            if [ -f "${dir}index.html" ]; then
+              name=$(basename "$dir")
+              echo "| ${name} | [🌐 Переглянути](${dir}) |" >> README.md
+            fi
+          done
+      
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --staged --quiet || git commit -m "🔄 Auto-update README"
+          git push
