@@ -3,15 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Програма навчання: NotebookLM — практика 4 семестр</title>
+<title>Програма навчання: Gemini Notebook для аналізу та роботи з матеріалами</title>
 <style>
   :root {
     --primary: #2E3440;
-    --accent: #6B5B95;
-    --accent-light: #9B8DC4;
-    --success: #A3BE8C;
-    --warning: #EBCB8B;
+    --accent: #5E4B8B;
+    --accent-light: #8A79B3;
+    --accent-bg: #F3F0F8;
+    --success: #5D7A3F;
+    --success-bg: #EFF5E8;
+    --warning: #8A6D1F;
+    --warning-bg: #FBF3D9;
     --danger: #BF616A;
+    --danger-bg: #FCE8E8;
     --bg: #FAFAF7;
     --card: #FFFFFF;
     --border: #E5E5E0;
@@ -30,28 +34,28 @@
 
   /* Header */
   .header {
-    background: linear-gradient(135deg, #4C3F6B 0%, #6B5B95 100%);
+    background: linear-gradient(135deg, #423266 0%, #5E4B8B 100%);
     color: white;
-    padding: 40px 32px;
-    border-radius: 12px;
+    padding: 36px 28px;
+    border-radius: 14px;
     margin-bottom: 24px;
   }
-  .header h1 { font-size: 28px; margin-bottom: 8px; font-weight: 700; }
-  .header .subtitle { font-size: 16px; opacity: 0.85; margin-bottom: 16px; }
+  .header h1 { font-size: 28px; margin-bottom: 8px; font-weight: 700; line-height: 1.2; }
+  .header .subtitle { font-size: 16px; opacity: 0.9; margin-bottom: 16px; }
   .header .meta {
-    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px;
-    font-size: 14px;
+    display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;
+    font-size: 13px;
   }
   .header .meta span {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.18);
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 20px;
   }
 
   /* Tabs */
   .tabs {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     background: var(--card);
     padding: 6px;
     border-radius: 10px;
@@ -61,8 +65,8 @@
   }
   .tab-btn {
     flex: 1;
-    min-width: 140px;
-    padding: 10px 14px;
+    min-width: 130px;
+    padding: 10px 12px;
     background: transparent;
     border: none;
     border-radius: 6px;
@@ -73,7 +77,7 @@
     transition: all 0.2s;
     white-space: nowrap;
   }
-  .tab-btn:hover { background: var(--bg); }
+  .tab-btn:hover { background: var(--bg); color: var(--primary); }
   .tab-btn.active {
     background: var(--accent);
     color: white;
@@ -86,9 +90,10 @@
   .card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 24px;
     margin-bottom: 20px;
+    scroll-margin-top: 20px;
   }
   .card h2 {
     font-size: 22px;
@@ -117,7 +122,7 @@
   /* Badge */
   .badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 4px 10px;
     border-radius: 12px;
     font-size: 12px;
     font-weight: 600;
@@ -126,14 +131,14 @@
     margin-right: 6px;
   }
   .badge-primary { background: #ECE6F4; color: var(--accent); }
-  .badge-success { background: #E8F0E0; color: #5d7a3f; }
-  .badge-warning { background: #FBF3D9; color: #8a6d1f; }
+  .badge-success { background: #E8F0E0; color: var(--success); }
+  .badge-warning { background: #FBF3D9; color: var(--warning); }
   .badge-danger { background: #F5DDDF; color: var(--danger); }
 
   /* Lesson block */
   .lesson-block {
     border-left: 4px solid var(--accent);
-    background: #F5F2F9;
+    background: var(--accent-bg);
     padding: 16px 20px;
     border-radius: 0 8px 8px 0;
     margin: 14px 0;
@@ -157,9 +162,7 @@
     color: var(--accent);
     font-size: 14px;
   }
-  .time-slot .activity {
-    font-size: 14px;
-  }
+  .time-slot .activity { font-size: 14px; }
   .time-slot .activity strong {
     display: block;
     margin-bottom: 4px;
@@ -188,24 +191,26 @@
     margin-right: 8px;
   }
 
-  /* Tip */
+  /* Boxes */
   .tip {
-    background: #FFF8E1;
+    background: var(--warning-bg);
     border-left: 4px solid var(--warning);
     padding: 12px 16px;
     border-radius: 0 8px 8px 0;
     margin: 12px 0;
     font-size: 14px;
+    color: #4A3A10;
   }
-  .tip strong { color: #8a6d1f; }
+  .tip strong { color: var(--warning); }
 
   .warning-box {
-    background: #FCE8E8;
+    background: var(--danger-bg);
     border-left: 4px solid var(--danger);
     padding: 12px 16px;
     border-radius: 0 8px 8px 0;
     margin: 12px 0;
     font-size: 14px;
+    color: #5C1D24;
   }
   .warning-box strong { color: var(--danger); }
 
@@ -226,7 +231,7 @@
     font-weight: 600;
     color: var(--primary);
   }
-  tr:hover td { background: #FAFAF7; }
+  tr:hover td { background: #F5F5F0; }
 
   /* Collapsible */
   .collapsible {
@@ -270,14 +275,11 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
   }
-  @media (max-width: 700px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  }
 
   /* Section card */
   .section-card {
-    background: #F5F2F9;
-    border: 1px solid #DED5EA;
+    background: var(--accent-bg);
+    border: 1px solid #E1D9EC;
     border-radius: 8px;
     padding: 16px;
   }
@@ -316,15 +318,9 @@
     color: var(--primary);
   }
 
-  /* Highlight */
-  .highlight {
-    background: linear-gradient(180deg, transparent 60%, #FBF3D9 60%);
-    font-weight: 500;
-  }
-
   /* Prompt block */
   .prompt {
-    background: #F5F2F9;
+    background: var(--accent-bg);
     border-left: 3px solid var(--accent);
     padding: 12px 16px;
     border-radius: 6px;
@@ -342,6 +338,17 @@
     color: var(--text-muted);
     font-size: 13px;
   }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    body { padding: 10px; }
+    .card { padding: 18px 14px; }
+    .header { padding: 24px 18px; }
+    .header h1 { font-size: 22px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .time-slot { grid-template-columns: 1fr; gap: 4px; }
+    table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
 </style>
 </head>
 <body>
@@ -349,130 +356,113 @@
 
   <!-- HEADER -->
   <div class="header">
-    <h1>🤖 Програма навчання: NotebookLM</h1>
-    <div class="subtitle">AI-асистент для роботи з джерелами та написання першого розділу дипломної роботи</div>
+    <h1>🤖 Програма навчання: Gemini Notebook</h1>
+    <div class="subtitle">Твій AI-помічник для роботи з документами, статями та швидкого аналізу матеріалів</div>
     <div class="meta">
-      <span>👥 Спеціальність: Менеджмент</span>
-      <span>⏱ Формат: 2 заняття по 2 години</span>
-      <span>🎯 Рівень: «Задовільно» (обов'язковий для всіх)</span>
-      <span>📚 Результат: перший розділ диплому</span>
+      <span>⚙️ Модуль аналітики</span>
+      <span>⏱ 2 блоки по 2 години</span>
+      <span>📚 Результат: власна база знань і готовий звіт</span>
     </div>
   </div>
 
   <!-- TABS -->
   <div class="tabs">
     <button class="tab-btn active" onclick="showTab(0)">🎯 Огляд</button>
-    <button class="tab-btn" onclick="showTab(1)">📅 Заняття 1</button>
-    <button class="tab-btn" onclick="showTab(2)">📅 Заняття 2</button>
+    <button class="tab-btn" onclick="showTab(1)">📅 Модуль 1</button>
+    <button class="tab-btn" onclick="showTab(2)">📅 Модуль 2</button>
     <button class="tab-btn" onclick="showTab(3)">💬 Промпти</button>
     <button class="tab-btn" onclick="showTab(4)">📝 Структура звітів</button>
-    <button class="tab-btn" onclick="showTab(5)">📚 Домашні завдання</button>
-    <button class="tab-btn" onclick="showTab(6)">✅ Критерії оцінки</button>
+    <button class="tab-btn" onclick="showTab(5)">📚 Фінальні кроки</button>
   </div>
 
   <!-- TAB 0: OVERVIEW -->
   <div class="tab-content active">
     <div class="card">
-      <h2>🎯 Чому NotebookLM — це не «ще один ChatGPT»</h2>
-      <p>На відміну від ChatGPT, який «знає все потроху» і часто вигадує, <strong>NotebookLM працює тільки з тими джерелами, які ти йому даєш</strong>. Це його суперсила для академічної роботи:</p>
+      <h2>🎯 Чому Gemini Notebook (раніше NotebookLM) — це круто?</h2>
+      <p>На відміну від звичайних чат-ботів, <strong>Gemini Notebook працює тільки з тими документами, які ти завантажиш</strong>. Вона не вигадує факти з голови, а точно аналізує твої файли:</p>
 
       <div class="grid-2" style="margin-top: 12px;">
         <div class="section-card">
-          <h4>✅ Що робить NotebookLM</h4>
-          <p>Аналізує тільки твої 50 джерел. Кожна відповідь — з посиланнями на конкретні джерела. Не вигадує — або відповідає з джерела, або каже «не знайдено».</p>
+          <h4>✅ Що вона вміє</h4>
+          <p>Швидко читає десятки статей чи PDF-файлів. На кожну відповідь дає точне посилання на сторінку або абзац у твоєму документі.</p>
         </div>
         <div class="section-card">
-          <h4>❌ Чого НЕ робить</h4>
-          <p>Не пише диплом за тебе. Не шукає джерела в інтернеті. Не аналізує те, чого нема в твоєму блокноті. Не замінює критичне мислення.</p>
+          <h4>❌ Чого вона не робить</h4>
+          <p>Не шукає вигадану інформацію в інтернеті та не фантазує, якщо у завантажених файлах немає відповіді.</p>
         </div>
       </div>
 
-      <h3 style="margin-top: 24px;">Що студент має на виході</h3>
+      <h3 style="margin-top: 24px;">Що ти отримаєш у результаті</h3>
       <ul>
-        <li>Зареєстрований акаунт NotebookLM з блокнотом по темі диплому</li>
-        <li>Завантажено 50 наукових джерел (без повторень)</li>
-        <li>Сформульовано план першого розділу (3 підрозділи)</li>
-        <li><strong>3 звіти</strong> — по одному на кожен підрозділ 1 розділу</li>
-        <li><strong>Аналітичні висновки</strong> до теоретичного розділу</li>
-        <li>Готовий список літератури (50 джерел в академічному стилі)</li>
-        <li>Текст 1 розділу диплому з посиланнями та виносками</li>
+        <li>Налаштований блокнот під твій проєкт чи тему</li>
+        <li>Завантажену та розсортовану базу корисних матеріалів (до 50 файлів)</li>
+        <li>Зрозумілий план дослідження з 3 ключових розділів</li>
+        <li><strong>Готові нотатки та підсумки</strong> за всіма матеріалами</li>
+        <li>Зібраний звіт із цитатами та списком лінків</li>
       </ul>
     </div>
 
     <div class="card">
-      <h2>📐 Логіка курсу</h2>
+      <h2>📐 Як побудована програма</h2>
       <div class="lesson-block">
-        <h4>Заняття 1 — Фундамент і збір джерел</h4>
-        <p>Реєстрація, інтерфейс NotebookLM, типи джерел. Студент після заняття 1 розуміє, де брати джерела, як їх правильно завантажити, як перевірити якість.</p>
-      </div>
-      <div class="lesson-block">
-        <h4>Заняття 2 — Робота з AI та написання тексту</h4>
-        <p>Як ставити правильні питання, як перевіряти відповіді, як писати наукові звіти. Після заняття 2 студент знає алгоритм написання кожного підрозділу.</p>
-      </div>
-
-      <div class="tip">
-        <strong>💡 Ключовий принцип:</strong> NotebookLM — це помічник, не автор. Студент має розуміти, що він пише диплом сам, а AI лише прискорює пошук інформації в його ж джерелах. Текст диплому має бути написаний студентом, з опорою на цитати з NotebookLM.
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>🔗 Зв'язок з іншими інструментами практики</h2>
+        <div class="card">
+      <h2>💡 Де це знадобиться на практиці</h2>
       <div class="grid-3">
         <div class="section-card">
-          <h4>NotebookLM → Notion</h4>
-          <p>Усі 50 джерел паралельно заносяться до бази «Література» в Notion. Висновки зберігаються в «Системі нотаток».</p>
+          <h4>📊 Дослідження та аналітика</h4>
+          <p>Швидкий огляд ринку, вивчення конкурентів та аналіз великих звітів без витрачання днів на читання.</p>
         </div>
         <div class="section-card">
-          <h4>NotebookLM → Canva</h4>
-          <p>Аналітичні висновки лягають в основу слайдів презентації. Цитати з джерел використовуються для теоретичних слайдів.</p>
+          <h4>🎓 Навчання та курси</h4>
+          <p>Опрацювання підручників, наукових статей, конспектів та лекцій в одному місці.</p>
         </div>
         <div class="section-card">
-          <h4>NotebookLM → Диплом</h4>
-          <p>Текст 3 звітів = чернетка 3 підрозділів першого розділу. З цього вже легко зробити фінальний варіант.</p>
+          <h4>📝 Робота з документами</h4>
+          <p>Підготовка договорів, інструкцій, проєктних заявок та створення швидких витягів із бізнес-документації.</p>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
   <!-- TAB 1: LESSON 1 -->
   <div class="tab-content">
     <div class="card">
-      <h2>📅 Заняття 1. Знайомство та збір джерел</h2>
-      <span class="badge badge-primary">2 години</span>
-      <span class="badge badge-success">Інструмент: NotebookLM</span>
+      <h2>📅 Модуль 1. Знайомство з сервісом та збір матеріалів</h2>
+      <span class="badge badge-primary">Час: ~2 години</span>
+      <span class="badge badge-success">Інструмент: Gemini Notebook</span>
 
-      <h3>🎯 Цілі заняття</h3>
+      <h3>🎯 Що ми зробимо</h3>
       <ul>
-        <li>Студент зареєстрований у NotebookLM</li>
-        <li>Створено блокнот за темою диплому</li>
-        <li>Визначено тему та план першого розділу</li>
-        <li>Завантажено перші 10-15 джерел (з 50)</li>
-        <li>Студент розуміє, які типи джерел придатні і як їх знаходити</li>
+        <li>Створимо робочий блокнот під твій проєкт</li>
+        <li>Розіб'ємо тему на 3 прості частини для зручного пошуку</li>
+        <li>Знайдемо та завантажимо перші 15–20 якісних статей чи файлів</li>
+        <li>Зрозуміємо, які матеріали справді корисні, а які краще відсіяти</li>
       </ul>
 
-      <h3>⏰ Хронометраж</h3>
+      <h3>⏰ План заняття</h3>
 
       <div class="time-slot">
         <div class="time">0:00–0:15</div>
         <div class="activity">
-          <strong>Вступ і мотивація</strong>
-          Що таке NotebookLM. Чому це не ChatGPT і не Google. Як він допомагає писати диплом. Демонстрація готового блокнота на екрані — щоб студент побачив, до чого прийде.
+          <strong>Як це працює</strong>
+          Подивимося на приклад готового блокнота й розберемося, чому це набагато зручніше за звичайні пошуковики.
         </div>
       </div>
 
       <div class="time-slot">
         <div class="time">0:15–0:30</div>
         <div class="activity">
-          <strong>Реєстрація + інтерфейс</strong>
-          Реєстрація через Google-акаунт. Огляд: ліва панель (Sources), центральна (Chat), права (Studio/Notes). Створення першого блокнота і його найменування за темою диплому.
+          <strong>Перший вхід та інтерфейс</strong>
+          Заходимо через Google-акаунт, дивимося, де лежать джерела (Sources), де ставити запитання (Chat) і де зберігати нотатки (Studio).
         </div>
       </div>
 
       <div class="time-slot">
         <div class="time">0:30–0:50</div>
         <div class="activity">
-          <strong>Уточнюємо тему та план</strong>
-          Кожен студент має тему диплому. Розбиваємо її на 3 підрозділи 1 розділу. Це критично — від цього залежить, які джерела шукати. Викладач допомагає сформулювати правильно.
+          <strong>Складаємо план</strong>
+          Розбиваємо тему на 3 зрозумілі напрями, щоб знати, що саме шукати.
         </div>
       </div>
 
@@ -486,160 +476,69 @@
       <div class="time-slot">
         <div class="time">1:00–1:30</div>
         <div class="activity">
-          <strong>Типи джерел і де їх брати</strong>
-          Демонстрація: Google Scholar, наукові репозитарії (наприклад, irbis-nbuv.gov.ua, scholar.google.com), eLibrary, ResearchGate. Що рахується як «джерело»: монографії, наукові статті, дисертації, законодавство, фахові видання. Що НЕ рахується: блоги, Вікіпедія, реферати.
+          <strong>Де шукати круті матеріали</strong>
+          Знаходимо статті в Google Scholar, дослідження, звітність та профільні сайти.
         </div>
       </div>
 
       <div class="time-slot">
-        <div class="time">1:30–1:50</div>
+        <div class="time">1:30–2:00</div>
         <div class="activity">
-          <strong>Завантаження джерел до блокнота</strong>
-          Демонстрація: 4 способи додати джерело в NotebookLM (PDF, Google Docs, Web URL, текст). Показ обмежень (50 джерел на блокнот). Завантажуємо разом 3-5 джерел.
-        </div>
-      </div>
-
-      <div class="time-slot">
-        <div class="time">1:50–2:00</div>
-        <div class="activity">
-          <strong>Домашнє завдання + Q&A</strong>
-          Видача ДЗ: завантажити ще 10-15 джерел до заняття 2. Паралельно заносити їх у базу «Література» в Notion.
+          <strong>Завантажуємо файли</strong>
+          Додаємо PDF, посилання на сайти, документи з Google Drive та перевіряємо, як система їх читає.
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🛠 Детальна практика для заняття 1</h2>
+      <h2>🛠 Практичні кроки (Модуль 1)</h2>
 
       <div class="collapsible open">
         <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Крок 1. Реєстрація та інтерфейс</span>
+          <span>Крок 1. Створюємо блокнот</span>
           <span class="arrow">▶</span>
         </div>
         <div class="collapsible-body">
           <ol>
-            <li>Відкрийте <code>notebooklm.google.com</code></li>
-            <li>Увійдіть через Google-акаунт (той самий, що для всього навчання)</li>
-            <li>Кнопка <strong>Create new notebook</strong> у центрі</li>
-            <li>Дайте назву блокнота — точно за темою диплому, наприклад: <span class="highlight">«Управління персоналом у малому бізнесі»</span></li>
+            <li>Перейди на сайт <code>notebooklm.google.com</code></li>
+            <li>Увійди під своїм Google-акаунтом</li>
+            <li>Натисни <strong>Create new notebook</strong></li>
+            <li>Дай блокноту зрозумілу назву (наприклад, <em>«Аналіз ринку»</em> або <em>«Управління проєктами»</em>)</li>
           </ol>
-          <h4>Три зони інтерфейсу</h4>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span>Крок 2. Намічаємо план пошуку</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="collapsible-body">
+          <p>Щоб не заплутатися, розділи тему на 3 частини:</p>
           <ul>
-            <li><strong>Sources (зліва):</strong> усі завантажені джерела. Сюди вантажиш PDF, текст, лінки.</li>
-            <li><strong>Chat (центр):</strong> місце, де ставиш питання AI. Кожна відповідь має посилання на джерела.</li>
-            <li><strong>Studio / Notes (справа):</strong> інструменти створення контенту — Briefing doc, Study guide, Audio overview, FAQ, Timeline тощо. І збереження нотаток.</li>
+            <li><strong>Частина 1:</strong> Базові поняття, теорія та теорія питання</li>
+            <li><strong>Частина 2:</strong> Сучасні інструменти, методи та приклади</li>
+            <li><strong>Частина 3:</strong> Проблеми, тренди та майбутнє напряму</li>
           </ul>
         </div>
       </div>
 
       <div class="collapsible">
         <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Крок 2. План першого розділу — критично</span>
+          <span>Крок 3. Додаємо файли</span>
           <span class="arrow">▶</span>
         </div>
         <div class="collapsible-body">
-          <p>Не починайте збирати джерела, поки немає плану. Інакше зберете 50 випадкових джерел і витратите час даремно.</p>
-          <h4>Універсальна структура 1 розділу для менеджменту</h4>
+          <p>Натисни кнопку <strong>+ Add source</strong> зліва. Можна додавати:</p>
           <ul>
-            <li><strong>1.1</strong> Поняття, сутність, теоретичні засади основного явища</li>
-            <li><strong>1.2</strong> Класифікація / складові / етапи / методи</li>
-            <li><strong>1.3</strong> Сучасний стан проблеми / зарубіжний досвід / нормативно-правова база</li>
-          </ul>
-
-          <h4>Приклади правильних формулювань</h4>
-          <table>
-            <tr><th>Тема диплому</th><th>1.1</th><th>1.2</th><th>1.3</th></tr>
-            <tr>
-              <td>Управління персоналом у малому бізнесі</td>
-              <td>Сутність і функції управління персоналом</td>
-              <td>Методи та інструменти управління персоналом</td>
-              <td>Сучасні тренди HR в малому бізнесі</td>
-            </tr>
-            <tr>
-              <td>Стратегія розвитку підприємства</td>
-              <td>Теоретичні засади стратегічного управління</td>
-              <td>Види та етапи розробки стратегії</td>
-              <td>Сучасні підходи до оцінки стратегії</td>
-            </tr>
-            <tr>
-              <td>Антикризове управління</td>
-              <td>Поняття, причини та види кризи в організації</td>
-              <td>Інструменти антикризового управління</td>
-              <td>Зарубіжний досвід антикризового менеджменту</td>
-            </tr>
-          </table>
-
-          <div class="tip">
-            <strong>💡 Викладачу:</strong> пройдіться по кожному студенту окремо. 10 хв на студента × 10 студентів = 1 година. Це найкорисніше витрачений час практики, бо без правильного плану — все інше не має сенсу.
-          </div>
-        </div>
-      </div>
-
-      <div class="collapsible">
-        <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Крок 3. Де шукати наукові джерела</span>
-          <span class="arrow">▶</span>
-        </div>
-        <div class="collapsible-body">
-          <h4>Основні ресурси</h4>
-          <table>
-            <tr><th>Ресурс</th><th>URL</th><th>Що там</th></tr>
-            <tr><td>Google Scholar</td><td>scholar.google.com</td><td>Усі наукові статті, цитованість</td></tr>
-            <tr><td>Національна бібліотека ім. Вернадського</td><td>irbis-nbuv.gov.ua</td><td>Українські дисертації, автореферати</td></tr>
-            <tr><td>eLibrary</td><td>elibrary.kubg.edu.ua тощо</td><td>Електронні фонди університетів</td></tr>
-            <tr><td>ResearchGate</td><td>researchgate.net</td><td>Глобальна база наукових публікацій</td></tr>
-            <tr><td>DOAJ</td><td>doaj.org</td><td>Відкриті наукові журнали</td></tr>
-            <tr><td>OUCI</td><td>ouci.dntb.gov.ua</td><td>Український індекс цитувань</td></tr>
-            <tr><td>SSRN</td><td>ssrn.com</td><td>Економіка, менеджмент</td></tr>
-          </table>
-
-          <h4>Що рахується як джерело</h4>
-          <ul>
-            <li>✅ Наукові монографії</li>
-            <li>✅ Статті у фахових журналах (категорії А, Б)</li>
-            <li>✅ Дисертації та автореферати</li>
-            <li>✅ Закони, постанови, нормативні акти</li>
-            <li>✅ Аналітичні звіти офіційних організацій (НБУ, Держстат, ООН)</li>
-          </ul>
-
-          <h4>Що НЕ рахується</h4>
-          <ul>
-            <li>❌ Вікіпедія</li>
-            <li>❌ Реферати, курсові з інтернету</li>
-            <li>❌ Блоги, особисті сторінки</li>
-            <li>❌ Новини без аналітики</li>
-          </ul>
-
-          <div class="tip">
-            <strong>💡 Лайфхак для студента:</strong> у Google Scholar справа кожної статті є кнопка <em>«Цитування»</em>. Натиснувши на «Цит. за 247 джерелами» — можна знайти десятки інших статей по темі. Один хороший «насіннєвий» джерело → 15 додаткових.
-          </div>
-        </div>
-      </div>
-
-      <div class="collapsible">
-        <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Крок 4. Завантаження джерел у NotebookLM</span>
-          <span class="arrow">▶</span>
-        </div>
-        <div class="collapsible-body">
-          <h4>Способи додати джерело</h4>
-          <p>На лівій панелі — кнопка <strong>+ Add source</strong>. Варіанти:</p>
-          <ol>
-            <li><strong>Upload sources</strong> — PDF, .docx, .txt, аудіо. Найкраще для скачаних статей і книг.</li>
-            <li><strong>Google Drive</strong> — документи з Google Docs / Slides.</li>
-            <li><strong>Link</strong> — Website або YouTube. Зручно для онлайн-публікацій.</li>
-            <li><strong>Paste text</strong> — просто вставити текст. Для коротких джерел.</li>
-          </ol>
-
-          <h4>Обмеження</h4>
-          <ul>
-            <li>Максимум 50 джерел на блокнот (у безкоштовній версії — менше, але для практики достатньо)</li>
-            <li>До 500 000 слів на джерело</li>
-            <li>Розмір файлу — до 200 МБ</li>
+            <li><strong>Upload sources:</strong> PDF-файли, Word-документи, тексти.</li>
+            <li><strong>Google Drive:</strong> файли прямо з твоєї хмари.</li>
+            <li><strong>Link:</strong> посилання на статті у вебі або корисні YouTube-відео.</li>
+            <li><strong>Paste text:</strong> Просто скопійований шматок тексту.</li>
           </ul>
 
           <div class="warning-box">
-            <strong>⚠️ Часта помилка:</strong> студенти заливають дві однакові статті з різними назвами. Перевіряйте перед завантаженням — у NotebookLM не має бути дублів. Цей пункт прямо вказаний у вимогах практики.
+            <strong>⚠️ Зверни увагу:</strong> стеж, щоб не завантажувати двічі один і той самий файл під різними назвами.
           </div>
         </div>
       </div>
@@ -649,42 +548,41 @@
   <!-- TAB 2: LESSON 2 -->
   <div class="tab-content">
     <div class="card">
-      <h2>📅 Заняття 2. Робота з AI та написання тексту</h2>
-      <span class="badge badge-primary">2 години</span>
-      <span class="badge badge-warning">Найважливіше заняття</span>
+      <h2>📅 Модуль 2. Робота з AI, правильні запити та звіт</h2>
+      <span class="badge badge-primary">Час: ~2 години</span>
+      <span class="badge badge-warning">Головна практика</span>
 
-      <h3>🎯 Цілі заняття</h3>
+      <h3>🎯 Що ми зробимо</h3>
       <ul>
-        <li>Студент знає, як ставити правильні питання AI</li>
-        <li>Розуміє різницю між «AI вигадав» і «AI знайшов у джерелі»</li>
-        <li>Створив свій перший звіт по підрозділу 1.1</li>
-        <li>Знає алгоритм роботи над 1.2 і 1.3 самостійно</li>
-        <li>Уміє цитувати джерела з посиланнями</li>
+        <li>Навчимося писати промпти, на які AI відповідає чітко й без «води»</li>
+        <li>Навчимося швидко перевіряти факти за цитатами</li>
+        <li>Зберемо готові нотатки та створимо загальний звіт</li>
+        <li>Спробуємо круті фішки з меню Studio</li>
       </ul>
 
-      <h3>⏰ Хронометраж</h3>
+      <h3>⏰ План заняття</h3>
 
       <div class="time-slot">
         <div class="time">0:00–0:15</div>
         <div class="activity">
-          <strong>Перевірка ДЗ</strong>
-          У кого скільки джерел? Хто наскільки наблизився до 50? Розбір типових проблем (повтори, неякісні джерела, файли, які NotebookLM не зміг прочитати).
+          <strong>Перевіряємо матеріали</strong>
+          Дивимося на завантажені файли, прибираємо зайве та перевіряємо, чи всі тексти зчиталися.
         </div>
       </div>
 
       <div class="time-slot">
         <div class="time">0:15–0:35</div>
         <div class="activity">
-          <strong>Як ставити питання AI</strong>
-          Демонстрація різниці: погані питання vs хороші питання. Принципи: конкретність, академічна мова, вказівка на формат відповіді. Розбір типів запитів (огляд, порівняння, синтез, цитати).
+          <strong>Як правильно запитувати AI</strong>
+          Вчимося писати чіткі промпти: вказуємо роль, завдання та бажаний формат (наприклад, у вигляді таблиці).
         </div>
       </div>
 
       <div class="time-slot">
         <div class="time">0:35–0:55</div>
         <div class="activity">
-          <strong>Перевірка відповідей AI</strong>
-          Як читати посилання на джерела. Як відкрити цитоване місце в джерелі. Що робити, якщо AI каже «not found». Що таке галюцинація і як її уникнути.
+          <strong>Перевіряємо цитати</strong>
+          Клікаємо на посилання у відповідях AI та пересвідчуємося, що в оригіналі написане саме це.
         </div>
       </div>
 
@@ -698,179 +596,64 @@
       <div class="time-slot">
         <div class="time">1:05–1:35</div>
         <div class="activity">
-          <strong>Створюємо разом звіт по 1.1</strong>
-          Покрокова робота: запит → відповідь → перевірка → нотатка. Студенти повторюють у своїх блокнотах. На виході — чернетка одного підрозділу.
+          <strong>Збираємо нотатки</strong>
+          Отримуємо відповіді за всіма розділами та зберігаємо їх у панелі Studio Notes.
         </div>
       </div>
 
       <div class="time-slot">
-        <div class="time">1:35–1:50</div>
+        <div class="time">1:35–2:00</div>
         <div class="activity">
-          <strong>Інструменти Studio: Briefing doc, Study guide</strong>
-          Демо: як одним кліком отримати огляд усіх джерел. Як використовувати Briefing doc для аналітичних висновків. Audio overview — як цікавий бонус.
-        </div>
-      </div>
-
-      <div class="time-slot">
-        <div class="time">1:50–2:00</div>
-        <div class="activity">
-          <strong>Фінальне ДЗ і дедлайни</strong>
-          Що має бути готовим до здачі: 50 джерел, 3 звіти, висновки, список літератури, готовий текст 1 розділу.
+          <strong>Фішки Studio та експорт</strong>
+          Генеруємо короткий огляд (Briefing doc), робимо підсумковий висновок і зберігаємо звіт.
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🛠 Детальна практика для заняття 2</h2>
+      <h2>🛠 Практичні кроки (Модуль 2)</h2>
 
       <div class="collapsible open">
         <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Принципи правильних запитів до AI</span>
+          <span>4 секрети вдалого запиту (промпту)</span>
           <span class="arrow">▶</span>
         </div>
         <div class="collapsible-body">
-          <h4>4 правила доброго запиту</h4>
           <ol>
-            <li><strong>Конкретність.</strong> Не «розкажи про менеджмент», а «дай визначення поняття "управління персоналом" згідно з різними авторами в моїх джерелах».</li>
-            <li><strong>Академічна мова.</strong> Уникайте розмовних слів. AI підлаштовується під стиль запитання.</li>
-            <li><strong>Формат відповіді.</strong> Вкажіть: «список з 5 пунктів», «таблиця з колонками автор / визначення / рік», «3 абзаци».</li>
-            <li><strong>Прив'язка до джерел.</strong> «На основі моїх джерел», «використовуючи цитати з 3-5 авторів», «з посиланнями».</li>
+            <li><strong>Чітка дія:</strong> починай із дієслова («порівняй», «виділи 5 фактів», «зроби таблицю»).</li>
+            <li><strong>Джерело:</strong> нагадай шукати відповідь («за моїми завантаженими файлами»).</li>
+            <li><strong>Формат:</strong> вкажи, як вивести результат («пронумерований список», «таблиця з 3 колонками»).</li>
+            <li><strong>Обсяг:</strong> попроси написати коротко («до 300 слів»).</li>
           </ol>
-
-          <h4>Шаблон ідеального запиту</h4>
-          <div class="prompt">[ДІЯ: проаналізуй / порівняй / опиши]
-[ОБ'ЄКТ: конкретне поняття]
-[ДЖЕРЕЛА: усі / лише статті / авторів X, Y]
-[ФОРМАТ: список / таблиця / абзаци]
-[ОБМЕЖЕННЯ: до 500 слів / по 3 автори]</div>
         </div>
       </div>
 
       <div class="collapsible">
         <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Порівняння: погано vs добре</span>
+          <span>Як перевірити відповідь AI</span>
           <span class="arrow">▶</span>
         </div>
         <div class="collapsible-body">
-          <table>
-            <tr><th>❌ Погано</th><th>✅ Добре</th></tr>
-            <tr>
-              <td>Розкажи про управління персоналом</td>
-              <td>На основі моїх джерел дай 5 визначень поняття «управління персоналом» різних авторів. Формат: таблиця з колонками «Автор», «Визначення», «Рік», «Джерело».</td>
-            </tr>
-            <tr>
-              <td>Які бувають методи?</td>
-              <td>Класифікуй методи управління персоналом, які описані в моїх джерелах. Згрупуй за двома підставами: за впливом на людину (адміністративні, економічні, соціально-психологічні) та за функціями. Дай приклади з джерел.</td>
-            </tr>
-            <tr>
-              <td>Що нового зараз?</td>
-              <td>Які сучасні тренди в управлінні персоналом малого бізнесу описано в моїх джерелах за останні 5 років? Згрупуй у 3-5 трендів, на кожен — 2-3 цитати з різних джерел.</td>
-            </tr>
-          </table>
-
-          <div class="tip">
-            <strong>💡 Покажіть студентам обидва запити в реальному часі.</strong> Різниця у відповідях буде разюча — це найкращий аргумент.
-          </div>
-        </div>
-      </div>
-
-      <div class="collapsible">
-        <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Перевірка відповідей AI</span>
-          <span class="arrow">▶</span>
-        </div>
-        <div class="collapsible-body">
-          <h4>Як читати посилання</h4>
-          <p>У відповіді NotebookLM кожне твердження має маленьку цифру <strong>[1]</strong>, <strong>[2]</strong>. Це посилання на конкретне джерело. Клацнувши — відкривається саме те речення в джерелі.</p>
-
-          <h4>Що перевіряти</h4>
-          <ol>
-            <li><strong>Чи справді в джерелі це написано?</strong> Особливо для важливих цитат. AI іноді «округлює».</li>
-            <li><strong>Чи не вирвано з контексту?</strong> Іноді цитата сама по собі звучить інакше, ніж у тексті.</li>
-            <li><strong>Хто автор?</strong> Перевірте, чи правильно AI ідентифікував авторство.</li>
-          </ol>
-
-          <h4>Що робити, якщо «Not found» / «I don't have information»</h4>
+          <p>Біля відповідей Gemini Notebook ти побачиш цифри-цитати <strong>[1]</strong>, <strong>[2]</strong>.</p>
           <ul>
-            <li>Питання може бути занадто загальним — конкретизуй</li>
-            <li>Можливо, цієї інформації немає в твоїх джерелах — потрібно знайти ще</li>
-            <li>Перефразуй питання іншими словами</li>
+            <li>Натисни на цифру — і система одразу підсвітить потрібний абзац у твоєму файлі.</li>
+            <li>Якщо все вірно — тисни <strong>Save to note</strong>, щоб зберегти цей шматок у свій підсумковий документ.</li>
           </ul>
-
-          <div class="warning-box">
-            <strong>⚠️ Галюцинації AI.</strong> NotebookLM рідше «вигадує», ніж ChatGPT, але це теж буває. Особливо коли просять синтез на тему, якої недостатньо в джерелах. Завжди перевіряйте цитати — це автоматично знаходить помилки.
-          </div>
         </div>
       </div>
 
       <div class="collapsible">
         <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Створюємо звіт по підрозділу 1.1 — пакет запитів</span>
+          <span>Автоматичні фішки панелі Studio</span>
           <span class="arrow">▶</span>
         </div>
         <div class="collapsible-body">
-          <p>Стандартний звіт по теоретичному підрозділу складається з 5 частин. Для кожної — окремий запит. Запитуєш — отримуєш відповідь — копіюєш у Studio Notes (правий бік).</p>
-
-          <h4>Запит 1: Визначення поняття</h4>
-          <div class="prompt">На основі моїх джерел дай 5 різних визначень поняття «[ТВОЄ ПОНЯТТЯ]» від різних авторів. Формат: для кожного — автор, рік, повне визначення з посиланням на джерело. Уникай повторень.</div>
-
-          <h4>Запит 2: Історія / еволюція</h4>
-          <div class="prompt">Опиши еволюцію розуміння поняття «[ПОНЯТТЯ]» в моїх джерелах. Виділи 3-5 основних етапів. Для кожного — період, ключові ідеї, авторів. Цитати з джерел.</div>
-
-          <h4>Запит 3: Складові / структура</h4>
-          <div class="prompt">Які структурні елементи / компоненти / функції має «[ПОНЯТТЯ]» згідно з моїми джерелами? Згрупуй у класифікацію. На кожен елемент — посилання на джерело.</div>
-
-          <h4>Запит 4: Точки зору / дискусія</h4>
-          <div class="prompt">У чому розходяться позиції різних авторів щодо «[ПОНЯТТЯ]» в моїх джерелах? Сформулюй 2-3 ключові дискусії, опиши протилежні погляди з цитатами.</div>
-
-          <h4>Запит 5: Висновок до підрозділу</h4>
-          <div class="prompt">На основі попередніх відповідей сформулюй 3-4 висновки до підрозділу 1.1 «[НАЗВА ПІДРОЗДІЛУ]». Це має бути академічний текст 200-300 слів. Без посилань — лише узагальнення.</div>
-
-          <div class="tip">
-            <strong>💡 Це готовий каркас підрозділу.</strong> Студенту лишається: впорядкувати, додати свої переходи між частинами, перевірити цитати, відредагувати стиль. Заняття на 1-2 години — і підрозділ готовий.
-          </div>
-        </div>
-      </div>
-
-      <div class="collapsible">
-        <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Studio: автоматичні інструменти</span>
-          <span class="arrow">▶</span>
-        </div>
-        <div class="collapsible-body">
-          <p>На правій панелі — Studio. Одним кліком NotebookLM генерує:</p>
+          <p>У правій панелі Studio є кнопки швидких дій:</p>
           <ul>
-            <li><strong>Briefing doc</strong> — короткий огляд усіх джерел блокнота, головні теми, ключові факти. Ідеально для вступу до 1 розділу.</li>
-            <li><strong>Study guide</strong> — питання для самоперевірки. Корисно перевірити, чи розумієш сам матеріал.</li>
-            <li><strong>FAQ</strong> — типові питання та відповіді з джерел. Можна використати для висновків.</li>
-            <li><strong>Timeline</strong> — хронологія подій/розвитку (якщо джерела про щось історичне).</li>
-            <li><strong>Audio overview</strong> — генерує аудіоподкаст (українською поки що не дуже якісно, англійською — добре). Корисно слухати в дорозі.</li>
-            <li><strong>Mind map</strong> — інтерактивна карта зв'язків між поняттями.</li>
+            <li><strong>Briefing doc:</strong> створює короткий витяг із найголовнішого з твоїх файлів.</li>
+            <li><strong>Study guide:</strong> формує список питань і відповідей для швидкого повторення.</li>
+            <li><strong>FAQ:</strong> збирає найчастіші запитання за твоїми матеріалами.</li>
           </ul>
-
-          <div class="tip">
-            <strong>💡 Лайфхак:</strong> Briefing doc дає чудовий матеріал для аналітичних висновків до 1 розділу. Студент згенерував → відредагував → готово.
-          </div>
-        </div>
-      </div>
-
-      <div class="collapsible">
-        <div class="collapsible-header" onclick="toggleCollapsible(this)">
-          <span>Як зберігати результати</span>
-          <span class="arrow">▶</span>
-        </div>
-        <div class="collapsible-body">
-          <p>Усі відповіді AI можна зберігати в нотатках блокнота. Кнопка <strong>Save to note</strong> під відповіддю.</p>
-          <p>Назвіть нотатки за структурою:</p>
-          <ul>
-            <li><strong>1.1 — Визначення поняття</strong></li>
-            <li><strong>1.1 — Класифікація</strong></li>
-            <li><strong>1.1 — Висновки</strong></li>
-            <li><strong>1.2 — ...</strong></li>
-            <li><strong>1.3 — ...</strong></li>
-            <li><strong>Висновки до 1 розділу</strong></li>
-          </ul>
-          <p>Паралельно — копіюйте текст у документ Word/Google Docs, де буде сама дипломна.</p>
         </div>
       </div>
     </div>
@@ -879,282 +662,90 @@
   <!-- TAB 3: PROMPTS -->
   <div class="tab-content">
     <div class="card">
-      <h2>💬 Бібліотека готових промптів</h2>
-      <p>Колекція готових запитів, які можна давати студентам як шпаргалку. Працюють для будь-якої теми менеджменту — потрібно лише підставити свої поняття.</p>
+      <h2>💬 Готові шаблони запитів (промпти</h2>
+      <p>Просто копіюй ці запити, підставляючи свої слова у квадратних дужках <code>[ ]</code>.</p>
     </div>
 
     <div class="card">
-      <h2>🧱 Базові запити для теорії</h2>
+      <h2>🧱 Базові запити</h2>
 
-      <h3>Визначення</h3>
-      <div class="prompt">Дай 5 різних визначень поняття «[X]» з моїх джерел. Для кожного — автор, рік, повне визначення, посилання на джерело. Виключи дублі.</div>
+      <h3>Поняття та сутність</h3>
+      <div class="prompt">Знайди в моїх джерелах 5 різних визначень поняття «[ТВОЄ ПОНЯТТЯ]». Зроби таблицю з колонками: Автор/Джерело, Рік, Визначення, Головна думка.</div>
 
-      <h3>Класифікація</h3>
-      <div class="prompt">Які класифікації «[X]» наведені в моїх джерелах? Згрупуй за підставою класифікації. Для кожної класифікації — автор, підстава, види, приклади.</div>
+      <h3>Види та класифікації</h3>
+      <div class="prompt">Які види чи класифікації «[ПОНЯТТЯ]» є в моїх матеріалах? Розпиши кожен вид коротко і згадай, хто про це пише.</div>
 
-      <h3>Функції / завдання</h3>
-      <div class="prompt">Які функції / завдання виконує «[X]» згідно з моїми джерелами? Список з коротким описом кожної функції та посиланням на джерело.</div>
+      <h3>Порівняння думок</h3>
+      <div class="prompt">Подивися, як різні автори описують «[ПИТАННЯ]». У чому вони погоджуються, а в чому їхні думки розходяться? Надай цитати.</div>
 
-      <h3>Принципи</h3>
-      <div class="prompt">Сформулюй принципи «[X]» на основі моїх джерел. Виділи 5-7 ключових принципів. Кожен — назва, суть, обґрунтування з посиланням.</div>
-
-      <h3>Етапи / стадії</h3>
-      <div class="prompt">Опиши етапи «[ПРОЦЕС]» на основі моїх джерел. Для кожного етапу — назва, мета, ключові дії, результат, посилання.</div>
+      <h3>Головні тренди</h3>
+      <div class="prompt">Які головні тренди або проблеми у сфері «[ТЕМА]» згадуються в моїх джерелах? Наведи 5 ключових пунктів із коротким поясненням.</div>
     </div>
 
     <div class="card">
-      <h2>🔍 Аналітичні запити</h2>
+      <h2>✍️ Запити для підсумків</h2>
 
-      <h3>Порівняння поглядів</h3>
-      <div class="prompt">Порівняй погляди різних авторів на «[X]» в моїх джерелах. Виділи 2-3 основні позиції. На кожну — представники, аргументи, цитати.</div>
+      <h3>Підсумковий висновок</h3>
+      <div class="prompt">На основі завантажених джерел напиши 4-5 головних висновків із теми «[ТЕМА]». Напиши це простою та зрозумілою мовою, обсягом до 300 слів.</div>
 
-      <h3>Еволюція поняття</h3>
-      <div class="prompt">Як змінювалося розуміння «[X]» з часом згідно з моїми джерелами? Виділи 3-5 етапів. Для кожного — період, домінуючі ідеї, ключові автори.</div>
-
-      <h3>Проблеми та виклики</h3>
-      <div class="prompt">Які проблеми / виклики «[X]» згадуються в моїх джерелах? Згрупуй у 4-5 тем. На кожну — суть проблеми, приклади, посилання.</div>
-
-      <h3>Сучасні тренди</h3>
-      <div class="prompt">Які сучасні тренди «[X]» описано в моїх джерелах (особливо за останні 5 років)? 5-7 трендів. На кожен — суть, приклади, посилання.</div>
-
-      <h3>Український контекст</h3>
-      <div class="prompt">Які особливості «[X]» в українському контексті описано в моїх джерелах? Виділи специфіку, проблеми, перспективи. З посиланнями.</div>
-    </div>
-
-    <div class="card">
-      <h2>✍️ Запити для написання тексту</h2>
-
-      <h3>Висновок до підрозділу</h3>
-      <div class="prompt">На основі попередніх відповідей сформулюй 3-4 висновки до підрозділу «[НАЗВА]». Академічний стиль, 200-300 слів, без прямих цитат — лише узагальнення.</div>
-
-      <h3>Висновки до розділу</h3>
-      <div class="prompt">Сформулюй 5-7 узагальнюючих висновків до 1 розділу «[НАЗВА РОЗДІЛУ]». Кожен висновок — самостійне твердження з науковою обґрунтованістю. Стиль — академічний. 400-500 слів загалом.</div>
-
-      <h3>Вступ до підрозділу</h3>
-      <div class="prompt">Напиши вступний абзац (100-150 слів) до підрозділу «[НАЗВА]». Він має: пояснити актуальність, окреслити коло питань, які будуть розглянуті, послатись на наявність різних поглядів.</div>
-
-      <h3>Перехід між підрозділами</h3>
-      <div class="prompt">Напиши перехід (50-80 слів) від підрозділу 1.1 «[НАЗВА]» до 1.2 «[НАЗВА]». Має логічно завершувати попередній і вводити наступний.</div>
-    </div>
-
-    <div class="card">
-      <h2>📜 Робота з цитатами та джерелами</h2>
-
-      <h3>Шукати цитати</h3>
-      <div class="prompt">Знайди 5 точних цитат у моїх джерелах, які стосуються «[ТЕМА]». Кожна цитата — повний текст у лапках, автор, рік, сторінка (якщо є), посилання.</div>
-
-      <h3>Список літератури за темою</h3>
-      <div class="prompt">Зроби список усіх джерел у блокноті, які стосуються «[ТЕМА]». Формат: автор, рік, назва, тип джерела (стаття/книга/закон).</div>
-
-      <h3>Підбір джерел до підрозділу</h3>
-      <div class="prompt">Які з моїх джерел найбільш релевантні до підрозділу «[НАЗВА]»? Список 7-10 джерел з коротким (1 речення) поясненням, чому кожне підходить.</div>
-    </div>
-
-    <div class="card">
-      <h2>🎓 Запити для перевірки розуміння</h2>
-
-      <h3>Тестові питання</h3>
-      <div class="prompt">Сформулюй 10 питань для самоперевірки розуміння матеріалу мого блокнота. Складність — рівень курсової роботи. Дай також відповіді з посиланням на джерела.</div>
-
-      <h3>Чого мені не вистачає</h3>
-      <div class="prompt">Якщо я пишу теоретичний розділ дипломної на тему «[ТЕМА]» — яких аспектів не вистачає в моїх джерелах? Що варто додати? Запропонуй 5 напрямів для пошуку додаткових джерел.</div>
+      <h3>Вступний огляд</h3>
+      <div class="prompt">Напиши короткий вступ (150-200 слів) до теми «[ТЕМА]». Поясни, чому це важливо і які головні питання розглядаються у моїх джерелах.</div>
     </div>
   </div>
 
   <!-- TAB 4: REPORT STRUCTURE -->
   <div class="tab-content">
     <div class="card">
-      <h2>📝 Як виглядає звіт по підрозділу</h2>
-      <p>За вимогами практики студент має зробити <strong>3 звіти — по одному на кожен підрозділ 1 розділу</strong>. Це не просто текст — це структурований аналітичний документ. Нижче — повна структура з прикладами.</p>
+      <h2>📝 Проста структура готового звіту</h2>
+      <p>Приклад того, як може виглядати твій підсумковий документ, зібраний із нотаток.</p>
     </div>
 
     <div class="card">
-      <h2>📋 Структура одного звіту (4-6 сторінок)</h2>
-
       <div class="lesson-block">
-        <h4>1. Заголовок підрозділу та вступ</h4>
-        <p><strong>Що:</strong> Назва підрозділу + 1 абзац (100-150 слів) — у чому актуальність теми, що буде розглянуто.</p>
-        <p><strong>Як отримати:</strong> запит «Напиши вступний абзац до підрозділу...»</p>
+        <h4>1. Вступ</h4>
+        <p>Кілька абзаців про те, чому тема важлива та які матеріали опрацьовано.</p>
       </div>
 
       <div class="lesson-block">
-        <h4>2. Теоретичні підходи (визначення)</h4>
-        <p><strong>Що:</strong> 5+ визначень ключового поняття від різних авторів. Стиль викладу: «За думкою Іваненка [12], управління персоналом — це... В свою чергу, Петров [27] трактує це поняття як...»</p>
-        <p><strong>Обсяг:</strong> 1-1.5 сторінки</p>
-        <p><strong>Як отримати:</strong> запит «Дай 5 визначень...»</p>
+        <h4>2. Основні поняття та теорія</h4>
+        <p>Головні визначення, порівняння думок різних авторів і зручні таблиці.</p>
       </div>
 
       <div class="lesson-block">
-        <h4>3. Класифікація / структура / складові</h4>
-        <p><strong>Що:</strong> Як автори класифікують це поняття. Бажано таблицею або схемою.</p>
-        <p><strong>Обсяг:</strong> 1 сторінка</p>
-        <p><strong>Як отримати:</strong> запит «Які класифікації...»</p>
+        <h4>3. Розбір способів та методів</h4>
+        <p>Класифікації, схеми, інструменти та покрокові процеси з джерел.</p>
       </div>
 
       <div class="lesson-block">
-        <h4>4. Дискусійні питання / погляди</h4>
-        <p><strong>Що:</strong> У чому автори не сходяться. Це показує глибину опрацювання теми.</p>
-        <p><strong>Обсяг:</strong> 0.5-1 сторінка</p>
-        <p><strong>Як отримати:</strong> запит «Порівняй погляди...»</p>
+        <h4>4. Реальні приклади та тренди</h4>
+        <p>Огляд сучасного стану справ, проблем та майбутніх перспектив.</p>
       </div>
 
       <div class="lesson-block">
-        <h4>5. Аналітичні висновки до підрозділу</h4>
-        <p><strong>Що:</strong> 3-4 узагальнюючі висновки. Це <em>власна аналітика</em> студента на основі прочитаного, без цитат.</p>
-        <p><strong>Обсяг:</strong> 200-300 слів</p>
-        <p><strong>Як отримати:</strong> запит «Сформулюй висновки до підрозділу...»</p>
+        <h4>5. Висновки та список джерел</h4>
+        <p>Короткі підсумки та акуратний перелік усіх використаних файлів чи лінків.</p>
       </div>
-
-      <div class="lesson-block">
-        <h4>6. Список використаних джерел до підрозділу</h4>
-        <p><strong>Що:</strong> 10-15 джерел, на які є посилання в тексті. Формат — за ДСТУ.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>📐 Аналітичні висновки до 1 розділу (окремий документ)</h2>
-      <p>На додаток до трьох звітів — <strong>загальні висновки до теоретичного розділу</strong>. Це окремий блок тексту в кінці 1 розділу диплому.</p>
-
-      <h3>Структура висновків</h3>
-      <ol>
-        <li><strong>Узагальнення теоретичних підходів</strong> (1-2 абзаци) — що показав аналіз літератури</li>
-        <li><strong>Виявлені закономірності</strong> (1-2 абзаци) — те, що бачимо в більшості джерел</li>
-        <li><strong>Прогалини / спірні моменти</strong> (1 абзац) — те, що недостатньо досліджено</li>
-        <li><strong>Перспективи дослідження</strong> (1 абзац) — місток до 2 розділу диплому</li>
-      </ol>
-
-      <h3>Обсяг</h3>
-      <p>3-5 сторінок. У сумі весь 1 розділ — 25-35 сторінок (8-10 на підрозділ + висновки).</p>
-
-      <h3>Запит для генерації</h3>
-      <div class="prompt">На основі всіх моїх джерел сформулюй аналітичні висновки до теоретичного 1 розділу дипломної роботи на тему «[ТЕМА]». Структура: (1) узагальнення підходів, (2) закономірності, (3) прогалини, (4) перспективи. Обсяг — 500-700 слів. Стиль академічний.</div>
     </div>
   </div>
 
   <!-- TAB 5: HOMEWORK -->
   <div class="tab-content">
     <div class="card">
-      <h2>📚 Домашнє завдання після Заняття 1</h2>
-      <span class="badge badge-primary">Термін: до заняття 2 (1-1.5 тижні)</span>
+      <h2>📚 Чек-лист готовності проєкту</h2>
 
-      <h3>Що зробити</h3>
-      <ol>
-        <li><strong>Завантажити ще 15-20 джерел</strong> (до 25-30 загалом)</li>
-        <li><strong>Перевірити якість джерел:</strong> прибрати дублікати, замінити нефахові на наукові</li>
-        <li><strong>Перевірити, що блокнот «бачить» усі джерела</strong> — поставити одне тестове питання і подивитись, чи вистачає посилань</li>
-        <li><strong>Паралельно занести джерела в базу «Література» в Notion</strong></li>
-      </ol>
-
-      <h3>Як здати</h3>
-      <p>Через спільну форму Google Forms або в чат викладачу. Що надсилати:</p>
-      <ul>
-        <li>Скріншот блокнота NotebookLM зі списком джерел (видно кількість)</li>
-        <li>Скріншот бази «Література» в Notion</li>
-        <li>Файл .txt або повідомлення з: «Кількість джерел: __. Готова тема: __. План: 1.1__, 1.2__, 1.3__»</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>📚 Фінальне домашнє завдання</h2>
-      <span class="badge badge-danger">До захисту практики</span>
-
-      <h3>Повний пакет результатів</h3>
       <ul class="checklist">
-        <li>50 джерел у NotebookLM, без дублів</li>
-        <li>3 звіти — по одному на кожен підрозділ 1 розділу</li>
-        <li>Аналітичні висновки до 1 розділу (3-5 сторінок)</li>
-        <li>Список літератури (50 джерел за ДСТУ)</li>
-        <li>Текст першого розділу дипломної роботи (25-35 сторінок) з посиланнями</li>
-        <li>Збережені нотатки в Studio (мінімум 15 нотаток за структурою)</li>
-        <li>Усі джерела продубльовано в базі «Література» в Notion</li>
+        <li>Створено блокнот у Gemini Notebook і завантажено необхідні файли</li>
+        <li>Прибрано повтори та файли, що не зчиталися</li>
+        <li>Збережено нотатки за всіма основними питаннями теми</li>
+        <li>Згенеровано підсумковий короткий огляд (Briefing doc)</li>
+        <li>Зібрано й вичитано готовий текст звіту</li>
+        <li>Усі матеріали збережено або продубльовано в Notion</li>
       </ul>
-
-      <h3>Що демонструється на захисті</h3>
-      <ol>
-        <li>Сам блокнот NotebookLM на екрані (1 хв)</li>
-        <li>Кількість джерел та їх якість (1 хв)</li>
-        <li>Один приклад запиту до AI у реальному часі (1 хв)</li>
-        <li>Studio Notes — збережені звіти (1 хв)</li>
-        <li>Готовий текст 1 розділу — у Word/Google Docs (1-2 хв)</li>
-      </ol>
-
-      <div class="warning-box">
-        <strong>⚠️ Часті проблеми перед захистом:</strong>
-        <ul style="margin-top: 6px;">
-          <li>«У мене 30 джерел замість 50» — недостатньо. Це порушення вимог.</li>
-          <li>«Я скопіював відповіді AI як свій текст» — викладач побачить за стилем. Потрібно редагувати.</li>
-          <li>«У моїх джерелах половина — реферати з інтернету» — не зараховується як науковий рівень.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 6: CRITERIA -->
-  <div class="tab-content">
-    <div class="card">
-      <h2>✅ Критерії оцінювання NotebookLM-частини</h2>
-      <p>Згідно з положенням про практику, NotebookLM — це <strong>базовий обов'язковий рівень («Задовільно»)</strong>. Без виконання — практика не зараховується.</p>
-
-      <h3>Що перевіряється</h3>
-      <table>
-        <tr><th>Критерій</th><th>На що дивитись</th><th>Вага</th></tr>
-        <tr><td>Кількість джерел</td><td>Точно 50, без повторень</td><td>★★★</td></tr>
-        <tr><td>Якість джерел</td><td>Наукові статті, монографії, дисертації, закони. НЕ Вікіпедія/реферати</td><td>★★★</td></tr>
-        <tr><td>3 звіти по підрозділах</td><td>Структура: вступ, теорія, класифікації, дискусії, висновки</td><td>★★★</td></tr>
-        <tr><td>Аналітичні висновки</td><td>3-5 стор., авторська аналітика, а не цитати</td><td>★★</td></tr>
-        <tr><td>Список літератури</td><td>Усі 50, оформлення за ДСТУ</td><td>★★</td></tr>
-        <tr><td>Цитування в тексті</td><td>Посилання на джерела, виноски</td><td>★★</td></tr>
-        <tr><td>Текст 1 розділу</td><td>Готовий, відредагований, академічний стиль</td><td>★★★</td></tr>
-        <tr><td>Демонстрація на захисті</td><td>Студент уміє показати блокнот, ставити запитання</td><td>★</td></tr>
-      </table>
-
-      <h3>Чек-лист готовності</h3>
-      <ul class="checklist">
-        <li>Блокнот має точно 50 джерел</li>
-        <li>Серед джерел — мінімум 30 наукових статей</li>
-        <li>Серед джерел — мінімум 5 україномовних</li>
-        <li>Серед джерел — мінімум 10 за останні 5 років</li>
-        <li>Немає Вікіпедії, реферат-сайтів, блогів</li>
-        <li>У Studio Notes — мінімум 15 збережених нотаток</li>
-        <li>3 звіти по підрозділах готові</li>
-        <li>Аналітичні висновки написані</li>
-        <li>Список літератури за ДСТУ</li>
-        <li>1 розділ диплому готовий і відредагований</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>🎤 Сценарій захисту NotebookLM-частини (3-4 хвилини)</h2>
-
-      <div class="lesson-block">
-        <h4>0:00–0:30 — Вступ</h4>
-        <p><em>«Моя тема — [ТЕМА]. У блокноті NotebookLM я зібрала 50 джерел: [N] статей, [N] монографій, [N] дисертацій, [N] законодавчих актів. З них [N] україномовних, [N] за останні 5 років.»</em></p>
-      </div>
-
-      <div class="lesson-block">
-        <h4>0:30–1:30 — Демонстрація запиту</h4>
-        <p><em>«Покажу, як я працювала з джерелами. Ось запит: [читає реальний запит з блокнота]. Ось відповідь з [N] посиланнями на джерела. Я перевіряла кожне посилання — для прикладу клікаю на [3] — відкривається стаття Іваненка, сторінка 47, де саме це і написано.»</em></p>
-      </div>
-
-      <div class="lesson-block">
-        <h4>1:30–2:30 — Звіти та структура</h4>
-        <p><em>«У Studio Notes у мене 18 нотаток за структурою: 5 нотаток для 1.1, 6 для 1.2, 5 для 1.3, 2 загальні висновки. З цих нотаток я сформувала 3 звіти. Загалом — близько 30 сторінок теоретичного матеріалу з посиланнями.»</em></p>
-      </div>
-
-      <div class="lesson-block">
-        <h4>2:30–3:30 — Готовий розділ</h4>
-        <p><em>«Ось перший розділ дипломної (відкриває Word) — 28 сторінок, 47 цитувань. Аналітичні висновки — 4 сторінки. Список літератури — за ДСТУ, всі 50 джерел.»</em></p>
-      </div>
-
-      <div class="lesson-block">
-        <h4>3:30–4:00 — Завершення</h4>
-        <p><em>«NotebookLM дозволив мені опрацювати 50 джерел швидко і структурно. Але важливо: AI — це помічник, не автор. Кожну цитату я перевіряла, кожен абзац — переписала своїми словами. Дякую.»</em></p>
-      </div>
     </div>
   </div>
 
   <div class="footer-note">
-    Програма підготовлена для виробничої практики (4 семестр) · NotebookLM як базовий рівень «Задовільно»
+    Програма навчання з аналізу матеріалів у Gemini Notebook 🚀
   </div>
 
 </div>
