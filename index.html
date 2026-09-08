@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guides</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .card .icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .card .type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 8px;
+        }
+
+        .card .description {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .card .arrow {
+            display: inline-block;
+            margin-top: 12px;
+            color: #f5576c;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📚 Interactive Guides</h1>
+    <p class="subtitle">Мої навчальні проєкти — обери свій напрямок</p>
+
+    <div class="grid">
+
+        <!-- Canva Guide -->
+        <a href="/canva-guide/" class="card">
+            <span class="icon">🎨</span>
+            <span class="type">📖 Guide</span>
+            <h2>Canva Guide</h2>
+            <p class="description">10 слайдів, які виглядають професійно — навіть якщо ти не дизайнер</p>
+            <span class="badge">~6 годин</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+        <!-- NotebookLM Guide -->
+        <a href="/notebooklm-guide/" class="card">
+            <span class="icon">🧠</span>
+            <span class="type">📖 Guide</span>
+            <h2>NotebookLM Guide</h2>
+            <p class="description">Розумні нотатки з Gemini — твій AI-помічник для навчання</p>
+            <span class="badge">✨ AI</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+        <!-- Notion Guide -->
+        <a href="/notion-guide/" class="card">
+            <span class="icon">📝</span>
+            <span class="type">📖 Guide</span>
+            <h2>Notion Guide</h2>
+            <p class="description">Організуй життя та роботу в одному цифровому просторі</p>
+            <span class="badge">📋 Система</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+        <!-- Practice Canva -->
+        <a href="/practice_canva/" class="card">
+            <span class="icon">🖌️</span>
+            <span class="type">🧪 Practice</span>
+            <h2>Practice Canva</h2>
+            <p class="description">Закріплюємо навички роботи в Canva — практичні завдання</p>
+            <span class="badge">💪 Практика</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+        <!-- Practice NotebookLM -->
+        <a href="/practice_notebooklm/" class="card">
+            <span class="icon">✨</span>
+            <span class="type">🧪 Practice</span>
+            <h2>Practice NotebookLM</h2>
+            <p class="description">Працюємо з AI нотатками — створюємо власні конспекти</p>
+            <span class="badge">🤖 AI</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+        <!-- Practice Notion -->
+        <a href="/practice_notion/" class="card">
+            <span class="icon">📋</span>
+            <span class="type">🧪 Practice</span>
+            <h2>Practice Notion</h2>
+            <p class="description">Створюємо бази даних та системи в Notion з нуля</p>
+            <span class="badge">🏗️ Створення</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+        <!-- Remote Team Guide -->
+        <a href="/remote-team-guide/" class="card">
+            <span class="icon">🌐</span>
+            <span class="type">📖 Guide</span>
+            <h2>Remote Team Guide</h2>
+            <p class="description">Як працювати разом з будь-якої точки світу — гайд з дистанційної роботи </p>
+            <span class="badge">🤝 Команда</span>
+            <span class="arrow">Переглянути →</span>
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>
