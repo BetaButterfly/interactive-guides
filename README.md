@@ -2,10 +2,10 @@
 
 | Проєкт | Відкрити |
 |--------|----------|
-| canva-guide | [🌐 Переглянути](canva-guide/) |
-| notebooklm-guide | [🌐 Переглянути](notebooklm-guide/) |
-| notion-guide | [🌐 Переглянути](notion-guide/) |
-| practice_canva | [🌐 Переглянути](practice_canva/) |
-| practice_notebooklm | [🌐 Переглянути](practice_notebooklm/) |
-| practice_notion | [🌐 Переглянути](practice_notion/) |
-| remote-team-guide | [🌐 Переглянути](remote-team-guide/) |
+| canva-guide | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/canva-guide/) |
+| notebooklm-guide | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/notebooklm-guide/) |
+| notion-guide | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/notion-guide/) |
+| practice_canva | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/practice_canva/) |
+| practice_notebooklm | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/practice_notebooklm/) |
+| practice_notion | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/practice_notion/) |
+| remote-team-guide | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/remote-team-guide/) |
