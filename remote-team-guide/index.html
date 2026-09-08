@@ -1864,7 +1864,17 @@
     setTimeout(() => { f.style.width = w; }, 100);
   });
 }
-
+  
+// Keyboard support for card headers
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (e.target.classList.contains('card-header')) {
+        e.preventDefault();
+        e.target.click();
+      }
+    }
+  });
+  
 </script>
 </body>
 </html>
