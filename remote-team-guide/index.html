@@ -165,6 +165,12 @@
     margin-bottom: 20px;
     cursor: pointer;
     user-select: none;
+    outline: none;
+  }
+  .card.collapsed .card-header { margin-bottom: 0; }
+  .card-header:focus-visible {
+    outline: 2px solid var(--accent);
+    border-radius: 6px;
   }
   .card-icon {
     width: 44px; height: 44px;
@@ -191,8 +197,8 @@
     flex-shrink: 0;
   }
   .card.collapsed .toggle-btn { transform: rotate(-90deg); }
-  .card-body { }
-  .card.collapsed .card-body { display: none; }
+  .card-body { display: block; }
+  .card.collapsed .card-body { display: none !important; }
 
   /* LISTS */
   .check-list { list-style: none; }
@@ -842,7 +848,7 @@
           </div>
           <div class="mini-card">
             <h4> Підтверджуйте розуміння</h4>
-            <p>Після постановки задачі: «Що потрібно для старту?» або «Скажи своїми словами, що ти будеш робити». Не з недовіри — щоб синхронізуватися.</p>
+            <p>Після постановки задачі: «Що потрібно для старту?» або «Скажи своими словами, що ти будеш робити». Не з недовіри — щоб синхронізуватися.</p>
           </div>
           <div class="mini-card">
             <h4> Давайте фідбек швидко</h4>
@@ -1023,7 +1029,7 @@
     </div>
 
     <div class="highlight">
-      <strong>Реальність:</strong> Дистанційні команди мають вищий ризик вигорання і відчуженості. Мотивація тут — не наслідок хорошої атмосфери, а результат ваших конкретних дій як PM.
+      <strong>Реальність:</strong> Дистанційні команди мають вищий ризик вигорання і відчуженості. Мотивація тут — не наслідок хорошї атмосфери, а результат ваших конкретних дій як PM.
     </div>
 
     <div class="card mt16" id="card-motiv1">
@@ -1797,7 +1803,7 @@
     }
   }
 
-  // Card toggle (ВІДНОВЛЕНО)
+  // Card toggle
   function toggleCard(id) {
     const card = document.getElementById(id);
     if (card) {
@@ -1873,9 +1879,9 @@
     });
   }
   
-  // Keyboard support for card headers
+  // Keyboard support (виправлено подвійний клик)
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === 'Enter') {
       if (e.target.classList.contains('card-header')) {
         e.preventDefault();
         e.target.click();
