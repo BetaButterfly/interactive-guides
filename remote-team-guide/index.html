@@ -1821,24 +1821,38 @@
   }
 
   // Copy button - dinamically reads <pre> content to prevent mismatches
-  function copyText(btn) {
-    const box = btn.closest('.template-box');
-    const pre = box ? box.querySelector('pre') : null;
-    const text = pre ? pre.textContent : '';
+  async function copyText(btn) {
+  const box = btn.closest('.template-box');
+  const pre = box ? box.querySelector('pre') : null;
+  const text = pre ? pre.textContent : '';
 
-    navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = '✓ Скопійовано';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = orig;
-        btn.classList.remove('copied');
-      }, 2000);
-    }).catch(() => {
-      btn.textContent = 'Виберіть текст вручну';
-      setTimeout(() => { btn.textContent = 'Копіювати'; }, 2000);
-    });
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // Fallback для legacy/HTTP
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    
+    const orig = btn.textContent;
+    btn.textContent = '✓ Скопійовано';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 2000);
+  } catch (err) {
+    btn.textContent = 'Помилка копіювання';
+    setTimeout(() => { btn.textContent = 'Копіювати'; }, 2000);
   }
+}
 
   // Progress bars animation on load
   document.addEventListener('DOMContentLoaded', () => {
