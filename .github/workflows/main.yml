@@ -27,7 +27,7 @@ jobs:
           for dir in */; do
             if [ -f "${dir}index.html" ]; then
               name=$(basename "$dir")
-              echo "| ${name} | [🌐 Переглянути](${dir}) |" >> README.md
+              echo "| ${name} | [🌐 Переглянути](https://BetaButterfly.github.io/interactive-guides/${dir}) |" >> README.md
             fi
           done
       
@@ -36,5 +36,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git diff --staged --quiet || git commit -m "🔄 Auto-update README"
+          git diff --staged --quiet || git commit -m "🔄 Auto-update README with Pages links"
           git push
