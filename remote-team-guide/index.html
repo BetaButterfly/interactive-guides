@@ -1779,23 +1779,32 @@
 <script>
   // Tab switching
   function showTab(id, btnElement) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 
-  document.querySelectorAll('.nav-tab').forEach(t => {
-    t.classList.remove('active');
-    t.setAttribute('aria-selected', 'false');
-  });
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
 
-  document.getElementById('tab-' + id).classList.add('active');
-  btnElement.classList.add('active');
-  btnElement.setAttribute('aria-selected', 'true');
+    document.getElementById('tab-' + id).classList.add('active');
+    btnElement.classList.add('active');
+    btnElement.setAttribute('aria-selected', 'true');
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  if (id === 'trust') {
-    triggerProgressBars();
+    if (id === 'trust') {
+      triggerProgressBars();
+    }
   }
-}
+
+  // Card toggle (ВІДНОВЛЕНО)
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    if (card) {
+      card.classList.toggle('collapsed');
+    }
+  }
+
   // Interactive checklist
   function toggleCheck(li) {
     li.classList.toggle('done');
@@ -1820,52 +1829,51 @@
     document.getElementById('score-msg').textContent = msgs[idx];
   }
 
-  // Copy button - dinamically reads <pre> content to prevent mismatches
+  // Copy button
   async function copyText(btn) {
-  const box = btn.closest('.template-box');
-  const pre = box ? box.querySelector('pre') : null;
-  const text = pre ? pre.textContent : '';
+    const box = btn.closest('.template-box');
+    const pre = box ? box.querySelector('pre') : null;
+    const text = pre ? pre.textContent : '';
 
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-    } else {
-      // Fallback для legacy/HTTP
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      
+      const orig = btn.textContent;
+      btn.textContent = '✓ Скопійовано';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 2000);
+    } catch (err) {
+      btn.textContent = 'Помилка копіювання';
+      setTimeout(() => { btn.textContent = 'Копіювати'; }, 2000);
     }
-    
-    const orig = btn.textContent;
-    btn.textContent = '✓ Скопійовано';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.classList.remove('copied');
-    }, 2000);
-  } catch (err) {
-    btn.textContent = 'Помилка копіювання';
-    setTimeout(() => { btn.textContent = 'Копіювати'; }, 2000);
   }
-}
 
-  // Progress bars animation on load
+  // Progress bars animation
   function triggerProgressBars() {
-  const fills = document.querySelectorAll('#tab-trust .progress-fill');
-  fills.forEach(f => {
-    const w = f.getAttribute('data-width') || f.style.width;
-    f.setAttribute('data-width', w);
-    f.style.width = '0%';
-    setTimeout(() => { f.style.width = w; }, 100);
-  });
-}
+    const fills = document.querySelectorAll('#tab-trust .progress-fill');
+    fills.forEach(f => {
+      const w = f.getAttribute('data-width') || f.style.width;
+      f.setAttribute('data-width', w);
+      f.style.width = '0%';
+      setTimeout(() => { f.style.width = w; }, 100);
+    });
+  }
   
-// Keyboard support for card headers
+  // Keyboard support for card headers
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       if (e.target.classList.contains('card-header')) {
@@ -1874,7 +1882,6 @@
       }
     }
   });
-  
 </script>
 </body>
 </html>
